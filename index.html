@@ -4,7 +4,78 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>REVEAL — Don't Play With Friends 😈</title>
+<!-- PWA Manifest (inline) -->
+<link id="pwa-manifest" rel="manifest">
+<meta name="theme-color" content="#1a0008">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="REVEAL">
+<!-- Fonts: load from Google if online, fall back to system fonts offline -->
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Offline font fallback — matches Fredoka One / Nunito visually */
+:root {
+  --fd: 'Fredoka One', 'Rounded Mplus 1c', 'Baloo 2', ui-rounded, system-ui, sans-serif;
+  --fb: 'Nunito', 'Varela Round', ui-rounded, system-ui, sans-serif;
+}
+</style>
+<script>
+// ── PWA: inline manifest ──────────────────────────────────────────────────────
+(function(){
+  const manifest = {
+    name: "REVEAL — Don't Play With Friends",
+    short_name: "REVEAL",
+    description: "The party game that reveals everything 😈",
+    start_url: "./",
+    display: "standalone",
+    orientation: "portrait",
+    background_color: "#1a0008",
+    theme_color: "#1a0008",
+    icons: [
+      { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%231a0008'/%3E%3Ctext x='50%25' y='55%25' font-size='110' text-anchor='middle' dominant-baseline='middle'%3E%F0%9F%8E%AD%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" },
+      { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%231a0008'/%3E%3Ctext x='50%25' y='55%25' font-size='300' text-anchor='middle' dominant-baseline='middle'%3E%F0%9F%8E%AD%3C/text%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml" }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+})();
+
+// ── Service Worker (inline via Blob) ─────────────────────────────────────────
+(function(){
+  if (!('serviceWorker' in navigator)) return;
+  const CACHE = 'reveal-v1';
+  const swCode = `
+const CACHE_NAME = '${CACHE}';
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', self.location.href])));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys =>
+    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+  ).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if (cached) return cached;
+      return fetch(e.request).then(resp => {
+        if (!resp || resp.status !== 200 || resp.type === 'opaque') return resp;
+        const clone = resp.clone();
+        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
+        return resp;
+      }).catch(() => cached);
+    })
+  );
+});
+  `;
+  const blob = new Blob([swCode], {type:'text/javascript'});
+  const swURL = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swURL, {scope: './'})
+    .then(() => console.log('[REVEAL] Service Worker registered — offline ready ✓'))
+    .catch(err => console.warn('[REVEAL] SW registration failed (blob SW needs same-origin):', err));
+})();
+</script>
 <style>
 :root {
   --bg1:#1a0008;--bg2:#5c0a1a;--bg3:#9e1030;
@@ -12,7 +83,6 @@
   --pink:#e8294d;--teal:#06b6d4;--green:#22c55e;--red:#ef4444;--orange:#f97316;
   --w80:rgba(255,255,255,.8);--w20:rgba(255,255,255,.2);--w10:rgba(255,255,255,.1);--w05:rgba(255,255,255,.05);
   --card:rgba(255,255,255,.08);--r:20px;--rL:28px;
-  --fd:'Fredoka One',cursive;--fb:'Nunito',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
@@ -235,7 +305,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   <div style="display:flex;flex-direction:column;gap:12px;width:100%">
     <button class="btn btn-primary" onclick="go('setup')" style="font-size:18px;padding:17px 36px">START GAME 🎮</button>
     <button class="btn btn-secondary btn-sm" onclick="go('custom-setup')">⚙️ Custom Mode</button>
-    <button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="opacity:.45;font-size:12px;padding:8px 20px">🗑 Clear All Data</button>
+    <button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="opacity:.35;font-size:12px;padding:8px 20px">🗑 Clear All Data</button>
   </div>
 </div>
 
@@ -674,6 +744,21 @@ function clearAllData(){
   renderChips();
   document.querySelectorAll('.round-sel-btn').forEach((b,i)=>b.classList.toggle('sel',i===0));
   toast('All data cleared 🗑');
+}
+
+// ── Save to device ─────────────────────────────────────────────────────────
+function saveToDevice(){
+  try{
+    const html = document.documentElement.outerHTML;
+    const blob = new Blob(['<!DOCTYPE html>\n'+html], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'reveal-game.html';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);
+    toast('Saved! Open the file anytime offline 💾');
+  }catch(e){toast('Download failed — try saving the page manually');}
 }
 // Init on load
 window.addEventListener('DOMContentLoaded',loadStorage);

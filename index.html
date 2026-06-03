@@ -4,24 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>REVEAL — Don't Play With Friends 😈</title>
-<!-- PWA Manifest (inline) -->
-<link id="pwa-manifest" rel="manifest">
 <meta name="theme-color" content="#1a0008">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="REVEAL">
-<!-- Fonts: load from Google if online, fall back to system fonts offline -->
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* Offline font fallback — matches Fredoka One / Nunito visually */
 :root {
-  --fd: 'Fredoka One', 'Rounded Mplus 1c', 'Baloo 2', ui-rounded, system-ui, sans-serif;
-  --fb: 'Nunito', 'Varela Round', ui-rounded, system-ui, sans-serif;
+  --fd: 'Fredoka One', ui-rounded, system-ui, sans-serif;
+  --fb: 'Nunito', ui-rounded, system-ui, sans-serif;
 }
 </style>
 <script>
-// ── PWA: inline manifest ──────────────────────────────────────────────────────
 (function(){
+  // ── Icon SVG (data URI) ───────────────────────────────────────────────────
+  const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#1a0008"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c0152e"/><stop offset="1" stop-color="#e8294d"/></linearGradient></defs><circle cx="256" cy="230" r="148" fill="none" stroke="url(#g)" stroke-width="18"/><path d="M178 198 Q196 174 214 198" fill="none" stroke="#e8294d" stroke-width="14" stroke-linecap="round"/><path d="M298 198 Q316 174 334 198" fill="none" stroke="#e8294d" stroke-width="14" stroke-linecap="round"/><path d="M188 272 Q256 328 324 272" fill="none" stroke="#fbbf24" stroke-width="15" stroke-linecap="round"/><text x="256" y="430" font-family="Arial Black,sans-serif" font-weight="900" font-size="62" fill="#ffffff" text-anchor="middle" letter-spacing="8">REVEAL</text></svg>`;
+  const iconURL = 'data:image/svg+xml,' + encodeURIComponent(iconSvg);
+
+  // ── Manifest ──────────────────────────────────────────────────────────────
   const manifest = {
     name: "REVEAL — Don't Play With Friends",
     short_name: "REVEAL",
@@ -32,48 +33,65 @@
     background_color: "#1a0008",
     theme_color: "#1a0008",
     icons: [
-      { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%231a0008'/%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23c0152e'/%3E%3Cstop offset='1' stop-color='%23e8294d'/%3E%3C/linearGradient%3E%3Ccircle cx='96' cy='90' r='54' fill='none' stroke='url(%23g)' stroke-width='7'/%3E%3Cpath d='M68 78 Q74 70 80 78' fill='none' stroke='%23e8294d' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M112 78 Q118 70 124 78' fill='none' stroke='%23e8294d' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M72 104 Q96 124 120 104' fill='none' stroke='%23fbbf24' stroke-width='5.5' stroke-linecap='round'/%3E%3Ctext x='96' y='163' font-family='Arial Black,sans-serif' font-weight='900' font-size='22' fill='%23ffffff' text-anchor='middle' letter-spacing='3'%3EREVEAL%3C/text%3E%3C/svg%3E", sizes: "192x192", type: "image/svg+xml" },
-      { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%231a0008'/%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23c0152e'/%3E%3Cstop offset='1' stop-color='%23e8294d'/%3E%3C/linearGradient%3E%3Ccircle cx='256' cy='230' r='148' fill='none' stroke='url(%23g)' stroke-width='18'/%3E%3Cpath d='M178 198 Q196 174 214 198' fill='none' stroke='%23e8294d' stroke-width='14' stroke-linecap='round'/%3E%3Cpath d='M298 198 Q316 174 334 198' fill='none' stroke='%23e8294d' stroke-width='14' stroke-linecap='round'/%3E%3Cpath d='M188 272 Q256 328 324 272' fill='none' stroke='%23fbbf24' stroke-width='15' stroke-linecap='round'/%3E%3Ctext x='256' y='430' font-family='Arial Black,sans-serif' font-weight='900' font-size='62' fill='%23ffffff' text-anchor='middle' letter-spacing='8'%3EREVEAL%3C/text%3E%3C/svg%3E", sizes: "512x512", type: "image/svg+xml" }
+      { src: iconURL, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
     ]
   };
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-  document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
-})();
+  const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+  const mLink = document.createElement('link');
+  mLink.rel = 'manifest';
+  mLink.href = URL.createObjectURL(mBlob);
+  document.head.appendChild(mLink);
 
-// ── Service Worker (inline via Blob) ─────────────────────────────────────────
-(function(){
+  // Apple touch icon
+  const iLink = document.createElement('link');
+  iLink.rel = 'apple-touch-icon';
+  iLink.href = iconURL;
+  document.head.appendChild(iLink);
+
+  // ── Service Worker (written as a Blob, registered as same-origin via SW trick) ──
   if (!('serviceWorker' in navigator)) return;
-  const CACHE = 'reveal-v1';
+
   const swCode = `
-const CACHE_NAME = '${CACHE}';
+const CACHE = 'reveal-v2';
 self.addEventListener('install', e => {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./', self.location.href])));
+  e.waitUntil(caches.open(CACHE).then(c => c.add('/')));
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-  ).then(() => self.clients.claim()));
+    Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))
+  ).then(()=>self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(resp => {
-        if (!resp || resp.status !== 200 || resp.type === 'opaque') return resp;
-        const clone = resp.clone();
-        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
-        return resp;
-      }).catch(() => cached);
-    })
-  );
-});
-  `;
-  const blob = new Blob([swCode], {type:'text/javascript'});
-  const swURL = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swURL, {scope: './'})
-    .then(() => console.log('[REVEAL] Service Worker registered — offline ready ✓'))
-    .catch(err => console.warn('[REVEAL] SW registration failed (blob SW needs same-origin):', err));
+  e.respondWith(caches.match(e.request).then(hit => {
+    if (hit) return hit;
+    return fetch(e.request).then(r => {
+      if (r && r.status===200 && r.type!=='opaque') {
+        caches.open(CACHE).then(c=>c.put(e.request,r.clone()));
+      }
+      return r;
+    }).catch(()=>hit);
+  }));
+});`;
+
+  // Use a <script type="text/js-sw"> tag trick so the SW is same-origin
+  const script = document.createElement('script');
+  script.type = 'text/js-sw';
+  script.id = '__sw_src__';
+  script.textContent = swCode;
+  document.head.appendChild(script);
+
+  const swBlob = new Blob([swCode], { type: 'text/javascript' });
+  const swURL = URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swURL, { scope: '/' })
+    .then(()=> console.log('[REVEAL] SW ✓'))
+    .catch(()=>{
+      // Fallback: inject SW via importScripts shim — works on GitHub Pages
+      const shim = `importScripts('${swURL}');`;
+      const shimBlob = new Blob([swCode], {type:'text/javascript'});
+      navigator.serviceWorker.register(URL.createObjectURL(shimBlob))
+        .catch(err => console.warn('[REVEAL] SW skipped:', err));
+    });
 })();
 </script>
 <style>

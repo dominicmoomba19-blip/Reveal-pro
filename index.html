@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>REVEAL — Don't Play With Friends 😈</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg1:#1a0008;--bg2:#5c0a1a;--bg3:#9e1030;
+  --crimson:#c0152e;--crimsonL:#e8294d;--gold:#fbbf24;
+  --pink:#e8294d;--teal:#06b6d4;--green:#22c55e;--red:#ef4444;--orange:#f97316;
+  --w80:rgba(255,255,255,.8);--w20:rgba(255,255,255,.2);--w10:rgba(255,255,255,.1);--w05:rgba(255,255,255,.05);
+  --card:rgba(255,255,255,.08);--r:20px;--rL:28px;
+  --fd:'Fredoka One',cursive;--fb:'Nunito',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--fb);background:linear-gradient(160deg,var(--bg1) 0%,var(--bg2) 50%,var(--bg3) 100%);height:100dvh;color:#fff;position:relative;overflow:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 15% 15%,rgba(192,21,46,.18) 0%,transparent 55%),radial-gradient(circle at 85% 85%,rgba(232,41,77,.12) 0%,transparent 55%),radial-gradient(circle at 50% 50%,rgba(6,182,212,.06) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+/* SCREENS */
+.screen{display:none;position:relative;z-index:1;height:100dvh;overflow-y:auto;overflow-x:hidden;padding:24px 20px;flex-direction:column;align-items:center;animation:fadeIn .3s ease}
+.screen.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 16px rgba(192,21,46,.8))}50%{transform:scale(1.12);filter:drop-shadow(0 0 36px rgba(232,41,77,.9))}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+@keyframes coinSpin{0%{transform:rotateY(0) scale(1)}30%{transform:rotateY(90deg) scale(.5)}60%{transform:rotateY(200deg) scale(1.1)}100%{transform:rotateY(360deg) scale(1)}}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(192,21,46,.4)}50%{box-shadow:0 0 50px rgba(232,41,77,.7)}}
+
+/* TYPOGRAPHY */
+.display{font-family:var(--fd);background:linear-gradient(135deg,#fff 0%,#fca5a5 50%,#fda4af 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-title{font-family:var(--fd);font-size:30px;text-align:center;margin-bottom:6px}
+.section-sub{color:var(--w80);text-align:center;font-size:14px;margin-bottom:20px;font-weight:600}
+
+/* BUTTONS */
+.btn{border:none;border-radius:50px;padding:15px 36px;font-family:var(--fb);font-size:17px;font-weight:800;cursor:pointer;transition:all .18s ease;letter-spacing:.3px;position:relative;overflow:hidden}
+.btn:active{transform:scale(.95)}
+.btn-primary{background:linear-gradient(135deg,#b91c3c,#e8294d);color:#fff;box-shadow:0 8px 28px rgba(158,16,48,.5);width:100%}
+.btn-secondary{background:var(--w10);color:#fff;border:2px solid var(--w20);width:100%;backdrop-filter:blur(10px)}
+.btn-sm{padding:11px 24px;font-size:15px}
+.btn-icon{width:46px;height:46px;padding:0;border-radius:50%;font-size:20px;display:flex;align-items:center;justify-content:center;background:var(--w10);border:2px solid var(--w20);cursor:pointer;transition:all .18s;color:#fff;font-family:var(--fb);flex-shrink:0}
+.btn-icon:active{transform:scale(.9)}
+
+/* INPUTS */
+.field{background:var(--w10);border:2px solid var(--w20);border-radius:16px;padding:14px 18px;font-family:var(--fb);font-size:16px;color:#fff;width:100%;outline:none;transition:border-color .2s;backdrop-filter:blur(10px)}
+.field::placeholder{color:rgba(255,255,255,.35)}
+.field:focus{border-color:var(--crimsonL)}
+
+/* BACK */
+.back{align-self:flex-start;margin-bottom:14px;background:var(--w10);border:1.5px solid var(--w20);border-radius:12px;padding:8px 16px;color:#fff;font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .18s}
+.back:active{transform:scale(.95)}
+
+/* PLAYER CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:8px;width:100%;min-height:16px}
+.chip{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(158,16,48,.35),rgba(232,41,77,.25));border:1.5px solid rgba(192,21,46,.5);border-radius:50px;padding:7px 13px;font-size:13px;font-weight:800;animation:popIn .2s ease}
+.chip-x{cursor:pointer;font-size:15px;opacity:.7;line-height:1}
+.count-badge{background:rgba(192,21,46,.25);border-radius:10px;padding:4px 12px;font-size:12px;font-weight:800;color:var(--crimsonL);border:1px solid rgba(192,21,46,.35);align-self:flex-start}
+
+/* MODE CARDS */
+/* MODE CARDS */
+.mode-card{width:100%;border-radius:var(--rL);padding:20px 18px 20px 118px;min-height:118px;display:flex;align-items:center;cursor:pointer;transition:all .2s ease;border:2px solid;position:relative;overflow:hidden}
+.mode-card:active{transform:scale(.97)}
+.mode-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:112px;background:rgba(0,0,0,.22);border-right:1px solid rgba(255,255,255,.07);z-index:0}
+.mode-emoji{position:absolute;left:-4px;bottom:-14px;font-size:108px;line-height:1;filter:drop-shadow(0 8px 22px rgba(0,0,0,.7));z-index:1;pointer-events:none}
+.mode-info{flex:1;min-width:0;position:relative;z-index:1}
+.mode-name{font-family:var(--fd);font-size:22px;line-height:1.15;margin-bottom:6px;word-break:break-word}
+.mode-desc{font-size:13px;opacity:.9;line-height:1.5;font-weight:600}
+.mode-arrow{font-size:22px;opacity:.35;flex-shrink:0;margin-left:10px;align-self:center;position:relative;z-index:1}
+.m-classic{background:linear-gradient(135deg,#1a3a5c,#0d2540);border-color:#FFD700}
+.m-classic .mode-name{color:#FFD700}
+.m-spicy{background:linear-gradient(135deg,#5c1a1a,#3d0a0a);border-color:#ef4444}
+.m-spicy .mode-name{color:#ff6b6b}
+.m-hardcore{background:linear-gradient(135deg,#3d1a00,#2a1000);border-color:#f97316}
+.m-hardcore .mode-name{color:#fb923c}
+.m-confessions{background:linear-gradient(135deg,#3b0010,#1f000a);border-color:#e8294d}
+.m-confessions .mode-name{color:#fca5a5}
+.m-deep{background:linear-gradient(135deg,#0a1a3d,#071228);border-color:#3b82f6}
+.m-deep .mode-name{color:#60a5fa}
+.m-paranoia{background:linear-gradient(135deg,#0a3d2a,#07281c);border-color:#06b6d4}
+.m-paranoia .mode-name{color:#22d3ee}
+.m-blackout{background:linear-gradient(135deg,#0d0d0d,#1a1a1a);border-color:rgba(255,255,255,.25)}
+.m-blackout .mode-name{color:#fff}
+.m-custom{background:linear-gradient(135deg,#0a3d0a,#072807);border-color:#22c55e}
+.m-custom .mode-name{color:#4ade80}
+.m-wyr{background:linear-gradient(135deg,#1a1a3d,#0d0d2e);border-color:#f59e0b}
+.m-wyr .mode-name{color:#fbbf24}
+.m-worf{background:linear-gradient(135deg,#1a0a0a,#2e0d0d);border-color:#dc2626}
+.m-worf .mode-name{color:#f87171}
+.m-dpwf{background:linear-gradient(135deg,#0a0000,#1a0000);border-color:#ff0000;box-shadow:0 0 18px rgba(255,0,0,.25),inset 0 0 30px rgba(255,0,0,.05)}
+.m-dpwf .mode-name{color:#ff3333;text-shadow:0 0 12px rgba(255,0,0,.6)}
+/* NEVER HAVE I EVER */
+.m-nhie{background:linear-gradient(135deg,#001a1a,#002a20);border-color:#06b6d4}
+.m-nhie .mode-name{color:#22d3ee}
+.nhie-player{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--w10);border:2px solid var(--w20);border-radius:18px;padding:12px 8px;cursor:pointer;transition:all .2s;flex:1;min-width:72px;max-width:130px;user-select:none}
+.nhie-player:active{transform:scale(.94)}
+.nhie-player.drank{background:rgba(6,182,212,.18);border-color:#06b6d4}
+.nhie-player.out{opacity:.35;pointer-events:none}
+.nhie-lives{font-size:13px;font-weight:900;min-height:18px;letter-spacing:1px}
+.nhie-pname{font-size:12px;font-weight:800;text-align:center;word-break:break-word}
+.nhie-grid{display:flex;flex-wrap:wrap;gap:8px;width:100%;justify-content:center}
+
+/* HOT SEAT */
+.m-hotseat{background:linear-gradient(135deg,#1a1000,#2a1a00);border-color:#f59e0b}
+.m-hotseat .mode-name{color:#fbbf24}
+.hs-seat{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.05));border:2px solid rgba(251,191,36,.4);border-radius:var(--rL);padding:20px 18px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px}
+.hs-seated{font-family:var(--fd);font-size:36px;color:var(--gold)}
+.hs-vote-btn{display:flex;align-items:center;justify-content:space-between;background:var(--w10);border:2px solid var(--w20);border-radius:14px;padding:13px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
+.hs-vote-btn:active{transform:scale(.98)}
+.hs-vote-btn.leading{background:rgba(251,191,36,.15);border-color:rgba(251,191,36,.55)}
+.hs-react-row{display:flex;gap:8px;width:100%}
+.hs-react-btn{flex:1;padding:11px 4px;border-radius:14px;background:var(--w10);border:2px solid var(--w20);color:#fff;font-family:var(--fb);font-size:11px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
+.hs-react-btn:active{transform:scale(.95)}
+.hs-react-good.sel{background:linear-gradient(135deg,#15803d,#22c55e);border-color:transparent}
+.hs-react-bad.sel{background:linear-gradient(135deg,#7f1d1d,#b91c3c);border-color:transparent}
+
+
+/* WEREWOLF */
+.ww-role-card{border-radius:var(--rL);padding:36px 22px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.ww-wolf{background:linear-gradient(135deg,#1a0505,#2d0808);border:3px solid #dc2626}
+.ww-villager{background:linear-gradient(135deg,#051a0a,#082d10);border:3px solid #22c55e}
+.ww-seer{background:linear-gradient(135deg,#05081a,#080f2d);border:3px solid #60a5fa}
+.ww-doctor{background:linear-gradient(135deg,#0a1505,#142208);border:3px solid #a3e635}
+.ww-vote-btn{display:flex;align-items:center;justify-content:space-between;background:var(--w10);border:2px solid var(--w20);border-radius:14px;padding:13px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
+.ww-vote-btn:active{transform:scale(.98)}
+.ww-vote-btn.eliminated{background:rgba(239,68,68,.2);border-color:#ef4444;opacity:.6;pointer-events:none}
+.ww-vote-btn.voted{background:rgba(239,68,68,.25);border-color:#ef4444}
+.ww-dead-chip{background:rgba(239,68,68,.15);border:1.5px solid rgba(239,68,68,.4);border-radius:50px;padding:5px 13px;font-size:13px;font-weight:800;color:#fca5a5;display:flex;align-items:center;gap:5px}
+
+/* GAME SCREEN */
+.game-header{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:10px}
+.mode-badge{font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:50px;background:var(--w10);border:1.5px solid var(--w20)}
+.round-info{font-size:13px;font-weight:700;color:var(--w80)}
+.progress{width:100%;height:5px;background:var(--w10);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#b91c3c,#e8294d);transition:width .4s ease}
+
+/* QUESTION CARD */
+.q-card{background:var(--w10);border:2px solid var(--w20);border-radius:var(--rL);padding:28px 22px;text-align:center;width:100%;backdrop-filter:blur(20px);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:180px;position:relative;overflow:hidden;animation:slideUp .4s ease}
+.q-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(192,21,46,.08) 0%,transparent 70%);pointer-events:none}
+.q-num{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;opacity:.45}
+.q-text{font-family:var(--fd);font-size:24px;line-height:1.35;position:relative;z-index:1}
+.judge-lbl{font-size:12px;font-weight:700;opacity:.65;display:flex;align-items:center;gap:5px}
+.judge-nm{font-size:20px;font-weight:900;color:var(--gold)}
+
+/* SCORE BUTTONS */
+.score-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
+.sbtn{flex:1;min-width:76px;max-width:140px;padding:10px 8px;border-radius:14px;background:var(--w10);border:2px solid var(--w20);color:#fff;font-family:var(--fb);font-size:13px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center}
+.sbtn:active,.sbtn.sel{background:linear-gradient(135deg,#b91c3c,#e8294d);border-color:transparent;transform:scale(1.06)}
+
+/* SECRET CARD */
+.secret-card{background:var(--w10);border:2px solid var(--w20);border-radius:var(--rL);padding:28px 22px;text-align:center;width:100%;backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;gap:18px}
+.tap-box{background:var(--w05);border:2.5px dashed var(--w20);border-radius:16px;padding:36px 20px;width:100%;text-align:center;cursor:pointer;transition:all .18s;font-size:14px;font-weight:700}
+.tap-box:active{transform:scale(.97);background:var(--w10)}
+
+/* SCOREBOARD OVERLAY */
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(10,0,25,.95);z-index:100;padding:24px 20px;overflow-y:auto;backdrop-filter:blur(12px)}
+.score-item{display:flex;align-items:center;gap:13px;background:var(--w10);border:1.5px solid var(--w20);border-radius:16px;padding:14px 18px;width:100%;transition:all .3s}
+.rank-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0}
+.r1{background:linear-gradient(135deg,#ffd700,#ffa500);color:#1a0533}
+.r2{background:linear-gradient(135deg,#c0c0c0,#a0a0a0);color:#1a0533}
+.r3{background:linear-gradient(135deg,#cd7f32,#a05a20);color:#fff}
+.r-other{background:var(--w10);border:1.5px solid var(--w20)}
+.p-name{flex:1;font-size:17px;font-weight:800}
+.pts{font-family:var(--fd);font-size:26px;color:var(--gold)}
+
+/* COIN */
+.coin{width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:46px;margin:8px auto;background:linear-gradient(135deg,#ffd700,#ffa500);box-shadow:0 8px 28px rgba(255,215,0,.4);cursor:pointer;transition:all .2s;user-select:none}
+.coin.spin{animation:coinSpin .9s ease forwards}
+.coin:active{transform:scale(.93)}
+
+/* ROLE CARD */
+.role-card{background:#0d0d0d;border:3px solid rgba(255,255,255,.18);border-radius:var(--rL);padding:36px 22px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px}
+.role-imp{border-color:#ef4444;background:#1a0000}
+.role-inn{border-color:#22c55e;background:#001a00}
+
+/* VOTE BTN */
+.vote-btn{display:flex;align-items:center;justify-content:space-between;background:var(--w10);border:2px solid var(--w20);border-radius:14px;padding:13px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
+.vote-btn.voted{background:rgba(239,68,68,.2);border-color:#ef4444}
+.vote-btn:active{transform:scale(.98)}
+
+/* CUSTOM Q */
+.cq-item{display:flex;align-items:center;gap:10px;background:var(--w10);border:1.5px solid var(--w20);border-radius:13px;padding:11px 15px;width:100%}
+.cq-text{flex:1;font-size:13px;font-weight:600;line-height:1.4}
+.del-btn{background:rgba(239,68,68,.18);border:none;border-radius:8px;padding:6px 10px;color:#ef4444;font-size:15px;cursor:pointer;flex-shrink:0}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(26,10,55,.97);border:1.5px solid rgba(192,21,46,.5);backdrop-filter:blur(20px);border-radius:50px;padding:11px 22px;font-weight:800;font-size:14px;z-index:200;transition:transform .3s ease;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* CONFETTI */
+.cf{position:fixed;width:9px;height:9px;border-radius:2px;animation:confettiFall 3s ease forwards;pointer-events:none;z-index:300}
+
+/* ROUND SELECTOR */
+.round-sel-btn{padding:9px 20px;border-radius:50px;border:2px solid rgba(192,21,46,.4);background:rgba(255,255,255,.07);color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .18s}
+.round-sel-btn.sel{background:linear-gradient(135deg,#b91c3c,#e8294d);border-color:transparent}
+.round-sel-btn:active{transform:scale(.93)}
+
+/* ROUND COUNTER BANNER */
+.round-banner{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(192,21,46,.3);border-radius:14px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:800}
+.round-banner-label{opacity:.6}
+.round-banner-num{color:#fca5a5;font-family:'Fredoka One',cursive;font-size:17px}
+.round-banner-final{color:#fbbf24;animation:pulse 1s ease-in-out infinite}
+
+/* UTILS */
+.flex-col{display:flex;flex-direction:column}
+.gap-8{gap:8px}.gap-10{gap:10px}.gap-12{gap:12px}.gap-16{gap:16px}
+.w-full{width:100%}
+.tc{text-align:center}
+.spacer{flex:1}
+.divider{width:100%;height:1px;background:var(--w20);margin:4px 0}
+.scroll{overflow-y:auto;width:100%;flex:1;padding-bottom:20px;-webkit-overflow-scrolling:touch}
+.scroll::-webkit-scrollbar{width:3px}
+.scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:2px}
+.row{display:flex;gap:10px;align-items:center;width:100%}
+</style>
+</head>
+<body>
+
+<!-- ====== SPLASH ====== -->
+<div id="splash" class="screen active" style="justify-content:space-between;text-align:center;padding-top:52px;padding-bottom:36px">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div class="display" style="font-family:'Fredoka One',cursive;font-size:72px;letter-spacing:5px;line-height:1">REVEAL</div>
+    <div style="font-size:13px;color:var(--w80);letter-spacing:3px;text-transform:uppercase;font-weight:700">Don't Play With Friends 😈 Mwahahaha</div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:4px;padding:0 10px">
+    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">🎭</span>
+    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .18s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">😈</span>
+    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .36s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">💀</span>
+    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .54s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">👀</span>
+    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .72s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">🐺</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px;width:100%">
+    <button class="btn btn-primary" onclick="go('setup')" style="font-size:18px;padding:17px 36px">START GAME 🎮</button>
+    <button class="btn btn-secondary btn-sm" onclick="go('custom-setup')">⚙️ Custom Mode</button>
+    <button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="opacity:.45;font-size:12px;padding:8px 20px">🗑 Clear All Data</button>
+  </div>
+</div>
+
+<!-- ====== SETUP ====== -->
+<div id="setup" class="screen flex-col gap-16" style="max-width:480px;margin:0 auto;width:100%;padding-top:50px">
+  <button class="back" onclick="go('splash')">← Back</button>
+  <div class="section-title display">Who's Playing? 🎮</div>
+  <div class="section-sub">Add at least 2 players — tap Enter or +</div>
+  <div class="row">
+    <input class="field" id="p-input" type="text" placeholder="Player name..." maxlength="18" onkeydown="if(event.key==='Enter')addP()">
+    <button class="btn-icon" onclick="addP()">+</button>
+  </div>
+  <div id="chips" class="chips"></div>
+  <div id="p-count" class="count-badge" style="display:none">0 players</div>
+  <div class="spacer"></div>
+  <button class="btn btn-primary" id="start-btn" onclick="goModes()" style="display:none">Let's Play! 🎉</button>
+</div>
+
+<!-- ====== MODE SELECT ====== -->
+<div id="mode-select" class="screen flex-col" style="max-width:480px;margin:0 auto;width:100%;padding-top:40px;height:100dvh">
+  <button class="back" onclick="go('setup')">← Back</button>
+  <div class="section-title display">Pick a Mode 🎯</div>
+  <div class="section-sub">Choose how wild tonight gets</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;margin-bottom:10px">
+    <div style="font-size:13px;font-weight:800;opacity:.65;letter-spacing:.5px">HOW MANY ROUNDS?</div>
+    <div style="display:flex;gap:8px">
+      <button class="round-sel-btn sel" data-val="10" onclick="setRounds(this)">10</button>
+      <button class="round-sel-btn" data-val="15" onclick="setRounds(this)">15</button>
+      <button class="round-sel-btn" data-val="20" onclick="setRounds(this)">20</button>
+      <button class="round-sel-btn" data-val="30" onclick="setRounds(this)">30</button>
+    </div>
+  </div>
+  <div class="scroll flex-col gap-10" style="padding-bottom:16px">
+    <div class="mode-card m-classic" onclick="startMode('classic')"><div class="mode-emoji">🐷</div><div class="mode-info"><div class="mode-name">CLASSIC</div><div class="mode-desc">Get a taste of the game with cool and fun questions. Judge picks the best answer!</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-spicy" onclick="startMode('spicy')"><div class="mode-emoji">😈</div><div class="mode-info"><div class="mode-name">SPICY</div><div class="mode-desc">Naughty questions, wild answers — this night's one for the books.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-hardcore" onclick="startMode('hardcore')"><div class="mode-emoji">💀</div><div class="mode-info"><div class="mode-name">HARDCORE</div><div class="mode-desc">No rules. No mercy. Just brutally honest questions about everyone here.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-confessions" onclick="startMode('confessions')"><div class="mode-emoji">🙈</div><div class="mode-info"><div class="mode-name">CONFESSIONS</div><div class="mode-desc">Questions to expose your friends' darkest secrets... one confession at a time.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-deep" onclick="startMode('deep')"><div class="mode-emoji">🦭</div><div class="mode-info"><div class="mode-name">DEEP</div><div class="mode-desc">Get real. Go deeper than small talk. Share what you actually think.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-paranoia" onclick="startMode('paranoia')"><div class="mode-emoji">👀</div><div class="mode-info"><div class="mode-name">PARANOIA</div><div class="mode-desc">Who did I say? Only you'll know — unless they flip the coin to find out.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-blackout" onclick="startMode('blackout')"><div class="mode-emoji">🕵️</div><div class="mode-info"><div class="mode-name">BLACKOUT</div><div class="mode-desc">One secret imposter. One topic. Find them before they fool everyone.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-wyr" onclick="startMode('wyr')"><div class="mode-emoji">🤔</div><div class="mode-info"><div class="mode-name">WOULD U RATHER</div><div class="mode-desc">Two impossible choices. Pick one and defend it with your life.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-worf" onclick="startMode('worf')"><div class="mode-emoji">🐺</div><div class="mode-info"><div class="mode-name">WEREWOLF</div><div class="mode-desc">Wolves hunt by night. Villagers hunt by day. Trust absolutely no one.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-nhie" onclick="startMode('nhie')"><div class="mode-emoji">🍺</div><div class="mode-info"><div class="mode-name">NEVER HAVE I EVER</div><div class="mode-desc">Tap if you've done it and lose a life. Most innocent at the end wins.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-hotseat" onclick="startMode('hotseat')"><div class="mode-emoji">🔥</div><div class="mode-info"><div class="mode-name">HOT SEAT</div><div class="mode-desc">Group votes. One person answers everything. No escape, no mercy.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-dpwf" onclick="startMode('dpwf')"><div class="mode-emoji">🎭</div><div class="mode-info"><div class="mode-name">DON'T PLAY WITH FRIENDS</div><div class="mode-desc">Warning: friendships will not survive this. Designed to cause division. You were told.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-custom" id="custom-card" onclick="startMode('custom')" style="display:none"><div class="mode-emoji">✨</div><div class="mode-info"><div class="mode-name" id="c-name">CUSTOM</div><div class="mode-desc" id="c-desc">Your own questions. Your own rules. Your chaos.</div></div><div class="mode-arrow">›</div></div>
+  </div>
+</div>
+
+
+<!-- ====== NEVER HAVE I EVER ====== -->
+<div id="nhie" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#22d3ee;border-color:rgba(6,182,212,.4)">NEVER HAVE I EVER</div>
+    <div class="round-info" id="nhie-round-info">Round 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="progress"><div class="progress-fill" id="nhie-prog" style="width:0%;background:linear-gradient(90deg,#0e7490,#22d3ee)"></div></div>
+  <div class="round-banner" style="border-color:rgba(6,182,212,.3)">
+    <span class="round-banner-label">Round</span>
+    <span class="round-banner-num" id="nhie-round-display" style="color:#22d3ee">1 / 10</span>
+    <span id="nhie-last-round" style="display:none;font-size:12px" class="round-banner-final">🔥 LAST ROUND!</span>
+  </div>
+  <div class="q-card" id="nhie-card" style="background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(34,211,238,.04));border-color:rgba(6,182,212,.3)">
+    <div class="q-num" style="color:#22d3ee">NEVER HAVE I EVER...</div>
+    <div class="q-text" id="nhie-text">Loading...</div>
+  </div>
+  <div style="font-size:13px;font-weight:700;opacity:.6;text-align:center">Tap your name if you HAVE done it 👇</div>
+  <div class="nhie-grid" id="nhie-grid"></div>
+  <button class="btn btn-primary" onclick="nextNHIE()" style="background:linear-gradient(135deg,#0e7490,#06b6d4);box-shadow:0 8px 28px rgba(6,182,212,.35)">Next →</button>
+</div>
+
+<!-- ====== HOT SEAT — VOTE ====== -->
+<div id="hs-vote" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;padding-top:40px">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">HOT SEAT 🔥</div>
+    <div class="round-info" id="hs-vote-round">Seat 1</div>
+  </div>
+  <div class="section-title display" style="font-size:26px;margin-top:6px">Who's going in? 🔥</div>
+  <div class="section-sub" style="margin-bottom:0">Tap a name to vote — most votes takes the seat</div>
+  <div class="flex-col gap-8 w-full" id="hs-vote-list"></div>
+  <div style="font-size:12px;opacity:.5;text-align:center;font-weight:700" id="hs-vote-status">0 votes cast</div>
+  <div style="display:flex;gap:8px;width:100%;margin-top:4px">
+    <button class="btn btn-secondary btn-sm" onclick="hsRandomPick()" style="flex:1">🎲 Random</button>
+    <button class="btn btn-primary btn-sm" onclick="confirmHSVote()" style="flex:2;background:linear-gradient(135deg,#b45309,#f59e0b);box-shadow:0 6px 20px rgba(245,158,11,.35)">Put Them In! 🔥</button>
+  </div>
+</div>
+
+<!-- ====== HOT SEAT — GAME ====== -->
+<div id="hs-game" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">HOT SEAT 🔥</div>
+    <div class="round-info" id="hs-q-info">Q 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="progress"><div class="progress-fill" id="hs-prog" style="width:0%;background:linear-gradient(90deg,#b45309,#f59e0b)"></div></div>
+  <div class="hs-seat">
+    <div style="font-size:30px">🔥</div>
+    <div style="font-size:11px;font-weight:800;opacity:.55;letter-spacing:2px;text-transform:uppercase">In The Hot Seat</div>
+    <div class="hs-seated" id="hs-seated-name">—</div>
+  </div>
+  <div class="q-card" id="hs-card" style="background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(245,158,11,.04));border-color:rgba(251,191,36,.3)">
+    <div class="q-num" style="color:#fbbf24">ANSWER THIS</div>
+    <div class="q-text" id="hs-q-text">Loading...</div>
+  </div>
+  <div style="font-size:12px;font-weight:700;opacity:.6;text-align:center">Group reacts after they answer 👇</div>
+  <div class="hs-react-row">
+    <button class="hs-react-btn hs-react-good" onclick="hsReact(this,1)"><span style="font-size:20px">🔥</span>Brave</button>
+    <button class="hs-react-btn hs-react-good" onclick="hsReact(this,1)"><span style="font-size:20px">😂</span>Hilarious</button>
+    <button class="hs-react-btn hs-react-bad" onclick="hsReact(this,0)"><span style="font-size:20px">😬</span>Cringe</button>
+    <button class="hs-react-btn hs-react-bad" onclick="hsReact(this,0)"><span style="font-size:20px">🙄</span>Boring</button>
+  </div>
+  <button class="btn btn-primary" onclick="nextHS()" style="background:linear-gradient(135deg,#b45309,#f59e0b);box-shadow:0 8px 28px rgba(245,158,11,.35)">Next →</button>
+</div>
+
+<!-- ====== CUSTOM SETUP ====== -->
+<div id="custom-setup" class="screen flex-col gap-16" style="max-width:480px;margin:0 auto;width:100%;padding-top:50px">
+  <button class="back" onclick="go('splash')">← Back</button>
+  <div class="section-title display">Custom Mode ✨</div>
+  <div class="section-sub">Name your mode and write your questions</div>
+  <input class="field" id="c-name-in" type="text" placeholder="Mode name (e.g. Zambia Edition)" maxlength="28">
+  <input class="field" id="c-desc-in" type="text" placeholder="Short description..." maxlength="60">
+  <div class="divider"></div>
+  <div class="row">
+    <input class="field" id="cq-in" type="text" placeholder="Type a question..." maxlength="200" onkeydown="if(event.key==='Enter')addCQ()">
+    <button class="btn-icon" onclick="addCQ()">+</button>
+  </div>
+  <div id="cq-list" class="flex-col gap-8 w-full scroll"></div>
+  <div class="spacer"></div>
+  <button class="btn btn-primary" onclick="saveCM()">Save Mode 💾</button>
+</div>
+
+<!-- ====== GAME (Classic/Spicy/Hardcore/Confessions/Deep/Custom) ====== -->
+<div id="game" class="screen flex-col gap-14" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" id="g-badge">CLASSIC</div>
+    <div class="round-info" id="g-round">Round 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="progress"><div class="progress-fill" id="g-prog" style="width:0%"></div></div>
+  <div class="round-banner" id="g-round-banner">
+    <span class="round-banner-label">Round</span>
+    <span class="round-banner-num" id="g-round-display">1 / 10</span>
+    <span id="g-last-round" style="display:none;font-size:12px" class="round-banner-final">🔥 LAST ROUND!</span>
+  </div>
+  <div class="q-card" id="q-card">
+    <div class="q-num" id="q-num">QUESTION 1</div>
+    <div class="q-text" id="q-text">Loading...</div>
+  </div>
+  <div class="tc w-full">
+    <div class="judge-lbl" style="justify-content:center;margin-bottom:5px">⚖️ Judge</div>
+    <div class="judge-nm" id="g-judge">Player 1</div>
+    <div style="font-size:12px;opacity:.6;margin-top:3px;font-weight:600">picks the best answer</div>
+  </div>
+  <div class="flex-col gap-8 w-full">
+    <div style="font-size:13px;font-weight:700;opacity:.65;text-align:center">Award point to:</div>
+    <div id="g-score-btns" class="score-row"></div>
+  </div>
+  <div class="flex-col gap-8 w-full" style="padding-bottom:16px">
+    <button class="btn btn-primary" id="g-next" onclick="nextQ()">Next Question →</button>
+    <!-- Skip vote strip -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:4px 0">
+      <button id="g-skip-btn" onclick="castSkipVote()" style="background:none;border:none;color:rgba(255,255,255,.4);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;padding:6px 12px;border-radius:8px;transition:all .18s;letter-spacing:.3px">⏭ Vote to skip</button>
+      <div id="g-skip-status" style="font-size:12px;font-weight:800;color:rgba(232,41,77,.7);display:none"></div>
+    </div>
+    <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
+  </div>
+</div>
+
+<!-- ====== PARANOIA ====== -->
+<div id="paranoia" class="screen flex-col gap-14" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#22d3ee;border-color:rgba(34,211,238,.4)">PARANOIA 👁️</div>
+    <div class="round-info" id="par-round">Round 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="round-banner">
+    <span class="round-banner-label">Round</span>
+    <span class="round-banner-num" id="par-round-display">1 / 10</span>
+    <span id="par-last-round" style="display:none;font-size:12px" class="round-banner-final">🔥 LAST ROUND!</span>
+  </div>
+
+  <!-- Step 1: secret question -->
+  <div class="secret-card" id="par-step1">
+    <div style="font-size:13px;font-weight:800;opacity:.65">🔒 SECRET QUESTION FOR</div>
+    <div class="judge-nm" id="par-player" style="font-size:26px">Player 1</div>
+    <div class="tap-box" id="par-tap" onclick="revealParQ()">
+      <div style="font-size:36px">🔒</div>
+      <div style="margin-top:8px">Tap to see your question</div>
+      <div style="font-size:12px;opacity:.55;margin-top:3px">Don't show anyone!</div>
+    </div>
+    <div id="par-q-area" style="display:none;width:100%;text-align:center">
+      <div class="q-text" id="par-q-text" style="font-size:21px;line-height:1.4"></div>
+      <div style="margin-top:14px;font-size:13px;opacity:.65;font-weight:600">Whisper a name to everyone. Hide the screen!</div>
+    </div>
+    <button class="btn btn-secondary btn-sm w-full" id="par-done" style="display:none" onclick="showNamePick()">Done Whispering 🤫</button>
+  </div>
+
+  <!-- Step 2: name pick -->
+  <div id="par-step2" style="display:none;width:100%" class="flex-col gap-10">
+    <div style="font-size:13px;font-weight:700;opacity:.65;text-align:center">Who did you say? (tap their name)</div>
+    <div id="par-name-btns" class="score-row"></div>
+  </div>
+
+  <!-- Step 3: coin flip -->
+  <div id="par-step3" style="display:none;width:100%">
+    <div class="secret-card">
+      <div style="font-size:13px;font-weight:800;opacity:.65">THE PERSON NAMED IS</div>
+      <div class="judge-nm" id="par-named" style="font-size:24px;color:#22d3ee">???</div>
+      <div style="font-size:13px;opacity:.65;font-weight:600">Flip the coin to reveal the question!</div>
+      <div class="coin" id="coin" onclick="flipCoin()">🪙</div>
+      <div id="coin-res" style="display:none;font-size:17px;font-weight:800;margin-top:6px"></div>
+      <div id="coin-q" style="display:none;margin-top:10px;background:rgba(34,197,94,.12);border:2px solid rgba(34,197,94,.35);border-radius:14px;padding:16px;font-weight:700;font-size:16px;line-height:1.4"></div>
+    </div>
+  </div>
+
+  <div class="flex-col gap-8 w-full" style="padding-bottom:16px">
+    <button class="btn btn-primary" id="par-next" onclick="nextPar()" style="display:none">Next Round →</button>
+    <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
+  </div>
+</div>
+
+<!-- ====== BLACKOUT ====== -->
+<div id="blackout" class="screen flex-col gap-14" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge">BLACKOUT 🕵️</div>
+    <div class="round-info" id="bo-round">Round 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="round-banner">
+    <span class="round-banner-label">Round</span>
+    <span class="round-banner-num" id="bo-round-display">1 / 10</span>
+    <span id="bo-last-round" style="display:none;font-size:12px" class="round-banner-final">🔥 LAST ROUND!</span>
+  </div>
+
+  <!-- Phase A: Role reveal -->
+  <div id="bo-roles" class="flex-col gap-14 w-full">
+    <div class="tc" style="font-size:14px;font-weight:700;opacity:.65">Pass the phone to each player</div>
+    <div class="judge-nm tc" id="bo-cur-p" style="font-size:26px"></div>
+    <div class="tap-box" id="bo-tap" onclick="revealRole()">
+      <div style="font-size:36px">🔒</div>
+      <div style="margin-top:8px">Tap to see your role</div>
+      <div style="font-size:12px;opacity:.55;margin-top:3px">Cover after reading!</div>
+    </div>
+    <div id="bo-role-reveal" style="display:none;width:100%" class="flex-col gap-10">
+      <div class="role-card" id="bo-role-card">
+        <div id="bo-r-emoji" style="font-size:58px"></div>
+        <div id="bo-r-title" style="font-family:var(--fd);font-size:30px"></div>
+        <div id="bo-r-info" style="font-size:18px;font-weight:800"></div>
+        <div id="bo-r-hint" style="font-size:13px;opacity:.65;margin-top:6px"></div>
+      </div>
+      <button class="btn btn-secondary btn-sm w-full" onclick="nextRole()">I'm ready 👍</button>
+    </div>
+  </div>
+
+  <!-- Phase B: Discuss -->
+  <div id="bo-discuss" style="display:none;width:100%" class="flex-col gap-14">
+    <div class="q-card" style="flex:unset">
+      <div class="q-text" id="bo-topic" style="font-size:21px"></div>
+      <div style="font-size:13px;opacity:.65;margin-top:8px;font-weight:600">Take turns describing the topic — don't say the word directly!</div>
+    </div>
+    <button class="btn btn-primary" onclick="startVote()">Start Voting 🗳️</button>
+  </div>
+
+  <!-- Phase C: Vote -->
+  <div id="bo-vote" style="display:none;width:100%" class="flex-col gap-12">
+    <div class="section-title display tc" style="font-size:22px">Who's the Imposter? 🕵️</div>
+    <div style="font-size:12px;opacity:.6;text-align:center;font-weight:600">Each player taps once to cast their vote</div>
+    <div id="bo-vote-btns" class="flex-col gap-8 w-full"></div>
+    <button class="btn btn-primary" onclick="revealImposter()">Reveal! 🎭</button>
+  </div>
+
+  <!-- Phase D: Reveal -->
+  <div id="bo-reveal" style="display:none;width:100%" class="flex-col gap-14 tc">
+    <div class="role-card role-imp" style="animation:glow 2s ease infinite">
+      <div style="font-size:58px">🎭</div>
+      <div style="font-family:var(--fd);font-size:24px;color:#ef4444">THE IMPOSTER WAS</div>
+      <div id="bo-imp-name" style="font-family:var(--fd);font-size:34px"></div>
+    </div>
+    <div id="bo-score-info" style="font-size:14px;font-weight:700;opacity:.8;line-height:1.5"></div>
+    <button class="btn btn-primary" onclick="nextBORound()">Next Round →</button>
+    <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
+  </div>
+</div>
+
+<!-- ====== WEREWOLF ====== -->
+<div id="worf" class="screen flex-col gap-14" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#f87171;border-color:rgba(248,113,113,.4)">WEREWOLF 🐺</div>
+    <div class="round-info" id="worf-round">Night 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+
+  <!-- Phase A: Role assignment (pass phone) -->
+  <div id="worf-phase-a" class="flex-col gap-12 w-full" style="flex:1;justify-content:center">
+    <div class="section-title display" style="font-size:26px">Assign Roles 🎭</div>
+    <div style="font-size:13px;opacity:.65;text-align:center;font-weight:600">Pass phone to each player. Tap to see your secret role!</div>
+    <div style="text-align:center">
+      <div style="font-size:13px;font-weight:800;opacity:.65;margin-bottom:6px">NEXT UP</div>
+      <div class="judge-nm" id="worf-cur-player" style="font-size:30px"></div>
+    </div>
+    <div class="tap-box" id="worf-tap" onclick="worfRevealRole()">
+      <div style="font-size:40px">🔒</div>
+      <div style="margin-top:8px;font-weight:800">Tap to see your role</div>
+      <div style="font-size:12px;opacity:.55;margin-top:3px">Cover after reading!</div>
+    </div>
+    <div id="worf-role-reveal" style="display:none;width:100%" class="flex-col gap-10">
+      <div class="ww-role-card" id="worf-role-card">
+        <div id="worf-role-emoji" style="font-size:60px"></div>
+        <div id="worf-role-name" style="font-family:var(--fd);font-size:30px"></div>
+        <div id="worf-role-desc" style="font-size:14px;opacity:.75;font-weight:600;line-height:1.5"></div>
+      </div>
+      <button class="btn btn-secondary btn-sm w-full" onclick="worfNextRole()">Got it 👍</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== WEREWOLF GAME ====== -->
+<div id="worf-game" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#f87171;border-color:rgba(248,113,113,.4)">WEREWOLF 🐺</div>
+    <div class="round-info" id="worf-game-round">Night 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="scroll flex-col gap-12" style="flex:1;width:100%">
+
+    <!-- Night / Day phase label -->
+    <div id="worf-phase-label" class="q-card" style="flex:unset;min-height:auto;padding:18px 20px;gap:8px">
+      <div id="worf-phase-emoji" style="font-size:36px">🌙</div>
+      <div id="worf-phase-title" style="font-family:var(--fd);font-size:22px"></div>
+      <div id="worf-phase-desc" style="font-size:13px;opacity:.7;font-weight:600;line-height:1.5"></div>
+    </div>
+
+    <!-- Alive players -->
+    <div style="font-size:12px;font-weight:900;letter-spacing:1.5px;opacity:.55;text-align:center">ALIVE</div>
+    <div id="worf-alive-list" class="flex-col gap-8 w-full"></div>
+
+    <!-- Dead players -->
+    <div id="worf-dead-section" style="display:none">
+      <div style="font-size:12px;font-weight:900;letter-spacing:1.5px;opacity:.4;text-align:center;margin-bottom:8px">☠️ ELIMINATED</div>
+      <div id="worf-dead-list" style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center"></div>
+    </div>
+
+    <!-- Action buttons -->
+    <div id="worf-action-area" class="flex-col gap-8 w-full" style="margin-top:4px"></div>
+  </div>
+</div>
+
+<!-- ====== SCOREBOARD OVERLAY ====== -->
+<div id="sb-overlay">
+  <div style="max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:12px">
+    <div class="game-header">
+      <div class="section-title display" style="margin:0;font-size:26px">🏆 Scores</div>
+      <button class="btn-icon" onclick="hideSB()">✕</button>
+    </div>
+    <div id="sb-list" class="flex-col gap-8 w-full"></div>
+    <button class="btn btn-secondary btn-sm" onclick="hideSB();confirmEnd()" style="margin-top:8px">End Game Early</button>
+  </div>
+</div>
+
+<!-- ====== END SCREEN ====== -->
+<div id="end" class="screen" style="justify-content:center;text-align:center;gap:18px;max-width:480px;margin:0 auto;width:100%">
+  <div style="font-size:80px;animation:bounce 1.2s ease infinite">👑</div>
+  <div class="display" style="font-family:var(--fd);font-size:46px">WINNER!</div>
+  <div id="e-winner" style="font-family:var(--fd);font-size:34px"></div>
+  <div id="e-pts" style="font-size:15px;opacity:.65;margin-top:-10px"></div>
+  <div id="e-scores" class="flex-col gap-8 w-full" style="margin:10px 0"></div>
+  <button class="btn btn-primary" onclick="playAgain()">Play Again 🔄</button>
+  <button class="btn btn-secondary btn-sm" onclick="go('splash')" style="margin-top:4px">Home 🏠</button>
+</div>
+
+<!-- End Game Confirm Modal -->
+<div id="end-confirm" style="display:none;position:fixed;inset:0;background:rgba(10,0,25,.92);z-index:150;align-items:center;justify-content:center;padding:24px">
+  <div style="background:linear-gradient(160deg,#1f000a,#5c0a1a);border:2px solid rgba(192,21,46,.5);border-radius:24px;padding:28px 24px;width:100%;max-width:380px;text-align:center;display:flex;flex-direction:column;gap:16px">
+    <div style="font-size:48px">🚪</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:26px">End the game?</div>
+    <div style="font-size:14px;opacity:.7;font-weight:600;line-height:1.5">Current scores will be saved and the winner declared. You can't undo this!</div>
+    <button class="btn btn-primary" onclick="document.getElementById('end-confirm').style.display='none';endGame()">Yes, End It 🏁</button>
+    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('end-confirm').style.display='none'">Keep Playing 🎮</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== HAPTIC =====
+function hap(type='light'){
+  if(!navigator.vibrate)return;
+  const patterns={light:18,medium:35,heavy:60,success:[30,60,30],error:[60,40,80]};
+  navigator.vibrate(patterns[type]||18);
+}
+
+// ===== STATE =====
+let players=[],scores={},mode='',round=0,judgeIdx=0,winner=null,qPool=[],cQs=[],cName='CUSTOM',cDesc='Your own questions.',maxRounds=10;
+let allTimeScores={};
+
+// ===== SKIP VOTE STATE =====
+let skipVotes=new Set(),skipThreshold=2;
+
+// ===== STORAGE =====
+function saveStorage(){
+  try{
+    localStorage.setItem('rv_players',JSON.stringify(players));
+    localStorage.setItem('rv_allTime',JSON.stringify(allTimeScores));
+    localStorage.setItem('rv_cQs',JSON.stringify(cQs));
+    localStorage.setItem('rv_cName',cName);
+    localStorage.setItem('rv_cDesc',cDesc);
+    localStorage.setItem('rv_rounds',maxRounds);
+  }catch(e){}
+}
+function loadStorage(){
+  try{
+    const p=localStorage.getItem('rv_players');if(p)players=JSON.parse(p);
+    const a=localStorage.getItem('rv_allTime');if(a)allTimeScores=JSON.parse(a);
+    const q=localStorage.getItem('rv_cQs');if(q)cQs=JSON.parse(q);
+    const cn=localStorage.getItem('rv_cName');if(cn)cName=cn;
+    const cd=localStorage.getItem('rv_cDesc');if(cd)cDesc=cd;
+    const r=localStorage.getItem('rv_rounds');if(r)maxRounds=parseInt(r);
+  }catch(e){}
+  // restore scores map
+  players.forEach(p=>{scores[p]=0;});
+  // restore rounds UI
+  document.querySelectorAll('.round-sel-btn').forEach(b=>{
+    b.classList.toggle('sel',parseInt(b.dataset.val)===maxRounds);
+  });
+  renderChips();
+  // restore custom mode card
+  const cc=document.getElementById('custom-card');
+  if(cQs.length>0&&cc){cc.style.display='flex';document.getElementById('c-name').textContent=cName;document.getElementById('c-desc').textContent=cDesc;}
+}
+function clearAllData(){
+  if(!confirm('Clear all saved players and all-time scores? This cannot be undone.'))return;
+  localStorage.clear();
+  players=[];scores={};allTimeScores={};cQs=[];cName='CUSTOM';cDesc='Your own questions.';maxRounds=10;
+  renderChips();
+  document.querySelectorAll('.round-sel-btn').forEach((b,i)=>b.classList.toggle('sel',i===0));
+  toast('All data cleared 🗑');
+}
+// Init on load
+window.addEventListener('DOMContentLoaded',loadStorage);
+
+// ===== QUESTIONS =====
+const Q={
+  classic:[
+    "What would your villain origin story be?",
+    "Describe your love life using a movie title",
+    "What skill do you have that'd be useless in a zombie apocalypse?",
+    "If your personality was a weather forecast, what is it today?",
+    "What's your go-to excuse when you don't want to go out?",
+    "If your life was a TV show, what would the title be?",
+    "What food best describes your personality right now?",
+    "What's something you pretend to understand but actually don't?",
+    "What would the warning label on you say?",
+    "If you were a country, what would your national anthem be about?",
+    "What job are you clearly too talented for?",
+    "What conspiracy theory do you secretly half-believe?",
+    "If you were a meme, which one would you be?",
+    "What would your ex say about you in one honest sentence?",
+    "What's the most embarrassing thing in your phone right now?",
+    "What's the worst advice you've ever given someone?",
+    "If you died today, what would your search history say about you?",
+    "If you could delete any one year of your life, which one?",
+    "What habit would horrify your ancestors?",
+    "Describe your dating life using only emojis",
+    "If you could only eat one meal for the rest of your life, what is it and why?",
+    "What's a skill you've always wanted but been too lazy to learn?",
+    "What animal best represents your personality — and why?",
+    "What would the title of your autobiography be?",
+    "What's the most out-of-character thing you've ever done?",
+    "If you had to delete all your apps except three, which stay?",
+    "What's your most unpopular food opinion?",
+    "What random talent do you have that nobody knows about?",
+    "If you could swap lives with anyone in this room for a week, who?",
+    "What's the weirdest thing you've ever done when you were bored?",
+    "What would your superhero power be and what would your weakness be?",
+    "If your morning routine was a movie genre, what genre is it?",
+    "What's the most dramatic thing you've done over something small?",
+    "Describe your ideal day in exactly five words",
+    "What's the funniest thing that's happened to you this year?",
+    "What's a rule you live by that sounds ridiculous out loud?",
+    "If you had to survive a week with no phone, what breaks first?",
+    "What's your most embarrassing fashion era?",
+    "If your life had a theme song right now, what would it be?",
+    "What would you do if you woke up tomorrow as the opposite gender?"
+  ],
+  spicy:[
+    "What's the most scandalous text you've ever sent?",
+    "Describe your most embarrassing date experience",
+    "What's your biggest turn-off you've never told anyone?",
+    "Describe your ex using only three brutal words",
+    "What's the wildest thing you've done at a party?",
+    "What's your most controversial opinion about relationships?",
+    "What's the most desperate thing you've done to get someone's attention?",
+    "What's the biggest lie you've told to impress someone?",
+    "What's your most embarrassing bedroom habit?",
+    "What's the pettiest thing you've done to an ex?",
+    "What app would embarrass you most if screenshared right now?",
+    "What's the most scandalous thing that's happened in your DMs?",
+    "What's the most embarrassing thing you've done when you liked someone?",
+    "What's something about your romantic life that would shock everyone here?",
+    "What's the most chaotic thing you've ever done for a crush?",
+    "What's the most embarrassing text you've accidentally sent to the wrong person?",
+    "What's something you've done that you blamed on being drunk?",
+    "What's the most cringe thing you've posted on social media?",
+    "What's the worst date you've ever been on?",
+    "What's a red flag you ignored because you liked the person?",
+    "What's the most embarrassing thing you've lied about on a date?",
+    "What's the boldest move you've made for someone who didn't deserve it?",
+    "What's one thing about your situationship / ex that you'd never admit publicly?",
+    "What's the most attention-seeking thing you've ever posted online?",
+    "What's the most embarrassing thing you've done for likes or validation?",
+    "What's the worst thing a partner has said to you that you pretended was fine?",
+    "Who was the worst person you ever had a crush on?",
+    "What's the most unhinged thing you've done at 2AM?",
+    "What's the most embarrassing reason you've blocked someone?",
+    "What's a secret you've taken to the grave that someone in a past relationship still doesn't know?",
+    "What's a habit you have that your future partner would find weird?",
+    "What's the most embarrassing thing you've rehearsed in the mirror?",
+    "What's the most savage thing you've done after a breakup?",
+    "What's the most extreme length you've gone to to avoid someone?",
+    "What's something you've done romantically that you're not proud of?",
+    "What's the worst rumour that was actually kind of true?",
+    "What's one relationship mistake you keep repeating?",
+    "What's the most embarrassing thing you've been caught doing?",
+    "What's the wildest reason you've ever cancelled plans?",
+    "What's the longest you've ever waited for a reply before doing something regrettable?"
+  ],
+  hardcore:[
+    "Who in this room would you trust LEAST with a secret? Be honest.",
+    "What's the most toxic thing you've done in a relationship?",
+    "What's the worst thing you've done that nobody knows about?",
+    "What do you actually think of your best friend's partner?",
+    "Who here would you vote off the island first?",
+    "What lie do you tell yourself every day?",
+    "If everyone here could read your mind right now, what would shock them most?",
+    "What opinion do you have that would get you cancelled?",
+    "Which person in this room have you judged the most?",
+    "What's the most selfish thing you've ever done?",
+    "Who here do you think talks the most but says the least?",
+    "What's the most two-faced thing you've ever done?",
+    "What's something you've always wanted to say to someone here?",
+    "What's the rudest thought you've had about someone in this room?",
+    "When was the last time you were genuinely jealous of someone here?",
+    "What secret would change how people see you?",
+    "What's your biggest character flaw that you rarely admit?",
+    "What's the most cowardly thing you've ever done?",
+    "Who in your friend group do you think is fake?",
+    "What do you pretend not to care about but secretly lose sleep over?",
+    "Who here has disappointed you most but you've never said anything?",
+    "What's the most hypocritical thing you regularly do?",
+    "What's something you've gotten away with that you probably shouldn't have?",
+    "Who here do you think needs to grow up?",
+    "What's the most manipulative thing you've ever done — and did it work?",
+    "What do you genuinely think about one person's life choices in this room?",
+    "What's the angriest you've ever been at someone here — and did they know?",
+    "What's the most embarrassing thing you've said behind someone's back?",
+    "What's something you've stolen — whether physically or emotionally?",
+    "What's the most power you've ever had over someone and what did you do with it?",
+    "What's a moment in your life where you were the villain?",
+    "Who's the person in this room you feel you've never truly been honest with?",
+    "What trait do you despise in others that you also have?",
+    "What do you actually think of one person's relationship here?",
+    "What's the most recent time you chose yourself over someone who needed you?",
+    "What grudge are you still holding that everyone thinks you've let go?",
+    "What's the most entitled thing you've ever done?",
+    "If one person in this room read your messages about them, who would be most upset?",
+    "What's the biggest promise you've made and quietly broken?",
+    "What's one thing you've done that you'd be ashamed to tell your parents?"
+  ],
+  confessions:[
+    "Confess something you've never told anyone in this room",
+    "What's your most embarrassing secret you hope nobody finds out?",
+    "Confess the most recent lie you told — and to who",
+    "What's something you've done you hoped everyone forgot about?",
+    "What's the biggest misunderstanding someone has of you?",
+    "Confess your most embarrassing childhood memory",
+    "What do you secretly envy about someone in this room?",
+    "Confess the most embarrassing thing you've ever Googled",
+    "What's a secret you've been keeping from your family?",
+    "Confess something you pretend not to care about but really do",
+    "What's the most childish thing you still secretly do?",
+    "Confess your most irrational fear",
+    "What do you do when you're completely alone that you'd never admit?",
+    "Confess the pettiest thing you've ever done to someone",
+    "What's the worst thing you've done when nobody was watching?",
+    "Confess something about yourself that would surprise everyone here",
+    "What's the most embarrassing thing you've said in a group chat?",
+    "What's a talent you hide from everyone?",
+    "What's something from your past that still makes you cringe?",
+    "Confess one bad habit you've been keeping secret",
+    "What's something you pretend to be fine about but still hurts?",
+    "Confess a purchase you'd be embarrassed to explain",
+    "What's the weirdest thing you've cried about?",
+    "Confess your most embarrassing music guilty pleasure",
+    "What's one thing you fake doing but never actually do?",
+    "Confess a time you lied to get out of trouble and it worked perfectly",
+    "What's the most food you've eaten in one sitting — and what was it?",
+    "What's something you told yourself was the last time... but wasn't?",
+    "Confess something you did as a child that your family never found out about",
+    "What's a compliment you got that you've been living off for years?",
+    "Confess the last time you completely lost your temper",
+    "What's something you're embarrassed to admit you don't know how to do?",
+    "Confess the most ridiculous thing you've believed for way too long",
+    "What's a shortcut you take that would horrify the people around you?",
+    "Confess the last time you cried — and what caused it",
+    "What's a version of yourself you've been hiding from this group?",
+    "Confess a time you took credit for something you didn't actually do",
+    "What's the most dramatic reaction you've had to something minor?",
+    "Confess a lie that's gone on so long you don't know how to stop",
+    "What's the most embarrassing autocorrect fail that actually sent?"
+  ],
+  deep:[
+    "What's the biggest lesson from your biggest failure?",
+    "If you could change one decision from your past, what would it be?",
+    "What does success mean to you — and are you actually chasing it?",
+    "What's something you believe but are afraid to say out loud?",
+    "If this was your last day alive, what would you regret most?",
+    "What part of yourself do you hide most from the world?",
+    "What's a value you claim to have but don't actually live by?",
+    "How has your childhood most shaped who you are today?",
+    "If you could be truly honest with one person, what would you tell them?",
+    "What's something you've forgiven others for but not yourself?",
+    "What's one thing about the future that genuinely scares you?",
+    "If your 10-year-old self could see you now, what would they think?",
+    "What dream did you give up on — and do you miss it?",
+    "What emotion do you find hardest to express, and why?",
+    "If your friends described your biggest flaw, what would they say?",
+    "What would you do differently if you knew no one would judge you?",
+    "What's one relationship in your life that needs healing?",
+    "What's the most important thing you've learned about yourself this year?",
+    "What are you most afraid people will discover about you?",
+    "If you could give your younger self one piece of advice, what would it be?",
+    "What's something you keep saying you'll do when you're 'ready'?",
+    "What version of yourself are you most proud of — and are you still them?",
+    "What's one belief you held for years that you've had to unlearn?",
+    "What's the hardest conversation you've been avoiding?",
+    "In what areas of life are you still waiting for permission to begin?",
+    "What's the biggest gap between how you see yourself and how others do?",
+    "What's something you do out of habit that no longer serves you?",
+    "If money and fear weren't factors, what would your life look like?",
+    "What does your inner critic say most often — and is any of it true?",
+    "What relationship dynamic do you keep recreating in different people?",
+    "What's a chapter of your story you'd rather skip but probably need to revisit?",
+    "What would feel like the greatest betrayal — and have you experienced it?",
+    "What does loneliness feel like for you, and when do you feel it most?",
+    "What's a part of your life that looks fine from the outside but isn't?",
+    "What do you need to hear most right now?",
+    "What's something you've never fully grieved?",
+    "What would change if you genuinely believed you were enough?",
+    "What habit or thought pattern are you most embarrassed that you still have?",
+    "When was the last time you did something purely for yourself with no guilt?",
+    "What's one truth about yourself that took you the longest to accept?"
+  ],
+  paranoia:[
+    "Who here is most likely to become famous?",
+    "Who here would survive a zombie apocalypse?",
+    "Who here is secretly the funniest person in the room?",
+    "Who here would be the worst partner in a heist?",
+    "Who here is most likely to cry at a movie?",
+    "Who here has the best taste in music?",
+    "Who here would you trust with your deepest secret?",
+    "Who here would be first to betray the group for money?",
+    "Who here has changed the most in the last year?",
+    "Who here gives the best advice?",
+    "Who here is the group's unofficial therapist?",
+    "Who here would be the worst roommate?",
+    "Who here secretly has the most rizz?",
+    "Who here would survive longest on a deserted island?",
+    "Who here is most likely to become a millionaire?",
+    "Who here do you think is hiding something from the group?",
+    "Who here would make the best president?",
+    "Who here would crack first under pressure?",
+    "Who here is the most mysterious?",
+    "Who here is most likely to do something crazy this year?",
+    "Who here is secretly the most competitive?",
+    "Who here would ghost you without warning?",
+    "Who here would be the best travel buddy?",
+    "Who here do you think works hardest when no one's watching?",
+    "Who here is most likely to end up on reality TV?",
+    "Who here do you think secretly has the most going on in their head?",
+    "Who here would be the first to forgive someone who wronged them?",
+    "Who here could win a debate against anyone?",
+    "Who here is the biggest people-pleaser?",
+    "Who here is most likely to quit their job and start a business?",
+    "Who here gives the best hugs?",
+    "Who here is the most emotionally intelligent?",
+    "Who here is most likely to become a gym rat in 6 months?",
+    "Who here has the best poker face?",
+    "Who here is most likely to move to another country?",
+    "Who here cares the most about what other people think?",
+    "Who here would you call at 3AM in a real emergency?",
+    "Who here is the most likely to be a morning person one day?",
+    "Who here is most likely to win a staring contest?",
+    "Who here do you think prays the hardest?"
+  ],
+  wyr:[
+    "Would you rather be incredibly smart but forgettable, or average but unforgettable?",
+    "Would you rather know when you'll die or how you'll die?",
+    "Would you rather have no privacy forever or be completely alone for 5 years?",
+    "Would you rather be able to read minds but not control it, or be invisible but only for 10 minutes a day?",
+    "Would you rather have your dream job but no social life, or a boring job with the best friendships?",
+    "Would you rather always say exactly what you're thinking or never be able to express your true feelings?",
+    "Would you rather live 200 years as a normal person or 50 years as the most famous person alive?",
+    "Would you rather have a rewind button for your words or a fast-forward button for awkward moments?",
+    "Would you rather know every secret about your friends or have your secrets known by them?",
+    "Would you rather be loved by someone you don't love, or love someone who doesn't love you back?",
+    "Would you rather always be 10 minutes late or always be 2 hours early?",
+    "Would you rather have unlimited money but no true friendships or be broke with a ride-or-die crew?",
+    "Would you rather be the funniest person in the room or the most attractive?",
+    "Would you rather lose all your memories from the last 5 years or never make new memories again?",
+    "Would you rather give up social media for a year or give up your favourite food for a year?",
+    "Would you rather always win every argument or always know when you're wrong?",
+    "Would you rather be stuck in a loop of your best day or never repeat the same day again?",
+    "Would you rather know the honest opinion everyone has about you or never know any opinions at all?",
+    "Would you rather have complete honesty from everyone around you or perfect peace in every relationship?",
+    "Would you rather forget who you are or have everyone forget who you are?",
+    "Would you rather always feel too hot or always feel too cold?",
+    "Would you rather live in a world with no music or no movies?",
+    "Would you rather never be able to lie or believe everything you're told?",
+    "Would you rather only eat sweet foods or only eat savoury foods forever?",
+    "Would you rather have your worst fear shown to everyone or face it alone in secret?",
+    "Would you rather travel back in time but not change anything, or see the future but not tell anyone?",
+    "Would you rather have a photographic memory or be able to sleep only 2 hours a night and feel fine?",
+    "Would you rather be talked about constantly or completely ignored?",
+    "Would you rather lose your sense of humour or lose your sense of style forever?",
+    "Would you rather be fluent in every language or be able to play every instrument?",
+    "Would you rather never age physically or never age mentally?",
+    "Would you rather always have to sing instead of speaking or always have to dance while walking?",
+    "Would you rather have your deepest fear disappear or your greatest regret be erased?",
+    "Would you rather be the most talented person in a small pond or average in the biggest ocean?",
+    "Would you rather find out you're adopted or find out you have a twin who was raised differently?",
+    "Would you rather give up your phone for a month or give up your bed for a month?",
+    "Would you rather have to apologise to every person you've ever wronged or forgive everyone who's wronged you?",
+    "Would you rather your dreams become reality or your reality become a dream?",
+    "Would you rather always know the right thing to say or always know the right thing to do?",
+    "Would you rather spend a year in total silence or a year in constant noise?"
+  ],
+  nhie:[
+    "...lied to get out of plans",
+    "...gone on a date with someone I met online",
+    "...drunk texted someone I deeply regret",
+    "...ghosted someone without any explanation",
+    "...cried at a movie or show and tried to hide it",
+    "...pretended to be sick to skip something",
+    "...kissed a complete stranger",
+    "...stalked someone's social media for over an hour",
+    "...told a lie that completely worked",
+    "...eaten an entire meal meant for two people alone",
+    "...been caught doing something embarrassing",
+    "...fallen asleep at work or school",
+    "...pretended to laugh at a joke I didn't understand",
+    "...talked badly about someone who was in the same room",
+    "...sent a message to the completely wrong person",
+    "...gone back to someone I swore I was done with",
+    "...stayed up all night doing something completely pointless",
+    "...blocked someone then unblocked them just to check their profile",
+    "...secretly judged someone for their relationship choices",
+    "...told someone I'll be there in 5 when I hadn't even left yet",
+    "...pretended I'd watched something just to fit in with a conversation",
+    "...had feelings for a close friend and said absolutely nothing",
+    "...said I'm fine when I absolutely was not fine",
+    "...done something I was explicitly told not to do",
+    "...lied about my age",
+    "...accidentally liked a photo while deep-stalking someone's profile",
+    "...drunk dialled or texted an ex",
+    "...pretended not to see someone in public to avoid them",
+    "...started a rumour, whether on purpose or not",
+    "...cheated on a test or exam",
+    "...read someone's messages without them knowing",
+    "...made a decision I knew was wrong just because of peer pressure",
+    "...cried in the bathroom at a social event",
+    "...stolen something — even something small",
+    "...said I love you and not fully meant it",
+    "...pretended to be busier than I was to seem more important",
+    "...showed up somewhere and immediately wanted to leave",
+    "...deleted a message after someone had already seen it",
+    "...laughed at something I probably shouldn't have",
+    "...cancelled plans at the last minute for no real reason"
+  ],
+  hotseat:[
+    "What's something about yourself that would genuinely shock everyone here?",
+    "Who in this group do you trust least with your secrets?",
+    "What's the most embarrassing thing that's happened to you this year?",
+    "What's a lie you've told to someone in this room?",
+    "What do you actually think of one person's relationship in this group?",
+    "What's the most childish thing you still do secretly?",
+    "What's something you've done that you've never told anyone here?",
+    "Who was your least favourite person in this group when you first met them?",
+    "What's the meanest thing you've said about someone in this room?",
+    "What's the most recent thing you've done that you're not proud of?",
+    "What's one thing about your life right now that you're pretending is fine?",
+    "Rate everyone in this room from most to least trustworthy — out loud.",
+    "What's your most embarrassing guilty pleasure?",
+    "Who here would be your last choice to go on a road trip with?",
+    "What's the biggest secret you're currently keeping from someone close to you?",
+    "What's the worst thing about you that your friends would never say to your face?",
+    "What's a belief you hold that most people here would disagree with?",
+    "Who in this group have you been most jealous of, and why?",
+    "What's something you regret saying to someone in this room?",
+    "What do you genuinely think of one person's life choices here?",
+    "What's the most dramatic thing you've done for attention?",
+    "What's one thing you wish you could take back from this friend group?",
+    "What would your phone screen time reveal that you'd be embarrassed by?",
+    "What's the biggest personal failure you've had in the last 12 months?",
+    "If you had to confess something to someone here right now, what would it be?",
+    "What's the thing about yourself that you work hardest to hide?",
+    "Who here knows too much about you — and does that make you nervous?",
+    "What's a decision you've made recently that you know was selfish?",
+    "What would change if everyone in this room knew exactly what you think of them?",
+    "What's the most two-faced thing you've ever done to someone you called a friend?"
+  ],
+  dpwf:[
+    "Who here do you think secretly can't stand someone else in this room?",
+    "Who here have you talked about behind their back this month — and what did you say?",
+    "Be honest: who here do you think is the least genuine person in the group?",
+    "What's the most brutal honest opinion you have about someone in this room that you've never said?",
+    "Who in this group do you think would turn on everyone else first if things got hard?",
+    "What's one thing you genuinely dislike about your closest friend here — not a joke, be real?",
+    "Who here do you think is liked the least by the rest of the group but nobody says it?",
+    "What's something you've done to someone in this room that you never properly apologised for?",
+    "If you had to rank everyone here from most to least loyal, who's last and why?",
+    "Who here do you think has changed the most — and not for the better?",
+    "Who do you secretly think is the most overrated in this group?",
+    "What rumour about someone here did you hear and actually believe?",
+    "Who here have you lied to most — and what was the biggest lie?",
+    "If this friend group had to end tomorrow, who would you genuinely not miss?",
+    "Who here do you think tries too hard to fit in?",
+    "What's something someone here did that you forgave but never actually forgot?",
+    "Who in this room do you think is secretly jealous of someone else here?",
+    "What's the most unfair thing someone here has done to you?",
+    "If you had to cut one person from your life in this room who would it be and why?",
+    "Who here do you think is the worst at taking accountability?",
+    "What's something someone here did that genuinely changed how you see them?",
+    "Who here do you think has benefited the most from this friendship while giving back the least?",
+    "If one person here found out everything you've said about them, who would be most upset?",
+    "What trait does someone here have that you genuinely find irritating but have never said?",
+    "Who here do you think needs to hear the most uncomfortable truth — and what is it?",
+    "What's the most selfish thing you've witnessed someone in this room do?",
+    "Who here do you think is most likely holding a grudge against someone in this group right now?",
+    "What's one thing you wish you could say to someone in this room that you've been too afraid to?",
+    "Who here do you think is least self-aware about how they come across to others?",
+    "If you had to expose one secret about someone in this room right now, whose would shake the table most?"
+  ]
+};
+
+const TOPICS=["First Love","Monday Morning","Social Media Addiction","That Friend Who Always Cancels","A Bad Haircut","Running Very Late","Group Chat Drama","Your Hometown","A Sunday Afternoon","Being Ghosted","Expensive Sneakers","Catching Feelings","That Awkward Silence","A Bad Date","Nostalgia","Being Broke","A Long Road Trip","School Days","Eating Alone","The Walk of Shame","Procrastination","Overtime at Work","A Surprise Party","Midnight Cravings","The Friend Zone","Going Viral","A Cold Shower","Déjà Vu","The Morning After","Road Rage","Power Outage","A Blind Date","Sibling Rivalry","Jet Lag","A Secret Crush","Payday","Online Shopping at 3AM","That One Teacher","The Last Slice of Pizza","A Wedding Speech","Interview Nerves","Losing Your Keys","An Unexpected Compliment","The Gym in January","A Passive-Aggressive Text"];
+
+// ===== NAV =====
+function goInternal(id,animate){
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.style.animation='none'; // stop any running animation before hiding
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  const el=document.getElementById(id);
+  el.style.animation=animate?'':'none'; // skip fadeIn on back press
+  el.classList.add('active');
+  el.style.display='flex';
+  el.scrollTop=0;
+}
+function go(id){
+  hap('light');
+  goInternal(id,true);
+  history.pushState({screen:id},'');
+}
+window.addEventListener('popstate',function(e){
+  if(e.state&&e.state.screen)goInternal(e.state.screen,false);
+});
+history.replaceState({screen:'splash'},'');
+
+// ===== PLAYERS =====
+function addP(){
+  hap('light');
+  const el=document.getElementById('p-input'),n=el.value.trim();
+  if(!n)return;
+  if(players.includes(n)){toast('Name already added!');return;}
+  if(players.length>=20){toast('Max 20 players!');return;}
+  players.push(n);scores[n]=0;el.value='';renderChips();el.focus();saveStorage();
+}
+function removeP(n){players=players.filter(p=>p!==n);delete scores[n];renderChips();saveStorage();}
+function renderChips(){
+  const c=document.getElementById('chips'),cb=document.getElementById('p-count'),sb=document.getElementById('start-btn');
+  c.innerHTML=players.map(p=>`<div class="chip">${escHtml(p)}<span class="chip-x" onclick="removeP('${esc(p)}')">×</span></div>`).join('');
+  cb.style.display=players.length?'block':'none';
+  cb.textContent=`${players.length} player${players.length!==1?'s':''}`;
+  sb.style.display=players.length>=2?'block':'none';
+}
+function goModes(){
+  const cc=document.getElementById('custom-card');
+  if(cQs.length>0){cc.style.display='flex';document.getElementById('c-name').textContent=cName;document.getElementById('c-desc').textContent=cDesc;}
+  go('mode-select');
+}
+function addCQ(){
+  const el=document.getElementById('cq-in'),q=el.value.trim();
+  if(!q)return;cQs.push(q);el.value='';renderCQs();
+}
+function renderCQs(){
+  document.getElementById('cq-list').innerHTML=cQs.map((q,i)=>`
+    <div class="cq-item"><div class="cq-text">${i+1}. ${q}</div><button class="del-btn" onclick="cQs.splice(${i},1);renderCQs()">🗑</button></div>
+  `).join('');
+}
+function saveCM(){
+  if(cQs.length<3){toast('Add at least 3 questions!');return;}
+  cName=document.getElementById('c-name-in').value.trim()||'CUSTOM';
+  cDesc=document.getElementById('c-desc-in').value.trim()||'Your own questions. Your own rules.';
+  saveStorage();
+  toast('Custom mode saved! ✨');setTimeout(()=>go('splash'),800);
+}
+
+// ===== ROUND SELECTOR =====
+function setRounds(btn){
+  document.querySelectorAll('.round-sel-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  maxRounds=parseInt(btn.dataset.val);saveStorage();
+}
+
+// ===== CONFIRM END =====
+function confirmEnd(){
+  document.getElementById('end-confirm').style.display='flex';
+}
+
+// ===== START MODE =====
+function startMode(m){
+  mode=m;round=0;judgeIdx=0;players.forEach(p=>scores[p]=0);
+  if(m==='blackout')startBO();
+  else if(m==='paranoia')startPar();
+  else if(m==='worf')startWorf();
+  else if(m==='nhie')startNHIE();
+  else if(m==='hotseat')startHS();
+  else startReg(m);
+}
+
+// ===== REGULAR GAME =====
+function startReg(m){
+  const pool=m==='custom'?cQs:Q[m];
+  qPool=shuffle([...pool]);round=0;
+  const colors={classic:'#FFD700',spicy:'#ff6b6b',hardcore:'#fb923c',confessions:'#fca5a5',deep:'#60a5fa',custom:'#4ade80',wyr:'#fbbf24',dpwf:'#ff3333',nhie:'#22d3ee',hotseat:'#fbbf24'};
+  const badge=document.getElementById('g-badge');
+  badge.textContent=m.toUpperCase();badge.style.color=colors[m]||'#fff';
+  go('game');loadQ();
+}
+function loadQ(){
+  skipVotes=new Set();
+  skipThreshold=Math.max(2,Math.ceil(players.length/2));
+  const skipBtn=document.getElementById('g-skip-btn');
+  const skipStatus=document.getElementById('g-skip-status');
+  if(skipBtn){skipBtn.style.opacity='1';skipBtn.disabled=false;skipBtn.style.color='rgba(255,255,255,.4)';}
+  if(skipStatus){skipStatus.style.display='none';skipStatus.textContent='';}
+  // Check if we've hit the round limit
+  if(round>=maxRounds){endGame();return;}
+  if(round>=qPool.length){qPool=shuffle([...(mode==='custom'?cQs:Q[mode])]);round=0;}
+  const q=qPool[round],prog=((round+1)/maxRounds)*100;
+  document.getElementById('q-num').textContent=`QUESTION ${round+1}`;
+  document.getElementById('q-text').textContent=q;
+  document.getElementById('g-prog').style.width=prog+'%';
+  // Round counter banner
+  document.getElementById('g-round-display').textContent=`${round+1} / ${maxRounds}`;
+  const isLast=round===maxRounds-1;
+  document.getElementById('g-last-round').style.display=isLast?'block':'none';
+  const j=players[judgeIdx%players.length];
+  document.getElementById('g-judge').textContent=j;
+  document.getElementById('g-round').textContent=`Round ${round+1}`;
+  // score buttons
+  document.getElementById('g-score-btns').innerHTML=players.filter(p=>p!==j).map(p=>`<button class="sbtn" onclick="selW(this,'${esc(p)}')">${escHtml(p)}</button>`).join('');
+  winner=null;document.getElementById('g-next').textContent=isLast?'Final Round! Finish →':'Next Question →';
+  // re-animate
+  const c=document.getElementById('q-card');c.style.animation='none';c.offsetHeight;c.style.animation='slideUp .4s ease';
+}
+function selW(btn,p){
+  hap('light');
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');winner=p;
+  document.getElementById('g-next').textContent=`Award to ${p} →`;
+}
+function nextQ(){
+  hap(winner?'success':'light');
+  if(winner){scores[winner]=(scores[winner]||0)+1;toast(`+1 point for ${winner}! 🎉`);}
+  round++;judgeIdx++;
+  if(round>=maxRounds){endGame();}else{loadQ();}
+}
+function castSkipVote(){
+  hap('medium');
+  const cur=skipVotes.size+1;
+  skipVotes.add(cur);
+  const needed=skipThreshold-skipVotes.size;
+  const skipBtn=document.getElementById('g-skip-btn');
+  const skipStatus=document.getElementById('g-skip-status');
+  if(skipVotes.size>=skipThreshold){
+    hap('success');
+    if(skipBtn){skipBtn.disabled=true;skipBtn.style.opacity='.2';}
+    if(skipStatus){skipStatus.style.display='none';}
+    toast('Question skipped by group! ⏭');
+    winner=null;
+    round++;judgeIdx++;
+    if(round>=maxRounds){endGame();}else{loadQ();}
+  } else {
+    if(skipStatus){skipStatus.textContent=`${skipVotes.size}/${skipThreshold} want to skip`;skipStatus.style.display='block';}
+    if(skipBtn){skipBtn.style.color='rgba(232,41,77,.8)';}
+    toast(`${skipVotes.size}/${skipThreshold} want to skip ⏭`);
+  }
+}
+
+// ===== PARANOIA =====
+let parRound=0,parP=0,parNamed=null,parQPool=[];
+function startPar(){
+  parRound=0;parP=0;parQPool=shuffle([...Q.paranoia]);go('paranoia');loadPar();
+}
+function loadPar(){
+  if(parRound>=maxRounds){endGame();return;}
+  if(parRound>=parQPool.length){parQPool=shuffle([...Q.paranoia]);parRound=0;}
+  document.getElementById('par-player').textContent=players[parP%players.length];
+  document.getElementById('par-round').textContent=`Round ${parRound+1}`;
+  document.getElementById('par-round-display').textContent=`${parRound+1} / ${maxRounds}`;
+  const isLast=parRound===maxRounds-1;
+  document.getElementById('par-last-round').style.display=isLast?'block':'none';
+  document.getElementById('par-q-text').textContent=parQPool[parRound];
+  // reset
+  document.getElementById('par-step1').style.display=''; // BUG FIX: restore card after step2/3 hid it
+  document.getElementById('par-tap').style.display='block';
+  document.getElementById('par-q-area').style.display='none';
+  document.getElementById('par-done').style.display='none';
+  document.getElementById('par-step2').style.display='none';
+  document.getElementById('par-step3').style.display='none';
+  document.getElementById('par-next').style.display='none';
+  document.getElementById('coin').textContent='🪙';
+  document.getElementById('coin').style.pointerEvents='auto';
+  document.getElementById('coin-res').style.display='none';
+  document.getElementById('coin-q').style.display='none';
+  parNamed=null;
+}
+function revealParQ(){
+  document.getElementById('par-tap').style.display='none';
+  document.getElementById('par-q-area').style.display='block';
+  document.getElementById('par-done').style.display='block';
+}
+function showNamePick(){
+  // BUG FIX: previously only child elements were hidden, leaving the "SECRET QUESTION FOR"
+  // heading and player name visible behind steps 2 and 3. Now hide the whole card.
+  document.getElementById('par-step1').style.display='none';
+  document.getElementById('par-step2').style.display='flex';
+  const cur=players[parP%players.length];
+  document.getElementById('par-name-btns').innerHTML=players.filter(p=>p!==cur).map(p=>`<button class="sbtn" onclick="pickNamed(this,'${esc(p)}')">${escHtml(p)}</button>`).join('');
+}
+function pickNamed(btn,p){
+  hap('medium');
+  document.querySelectorAll('#par-name-btns .sbtn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');parNamed=p;
+  setTimeout(()=>{
+    document.getElementById('par-step2').style.display='none';
+    document.getElementById('par-step3').style.display='block';
+    document.getElementById('par-named').textContent=p;
+    document.getElementById('coin').textContent='🪙';
+    document.getElementById('coin').style.pointerEvents='auto';
+    document.getElementById('coin-res').style.display='none';
+    document.getElementById('coin-q').style.display='none';
+  },400);
+}
+function flipCoin(){
+  const c=document.getElementById('coin');
+  c.style.pointerEvents='none';
+  c.classList.add('spin');
+  setTimeout(()=>{
+    c.classList.remove('spin');
+    const heads=Math.random()>.5;
+    const res=document.getElementById('coin-res');
+    res.style.display='block';
+    if(heads){
+      hap('success');
+      c.textContent='🌟';
+      res.innerHTML='<span style="color:#22c55e;font-size:22px">HEADS! Question Revealed! 🎉</span>';
+      document.getElementById('coin-q').style.display='block';
+      document.getElementById('coin-q').textContent=parQPool[parRound];
+      scores[parNamed]=(scores[parNamed]||0)+1;
+      toast(`${parNamed} is brave! +1 point 🎉`);
+    } else {
+      hap('medium');
+      c.textContent='🌑';
+      res.innerHTML='<span style="color:#94a3b8;font-size:22px">TAILS! Secret kept 🤫</span>';
+    }
+    document.getElementById('par-next').style.display='block';
+  },950);
+}
+function nextPar(){parRound++;parP++;if(parRound>=maxRounds){endGame();}else{loadPar();}}
+
+// ===== BLACKOUT =====
+let boRound=0,boImposter=null,boTopic=null,boRoleIdx=0,boVotes={},boVoters=new Set();
+function startBO(){boRound=0;go('blackout');newBORound();}
+function newBORound(){
+  if(boRound>=maxRounds){endGame();return;}
+  boImposter=players[Math.floor(Math.random()*players.length)];
+  boTopic=TOPICS[Math.floor(Math.random()*TOPICS.length)];
+  boRoleIdx=0;boVotes={};boVoters=new Set();
+  document.getElementById('bo-round').textContent=`Round ${boRound+1}`;
+  document.getElementById('bo-round-display').textContent=`${boRound+1} / ${maxRounds}`;
+  const isLast=boRound===maxRounds-1;
+  document.getElementById('bo-last-round').style.display=isLast?'block':'none';
+  document.getElementById('bo-roles').style.display='flex';
+  document.getElementById('bo-discuss').style.display='none';
+  document.getElementById('bo-vote').style.display='none';
+  document.getElementById('bo-reveal').style.display='none';
+  showNextRole();
+}
+function showNextRole(){
+  document.getElementById('bo-cur-p').textContent=players[boRoleIdx];
+  document.getElementById('bo-tap').style.display='block';
+  document.getElementById('bo-role-reveal').style.display='none';
+}
+function revealRole(){
+  const p=players[boRoleIdx],imp=p===boImposter;
+  document.getElementById('bo-tap').style.display='none';
+  document.getElementById('bo-role-reveal').style.display='flex';
+  const card=document.getElementById('bo-role-card');
+  card.className='role-card '+(imp?'role-imp':'role-inn');
+  document.getElementById('bo-r-emoji').textContent=imp?'🎭':'🔍';
+  document.getElementById('bo-r-title').textContent=imp?'IMPOSTER!':'INNOCENT';
+  document.getElementById('bo-r-title').style.color=imp?'#ef4444':'#22c55e';
+  document.getElementById('bo-r-info').textContent=imp?"You don't know the topic!":'"'+boTopic+'"';
+  document.getElementById('bo-r-hint').textContent=imp?"Bluff your way through. Don't get caught!":"Describe it. Find the imposter. Don't say the word!";
+}
+function nextRole(){
+  boRoleIdx++;
+  if(boRoleIdx>=players.length){
+    document.getElementById('bo-roles').style.display='none';
+    document.getElementById('bo-discuss').style.display='flex';
+    // BUG FIX: was showing boTopic text here, which the imposter could simply read.
+    // Innocents already saw their word during their private role reveal card.
+    document.getElementById('bo-topic').textContent='💬 Innocents: describe your word without saying it. Imposter: bluff along! Keep it casual.';
+  } else showNextRole();
+}
+function startVote(){
+  document.getElementById('bo-discuss').style.display='none';
+  document.getElementById('bo-vote').style.display='flex';
+  document.getElementById('bo-vote-btns').innerHTML=players.map(p=>`
+    <button class="vote-btn" id="vb-${escId(p)}" onclick="castVote('${esc(p)}')">
+      <span>${escHtml(p)}</span><span id="vc-${escId(p)}" style="font-size:13px;opacity:.7"></span>
+    </button>`).join('');
+}
+function castVote(p){
+  hap('light');
+  // BUG FIX: boVoters Set was declared in state but never checked or updated here,
+  // allowing unlimited votes from the same tap. Now total votes are capped at players.length.
+  const totalVotes=Object.values(boVotes).reduce((s,v)=>s+v,0);
+  if(totalVotes>=players.length){toast('All votes already cast! 🗳️');return;}
+  boVotes[p]=(boVotes[p]||0)+1;
+  const btn=document.getElementById('vb-'+escId(p));
+  btn.classList.add('voted');setTimeout(()=>btn.classList.remove('voted'),350);
+  const vc=document.getElementById('vc-'+escId(p));
+  if(vc)vc.textContent=`${boVotes[p]} vote${boVotes[p]>1?'s':''}`;
+  const remaining=players.length-totalVotes-1;
+  toast(remaining>0?`Vote cast! ${remaining} left 🗳️`:`All votes in! 🗳️`);
+}
+function revealImposter(){
+  document.getElementById('bo-vote').style.display='none';
+  document.getElementById('bo-reveal').style.display='flex';
+  const topVoted=Object.keys(boVotes).sort((a,b)=>(boVotes[b]||0)-(boVotes[a]||0))[0];
+  const caught=topVoted===boImposter;
+  document.getElementById('bo-imp-name').textContent=boImposter;
+  if(caught){
+    document.getElementById('bo-score-info').innerHTML=`✅ <b>${boImposter}</b> was caught! Everyone else gets +1 point!`;
+    players.forEach(p=>{if(p!==boImposter)scores[p]=(scores[p]||0)+1;});
+    toast('Imposter caught! 🎉');
+  } else {
+    document.getElementById('bo-score-info').innerHTML=`😈 <b>${boImposter}</b> fooled everyone! Imposter gets +2 points!`;
+    scores[boImposter]=(scores[boImposter]||0)+2;
+    toast('Imposter escapes! 😈');
+  }
+  triggerConfetti();
+}
+function nextBORound(){boRound++;if(boRound>=maxRounds){endGame();}else{newBORound();}}
+
+// ===== WEREWOLF =====
+const WORF_ROLES=[
+  {id:'wolf',name:'Werewolf',emoji:'🐺',cls:'ww-wolf',desc:'You are a Werewolf! Stay hidden. Each night agree with fellow wolves on who to kill. During the day, act innocent and mislead the village.',team:'wolf'},
+  {id:'villager',name:'Villager',emoji:'🧑‍🌾',cls:'ww-villager',desc:'You are a Villager. No special powers, but your vote matters. Pay attention, read people, and find the wolves!',team:'village'},
+  {id:'seer',name:'Seer',emoji:'🔮',cls:'ww-seer',desc:'You are the Seer! Each night you secretly check one player\'s true role. The moderator silently nods or shakes head. Use this wisely!',team:'village'},
+  {id:'doctor',name:'Doctor',emoji:'💉',cls:'ww-doctor',desc:'You are the Doctor! Each night you protect one player (even yourself) from the wolves. If wolves target your choice, they survive!',team:'village'}
+];
+function worfRoleSet(n){
+  // BUG FIX: original returned 4 roles for any n<=4, meaning with 2-3 players
+  // the wolf role could end up unassigned after shuffle (only first n indices used).
+  // Now every case returns exactly n roles, guaranteeing at least 1 wolf.
+  if(n===2)return['wolf','villager'];
+  if(n===3)return['wolf','villager','villager'];
+  if(n===4)return['wolf','seer','villager','villager'];
+  if(n===5)return['wolf','seer','doctor','villager','villager'];
+  if(n===6)return['wolf','wolf','seer','doctor','villager','villager'];
+  if(n===7)return['wolf','wolf','seer','doctor','villager','villager','villager'];
+  if(n===8)return['wolf','wolf','seer','doctor','villager','villager','villager','villager'];
+  return['wolf','wolf','wolf','seer','doctor',...Array(n-5).fill('villager')];
+}
+let worfAssignIdx=0,worfAssigned=[],worfAlive=[],worfDead=[],worfNight=1;
+function startWorf(){
+  const roleIds=shuffle(worfRoleSet(players.length));
+  worfAssigned=players.map((p,i)=>({name:p,role:WORF_ROLES.find(r=>r.id===roleIds[i])}));
+  worfAssignIdx=0;
+  document.getElementById('worf-cur-player').textContent=players[0];
+  document.getElementById('worf-tap').style.display='block'; // BUG FIX: was 'flex', made tap-box contents go horizontal
+  document.getElementById('worf-role-reveal').style.display='none';
+  go('worf');
+}
+function worfRevealRole(){
+  const p=worfAssigned[worfAssignIdx];const role=p.role;
+  const card=document.getElementById('worf-role-card');
+  card.className='ww-role-card '+role.cls;
+  document.getElementById('worf-role-emoji').textContent=role.emoji;
+  document.getElementById('worf-role-name').textContent=role.name;
+  document.getElementById('worf-role-desc').textContent=role.desc;
+  document.getElementById('worf-tap').style.display='none';
+  document.getElementById('worf-role-reveal').style.display='flex';
+}
+function worfNextRole(){
+  worfAssignIdx++;
+  if(worfAssignIdx>=players.length){
+    worfAlive=[...worfAssigned];worfDead=[];worfNight=1;
+    go('worf-game');worfRenderNight();
+  } else {
+    document.getElementById('worf-cur-player').textContent=players[worfAssignIdx];
+    document.getElementById('worf-tap').style.display='block'; // BUG FIX: was 'flex'
+    document.getElementById('worf-role-reveal').style.display='none';
+  }
+}
+function worfRenderNight(){
+  document.getElementById('worf-game-round').textContent=`Night ${worfNight}`;
+  document.getElementById('worf-phase-emoji').textContent='🌙';
+  document.getElementById('worf-phase-title').textContent=`Night ${worfNight} — Everyone Close Eyes`;
+  document.getElementById('worf-phase-desc').textContent='Moderator guides: wolves pick victim → seer checks someone → doctor protects someone. Then wake everyone up.';
+  worfRenderPlayers();
+  document.getElementById('worf-action-area').innerHTML=`
+    <div style="background:rgba(220,38,38,.1);border:1.5px solid rgba(220,38,38,.3);border-radius:14px;padding:14px 16px;font-size:13px;font-weight:700;line-height:1.8;color:#fca5a5">
+      🐺 <b>Wolves</b> open eyes — agree on victim silently — close eyes.<br>
+      🔮 <b>Seer</b> opens eyes — points at someone — moderator nods/shakes — closes eyes.<br>
+      💉 <b>Doctor</b> opens eyes — points at someone to save — closes eyes.<br>
+      ☀️ Everyone wake up!
+    </div>
+    <button class="btn btn-primary w-full" onclick="worfStartDay()">☀️ Wake Up — Start Day Discussion</button>
+    <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game</button>`;
+}
+function worfStartDay(){
+  document.getElementById('worf-game-round').textContent=`Day ${worfNight}`;
+  document.getElementById('worf-phase-emoji').textContent='☀️';
+  document.getElementById('worf-phase-title').textContent=`Day ${worfNight} — Discuss & Vote`;
+  document.getElementById('worf-phase-desc').textContent='First: announce who died last night. Then discuss. Then vote someone out.';
+  worfRenderPlayers();
+  document.getElementById('worf-action-area').innerHTML=`
+    <div style="font-size:13px;font-weight:800;opacity:.65;text-align:center;letter-spacing:1px">VOTE TO ELIMINATE</div>
+    ${worfAlive.map(p=>`<button class="ww-vote-btn" onclick="worfEliminate('${esc(p.name)}')">${escHtml(p.name)}</button>`).join('')}
+    <button class="btn btn-secondary btn-sm w-full" onclick="worfSkipVote()">No consensus — skip vote</button>
+    <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game</button>`;
+}
+function worfEliminate(name){
+  const idx=worfAlive.findIndex(p=>p.name===name);if(idx===-1)return;
+  const p=worfAlive.splice(idx,1)[0];worfDead.push(p);
+  toast(`${p.name} eliminated! They were ${p.role.name} ${p.role.emoji}`);
+  if(!worfCheckWin()){worfNight++;go('worf-game');worfRenderNight();}
+}
+function worfSkipVote(){toast('No vote — night falls…');worfNight++;go('worf-game');worfRenderNight();}
+function worfCheckWin(){
+  const wolves=worfAlive.filter(p=>p.role.team==='wolf');
+  const village=worfAlive.filter(p=>p.role.team==='village');
+  if(wolves.length===0){worfEnd('village');return true;}
+  if(wolves.length>=village.length){worfEnd('wolf');return true;}
+  return false;
+}
+function worfEnd(winner){
+  const allWolves=worfAssigned.filter(p=>p.role.team==='wolf').map(p=>`${p.name}`).join(', ');
+  worfAlive.filter(p=>p.role.team===winner).forEach(p=>{scores[p.name]=(scores[p.name]||0)+2;});
+  go('end');
+  document.getElementById('end').querySelector('.display').textContent=winner==='wolf'?'WOLVES WIN! 🐺':'VILLAGE WINS! 🏘️';
+  document.getElementById('e-winner').textContent=winner==='wolf'?'The Werewolves':'The Village';
+  document.getElementById('e-pts').textContent=`Wolves were: ${allWolves}`;
+  const sorted=[...players].sort((a,b)=>(scores[b]||0)-(scores[a]||0));
+  document.getElementById('e-scores').innerHTML=sorted.map((p,i)=>`
+    <div class="score-item">
+      <div class="rank-badge ${i===0?'r1':i===1?'r2':i===2?'r3':'r-other'}">${i===0?'👑':i+1}</div>
+      <div class="p-name">${escHtml(p)}</div>
+      <div class="pts">${scores[p]||0}</div>
+    </div>`).join('');
+  triggerConfetti();
+}
+function worfRenderPlayers(){
+  document.getElementById('worf-alive-list').innerHTML=worfAlive.map(p=>`
+    <div style="background:var(--w10);border:1.5px solid var(--w20);border-radius:14px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-weight:800">${escHtml(p.name)}</span><span style="font-size:12px;opacity:.45">alive</span>
+    </div>`).join('');
+  const ds=document.getElementById('worf-dead-section');
+  if(worfDead.length){
+    ds.style.display='block';
+    document.getElementById('worf-dead-list').innerHTML=worfDead.map(p=>`<div class="ww-dead-chip">☠️ ${escHtml(p.name)} <span style="opacity:.6">(${escHtml(p.role.name)})</span></div>`).join('');
+  } else ds.style.display='none';
+}
+
+// ===== SCOREBOARD =====
+function showSB(){
+  const sorted=[...players].sort((a,b)=>(scores[b]||0)-(scores[a]||0));
+  document.getElementById('sb-list').innerHTML=sorted.map((p,i)=>`
+    <div class="score-item">
+      <div class="rank-badge ${i===0?'r1':i===1?'r2':i===2?'r3':'r-other'}">${i===0?'👑':i+1}</div>
+      <div class="p-name">${escHtml(p)}</div>
+      <div class="pts">${scores[p]||0}</div>
+    </div>`).join('');
+  document.getElementById('sb-overlay').style.display='block';
+}
+function hideSB(){document.getElementById('sb-overlay').style.display='none';}
+
+// ===== END GAME =====
+function endGame(){
+  hideSB();
+  const sorted=[...players].sort((a,b)=>(scores[b]||0)-(scores[a]||0));
+  const topScore=scores[sorted[0]]||0;
+  const winners=sorted.filter(p=>(scores[p]||0)===topScore);
+  const isTie=winners.length>1;
+  const w=sorted[0];
+  // Update all-time wins
+  if(topScore>0){
+    winners.forEach(p=>{allTimeScores[p]=(allTimeScores[p]||0)+1;});
+    saveStorage();
+  }
+  document.getElementById('e-winner').textContent=isTie?winners.join(' & '):w;
+  if(topScore===0){
+    document.getElementById('e-pts').textContent='Everyone played — no points scored!';
+    document.getElementById('end').querySelector('.display').textContent=isTie?'IT\'S A TIE! 🤝':'GAME OVER!';
+  } else {
+    document.getElementById('e-pts').textContent=isTie?`${topScore} points each`:`${topScore} points`;
+    document.getElementById('end').querySelector('.display').textContent=isTie?'IT\'S A TIE! 🤝':'WINNER!';
+  }
+  document.getElementById('e-scores').innerHTML=sorted.map((p,i)=>`
+    <div class="score-item">
+      <div class="rank-badge ${i===0?'r1':i===1?'r2':i===2?'r3':'r-other'}">${i===0?(isTie&&i<winners.length?'🤝':'👑'):i+1}</div>
+      <div class="p-name">${escHtml(p)}</div>
+      <div class="pts">${scores[p]||0}<span style="font-size:11px;opacity:.5;font-weight:600;margin-left:6px">ALL-TIME ${allTimeScores[p]||0}W</span></div>
+    </div>`).join('');
+  go('end');triggerConfetti();
+}
+function playAgain(){players.forEach(p=>scores[p]=0);go('mode-select');}
+
+
+// ===== NEVER HAVE I EVER =====
+let nhieRound=0,nhieLives={},nhieQPool=[],nhieDrank={},nhieDrinkTotal={};
+
+function startNHIE(){
+  nhieRound=0;nhieLives={};nhieDrinkTotal={};
+  players.forEach(p=>{nhieLives[p]=5;scores[p]=0;nhieDrinkTotal[p]=0;});
+  nhieQPool=shuffle([...Q.nhie]);
+  go('nhie');loadNHIE();
+}
+function loadNHIE(){
+  if(nhieRound>=maxRounds){nhieEnd();return;}
+  if(nhieRound>=nhieQPool.length)nhieQPool=shuffle([...Q.nhie]);
+  nhieDrank={};
+  const q=nhieQPool[nhieRound],prog=((nhieRound+1)/maxRounds)*100;
+  document.getElementById('nhie-text').textContent=q;
+  document.getElementById('nhie-prog').style.width=prog+'%';
+  document.getElementById('nhie-round-info').textContent='Round '+(nhieRound+1);
+  document.getElementById('nhie-round-display').textContent=`${nhieRound+1} / ${maxRounds}`;
+  document.getElementById('nhie-last-round').style.display=nhieRound===maxRounds-1?'block':'none';
+  renderNHIEGrid();
+  const c=document.getElementById('nhie-card');c.style.animation='none';c.offsetHeight;c.style.animation='slideUp .4s ease';
+}
+function renderNHIEGrid(){
+  document.getElementById('nhie-grid').innerHTML=players.map(p=>{
+    const lives=nhieLives[p]||0,drank=!!nhieDrank[p],out=lives<=0;
+    const bar='❤️'.repeat(Math.max(0,lives))+'🖤'.repeat(Math.max(0,5-lives));
+    return `<div class="nhie-player${drank?' drank':''}${out?' out':''}" onclick="nhieTap('${esc(p)}')">
+      <div class="nhie-lives">${bar}</div>
+      <div class="nhie-pname">${escHtml(p)}</div>
+      ${out?'<div style="font-size:10px;color:#22d3ee;font-weight:900">OUT 🍺</div>':''}
+    </div>`;
+  }).join('');
+}
+function nhieTap(p){
+  if((nhieLives[p]||0)<=0)return;
+  hap('medium');
+  if(nhieDrank[p]){delete nhieDrank[p];nhieLives[p]++;}
+  else{nhieDrank[p]=true;nhieLives[p]=Math.max(0,(nhieLives[p]||0)-1);nhieDrinkTotal[p]=(nhieDrinkTotal[p]||0)+1;}
+  renderNHIEGrid();
+}
+function nextNHIE(){nhieRound++;loadNHIE();}
+function nhieEnd(){
+  players.forEach(p=>{scores[p]=nhieLives[p]||0;});
+  const mostDrunk=players.sort((a,b)=>(nhieDrinkTotal[b]||0)-(nhieDrinkTotal[a]||0))[0];
+  endGame();
+  setTimeout(()=>toast(`🍺 Most experienced: ${mostDrunk}!`),1200);
+}
+
+// ===== HOT SEAT =====
+let hsRound=0,hsTotalQ=0,hsSeated=null,hsVotes={},hsQPool=[];
+const HS_Q_PER_SEAT=3;
+
+function startHS(){
+  hsRound=0;hsTotalQ=0;hsSeated=null;hsVotes={};
+  players.forEach(p=>scores[p]=0);
+  hsQPool=shuffle([...Q.hotseat]);
+  loadHSVote();go('hs-vote');
+}
+function loadHSVote(){
+  hsVotes={};
+  document.getElementById('hs-vote-round').textContent='Seat '+(hsRound+1);
+  document.getElementById('hs-vote-status').textContent='0 votes cast';
+  document.getElementById('hs-vote-list').innerHTML=players.map(p=>`
+    <button class="hs-vote-btn" id="hsvb-${escId(p)}" onclick="castHSVote('${esc(p)}')">${escHtml(p)}<span id="hsvc-${escId(p)}" style="font-family:'Fredoka One',cursive;font-size:18px;color:var(--gold)"></span></button>
+  `).join('');
+}
+function castHSVote(p){
+  hap('light');
+  hsVotes[p]=(hsVotes[p]||0)+1;
+  const total=Object.values(hsVotes).reduce((a,b)=>a+b,0);
+  document.getElementById('hs-vote-status').textContent=`${total} vote${total!==1?'s':''} cast`;
+  // highlight leader
+  const leader=Object.keys(hsVotes).sort((a,b)=>hsVotes[b]-hsVotes[a])[0];
+  players.forEach(pl=>{
+    const btn=document.getElementById(`hsvb-${escId(pl)}`);
+    const cnt=document.getElementById(`hsvc-${escId(pl)}`);
+    if(btn)btn.classList.toggle('leading',pl===leader);
+    if(cnt)cnt.textContent=hsVotes[pl]?` ${hsVotes[pl]}`:' ';
+  });
+}
+function hsRandomPick(){
+  const p=players[Math.floor(Math.random()*players.length)];
+  players.forEach(pl=>{hsVotes[pl]=0;});hsVotes[p]=players.length;
+  players.forEach(pl=>{
+    const btn=document.getElementById(`hsvb-${escId(pl)}`);
+    const cnt=document.getElementById(`hsvc-${escId(pl)}`);
+    if(btn)btn.classList.toggle('leading',pl===p);
+    if(cnt)cnt.textContent=pl===p?` ${players.length}`:'';
+  });
+  document.getElementById('hs-vote-status').textContent=`🎲 ${p} was picked!`;
+}
+function confirmHSVote(){
+  const keys=Object.keys(hsVotes);
+  if(!keys.length){toast('Cast at least one vote!');return;}
+  hsSeated=keys.sort((a,b)=>hsVotes[b]-hsVotes[a])[0];
+  document.getElementById('hs-seated-name').textContent=hsSeated;
+  loadHSQ();go('hs-game');
+}
+function loadHSQ(){
+  if(!hsQPool.length)hsQPool=shuffle([...Q.hotseat]);
+  const q=hsQPool.shift();
+  const qNum=hsTotalQ+1;
+  document.getElementById('hs-q-text').textContent=q;
+  document.getElementById('hs-q-info').textContent=`Q ${qNum} / ${maxRounds}`;
+  document.getElementById('hs-prog').style.width=`${(qNum/maxRounds)*100}%`;
+  document.getElementById('hs-last-round-placeholder') && (document.getElementById('hs-last-round-placeholder').style.display=qNum===maxRounds?'block':'none');
+  document.querySelectorAll('.hs-react-btn').forEach(b=>b.classList.remove('sel'));
+  const card=document.getElementById('hs-card');card.style.animation='none';card.offsetHeight;card.style.animation='slideUp .4s ease';
+}
+function hsReact(btn,pts){
+  document.querySelectorAll('.hs-react-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  if(pts>0&&hsSeated)scores[hsSeated]=(scores[hsSeated]||0)+1;
+}
+function nextHS(){
+  hsTotalQ++;
+  if(hsTotalQ>=maxRounds){endGame();return;}
+  const qInSeat=hsTotalQ%HS_Q_PER_SEAT;
+  if(qInSeat===0){hsRound++;loadHSVote();go('hs-vote');}
+  else{loadHSQ();}
+}
+
+// ===== UTILS =====
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+// BUG FIX: esc() previously only escaped single quotes, not backslashes, allowing
+// a name like "O\'s" to break out of the onclick JS string.
+function esc(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
+// BUG FIX: new escHtml() for safely rendering player names into innerHTML.
+// Without this, names containing < > & " inject raw HTML.
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+// escId: strips characters that are unsafe in element IDs derived from player names
+function escId(s){return s.replace(/[^a-zA-Z0-9_-]/g,'_')}
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+function triggerConfetti(){
+  const cols=['#b91c3c','#e8294d','#fbbf24','#22c55e','#06b6d4','#ef4444','#f97316'];
+  for(let i=0;i<70;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');el.className='cf';
+      el.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*.4}s;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
+      document.body.appendChild(el);setTimeout(()=>el.remove(),4500);
+    },i*25);
+  }
+}
+</script>
+</body>
+</html>

@@ -86,13 +86,7 @@ self.addEventListener('fetch', e => {
   const swURL = URL.createObjectURL(swBlob);
   navigator.serviceWorker.register(swURL, { scope: '/' })
     .then(()=> console.log('[REVEAL] SW ✓'))
-    .catch(()=>{
-      // Fallback: inject SW via importScripts shim — works on GitHub Pages
-      const shim = `importScripts('${swURL}');`;
-      const shimBlob = new Blob([swCode], {type:'text/javascript'});
-      navigator.serviceWorker.register(URL.createObjectURL(shimBlob))
-        .catch(err => console.warn('[REVEAL] SW skipped:', err));
-    });
+    .catch(err => console.warn('[REVEAL] SW skipped:', err));
 })();
 </script>
 <style>
@@ -150,7 +144,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .count-badge{background:rgba(192,21,46,.25);border-radius:10px;padding:4px 12px;font-size:12px;font-weight:800;color:var(--crimsonL);border:1px solid rgba(192,21,46,.35);align-self:flex-start}
 
 /* MODE CARDS */
-/* MODE CARDS */
 .mode-card{width:100%;border-radius:var(--rL);padding:20px 18px 20px 118px;min-height:118px;display:flex;align-items:center;cursor:pointer;transition:all .2s ease;border:2px solid;position:relative;overflow:hidden}
 .mode-card:active{transform:scale(.97)}
 .mode-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:112px;background:rgba(0,0,0,.22);border-right:1px solid rgba(255,255,255,.07);z-index:0}
@@ -205,7 +198,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .hs-react-btn:active{transform:scale(.95)}
 .hs-react-good.sel{background:linear-gradient(135deg,#15803d,#22c55e);border-color:transparent}
 .hs-react-bad.sel{background:linear-gradient(135deg,#7f1d1d,#b91c3c);border-color:transparent}
-
 
 /* WEREWOLF */
 .ww-role-card{border-radius:var(--rL);padding:36px 22px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
@@ -1604,12 +1596,12 @@ function worfCheckWin(){
   if(wolves.length>=village.length){worfEnd('wolf');return true;}
   return false;
 }
-function worfEnd(winner){
+function worfEnd(team){
   const allWolves=worfAssigned.filter(p=>p.role.team==='wolf').map(p=>`${p.name}`).join(', ');
-  worfAlive.filter(p=>p.role.team===winner).forEach(p=>{scores[p.name]=(scores[p.name]||0)+2;});
+  worfAlive.filter(p=>p.role.team===team).forEach(p=>{scores[p.name]=(scores[p.name]||0)+2;});
   go('end');
-  document.getElementById('end').querySelector('.display').textContent=winner==='wolf'?'WOLVES WIN! 🐺':'VILLAGE WINS! 🏘️';
-  document.getElementById('e-winner').textContent=winner==='wolf'?'The Werewolves':'The Village';
+  document.getElementById('end').querySelector('.display').textContent=team==='wolf'?'WOLVES WIN! 🐺':'VILLAGE WINS! 🏘️';
+  document.getElementById('e-winner').textContent=team==='wolf'?'The Werewolves':'The Village';
   document.getElementById('e-pts').textContent=`Wolves were: ${allWolves}`;
   const sorted=[...players].sort((a,b)=>(scores[b]||0)-(scores[a]||0));
   document.getElementById('e-scores').innerHTML=sorted.map((p,i)=>`
@@ -1688,7 +1680,7 @@ function startNHIE(){
 }
 function loadNHIE(){
   if(nhieRound>=maxRounds){nhieEnd();return;}
-  if(nhieRound>=nhieQPool.length)nhieQPool=shuffle([...Q.nhie]);
+  if(nhieRound>=nhieQPool.length){nhieQPool=shuffle([...Q.nhie]);nhieRound=0;}
   nhieDrank={};
   const q=nhieQPool[nhieRound],prog=((nhieRound+1)/maxRounds)*100;
   document.getElementById('nhie-text').textContent=q;
@@ -1720,7 +1712,7 @@ function nhieTap(p){
 function nextNHIE(){nhieRound++;loadNHIE();}
 function nhieEnd(){
   players.forEach(p=>{scores[p]=nhieLives[p]||0;});
-  const mostDrunk=players.sort((a,b)=>(nhieDrinkTotal[b]||0)-(nhieDrinkTotal[a]||0))[0];
+  const mostDrunk=[...players].sort((a,b)=>(nhieDrinkTotal[b]||0)-(nhieDrinkTotal[a]||0))[0];
   endGame();
   setTimeout(()=>toast(`🍺 Most experienced: ${mostDrunk}!`),1200);
 }
@@ -1782,7 +1774,8 @@ function loadHSQ(){
   document.getElementById('hs-q-text').textContent=q;
   document.getElementById('hs-q-info').textContent=`Q ${qNum} / ${maxRounds}`;
   document.getElementById('hs-prog').style.width=`${(qNum/maxRounds)*100}%`;
-  document.getElementById('hs-last-round-placeholder') && (document.getElementById('hs-last-round-placeholder').style.display=qNum===maxRounds?'block':'none');
+  const lastPlaceholder=document.getElementById('hs-last-round-placeholder');
+  if(lastPlaceholder)lastPlaceholder.style.display=qNum===maxRounds?'block':'none';
   document.querySelectorAll('.hs-react-btn').forEach(b=>b.classList.remove('sel'));
   const card=document.getElementById('hs-card');card.style.animation='none';card.offsetHeight;card.style.animation='slideUp .4s ease';
 }

@@ -22,26 +22,40 @@
   const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="100" fill="#1a0008"/><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c0152e"/><stop offset="1" stop-color="#e8294d"/></linearGradient></defs><circle cx="256" cy="230" r="148" fill="none" stroke="url(#g)" stroke-width="18"/><path d="M178 198 Q196 174 214 198" fill="none" stroke="#e8294d" stroke-width="14" stroke-linecap="round"/><path d="M298 198 Q316 174 334 198" fill="none" stroke="#e8294d" stroke-width="14" stroke-linecap="round"/><path d="M188 272 Q256 328 324 272" fill="none" stroke="#fbbf24" stroke-width="15" stroke-linecap="round"/><text x="256" y="430" font-family="Arial Black,sans-serif" font-weight="900" font-size="62" fill="#ffffff" text-anchor="middle" letter-spacing="8">REVEAL</text></svg>`;
   const iconURL = 'data:image/svg+xml,' + encodeURIComponent(iconSvg);
 
-  // ── Manifest ──────────────────────────────────────────────────────────────
-  const manifest = {
-    name: "REVEAL — Don't Play With Friends",
-    short_name: "REVEAL",
-    description: "The party game that reveals everything 😈",
-    start_url: "./",
-    display: "standalone",
-    orientation: "portrait",
-    background_color: "#1a0008",
-    theme_color: "#1a0008",
-    icons: [
-      { src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAFE0lEQVR4nO3cMXIcORBEUZp7Btjr7GF05r2O7iBnjYmgJlYzPd1INCoT+BHfFqsKj0PS0Vf7+ouou6/yCSg6AJEUgEgKQCQFIJICEEkBiKQARFIAIikAkRSASApAJAUgkgIQSQGIpABEUgAiKQCRFIBICkAkBSCSAhBJAYikAERSACIpAJEUgEgKQL/7+c+P85VPa9LWgC6JwdPLtgM0EA2Y2j6AJrjZU9LigErcbCVpWUDlaDZhtCCgcihbMVoK0MynhdGjRQCVv2L5AFWtAMjq2ayGmVA2IOencp5tYMGAUt4mZc6+IgElPknizGfKAxT9DNHDvywM0AIPsMAKzyUBWunuy+wSA2iZiy+2UQagBQ696moBgNJPvPaC7oCij7vDmtaAcs+6z7K+gEIPutvKpoAST7nn4nmAymdj9+ccAWVdcPML2AEKuh13aEGAygfjFC/zAhRxMg7ynBGglA9tbvJcAKDywTjLQS6AzM/Ecd4FoICcj2MByPlAJtmeyBdQ+VRueV6pHpDt95ZbnocyBVQ+lWeGtyoG5PldZZvhuRwBlb+Tc24XA1BYbherBGT4geyf29HsAFn9g4Y7uq25DqB335qFx71pJKsdywCNvezBU1Xd976RfHZsboBueqr59717pPIFvwPQvO0AdPuJPV/LcKTyBb+rATThmmsDGn7D7gA0b0EA3Xtf59cyHKl8x0cAmrcggO69760PZrLjwJFM1iwAdNPmVnrmjOSw7DqATA46cySHfZcCtFsOlwRQcA6XBFBwDpcEUHAOlwRQcA6XBFBwDpf0BfTr37//rPzN5nRydwAB6HUAOur82gA6XhxAAHodgI4C0McAdBSAPgagowD0MQB9qPsPsZJp55fyJ1iLA7SDoaC/4Zs5oJfXLBl4ZkE/vxqADAPQ5wB0EIBOxa9BL8v6Baj5A3p506qZJ5T18dNCAa1q6PymALrwn9wAqPt0E8r4H8q2BSTebUKpgNYzlPjzqxkC2tOQqGdTQO/OIZ44sdCPnxYE6NKVs7q0F4A+n2O3D6Hcn1+tHNC7o+i3Tin646fZArr0IZRr6NI6hh8/zQHQu9MMObpzVxcx1NOcAa1taIgeAHUeaDdAtnpaKKCrD+DWMh8/zQdQx5nePYMzo46ZnfW0CEDLGBqoB0DX7jX2VUrqm9NcT3MD1Hcyf0Or6mlBgLoN1TLqHsz/h9cjO0Ddtzt+qvmMlHlS9DRPQN0X9DG0iZ6WCEg0dKsk/at3L16VKSDxlPMZDfmKcXqaMyDxoCdfVME09ksk6mnmgPSzXn3jm7p7TQDde1xnOkMWLCwA0KgTG9IZtVphGYA+HtqK0eSNaosBNPziVW7u2KWwJEBn7t53+jlobl2hqjBAMx9At1I4/LTyAJ18BreXSJz5TJGAsp4kZc6+ggGdf5uSF3KebWDZgDqe6u7XshpmQisAatefbfjjlQ9Q1SKAHvW9Yt9zzvxazi0F6JH4tHdXfp+xLQjoUTmU5ek8WhbQo3I0C9N5tDig73BzU7sA+g43Y9sO0HOg0dsa0P9CTEcAIikAkRSASApAJAUgkgIQSQGIpABEUgAiKQCRFIBICkAkBSCSAhBJAYikAERSACIpAJEUgEgKQCQFIJICEEkBiKQARFIAIikAkRSASApAJAUgkgIQSQGIpABEUgAiKQCRFIBICkAkBSCSAhBJAYikAERSACIpAJEUgEgKQCQFIJICEEkBiKT+A2D9iGjZk4d1AAAAAElFTkSuQmCC", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "data:image/png;base64,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", sizes: "512x512", type: "image/png", purpose: "any maskable" }
-    ]
-  };
-  const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
-  const mLink = document.createElement('link');
-  mLink.rel = 'manifest';
-  mLink.href = URL.createObjectURL(mBlob);
-  document.head.appendChild(mLink);
+  // ── Manifest (icons rendered from SVG via canvas) ─────────────────────────
+  function svgToPng(size, cb) {
+    const img = new Image();
+    img.onload = function() {
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      c.getContext('2d').drawImage(img, 0, 0, size, size);
+      cb(c.toDataURL('image/png'));
+    };
+    img.src = iconURL;
+  }
+  svgToPng(512, function(png512) {
+    svgToPng(192, function(png192) {
+      const manifest = {
+        name: "REVEAL — Don't Play With Friends",
+        short_name: "REVEAL",
+        description: "The party game that reveals everything 😈",
+        start_url: "./",
+        display: "standalone",
+        orientation: "portrait",
+        background_color: "#1a0008",
+        theme_color: "#1a0008",
+        icons: [
+          { src: png192, sizes: "192x192", type: "image/png", purpose: "any" },
+          { src: png512, sizes: "512x512", type: "image/png", purpose: "any maskable" }
+        ]
+      };
+      const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+      const mLink = document.createElement('link');
+      mLink.rel = 'manifest';
+      mLink.href = URL.createObjectURL(mBlob);
+      document.head.appendChild(mLink);
+    });
+  });
 
   // Apple touch icon
   const iLink = document.createElement('link');

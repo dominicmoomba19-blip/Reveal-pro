@@ -1,9 +1,10 @@
-const CACHE = 'reveal-v1';
-const FILES = ['./','./index.html','./manifest.json','./sw.js','./icon.svg'];
+const CACHE = 'reveal-v3';
 
 self.addEventListener('install', e => {
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(['./']))
+  );
 });
 
 self.addEventListener('activate', e => {
@@ -16,13 +17,14 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(resp => {
-        if (!resp || resp.status !== 200 || resp.type === 'opaque') return resp;
-        caches.open(CACHE).then(c => c.put(e.request, resp.clone()));
-        return resp;
-      }).catch(() => cached);
+    caches.match(e.request).then(hit => {
+      if (hit) return hit;
+      return fetch(e.request).then(r => {
+        if (r && r.status === 200 && r.type !== 'opaque') {
+          caches.open(CACHE).then(c => c.put(e.request, r.clone()));
+        }
+        return r;
+      }).catch(() => caches.match('./'));
     })
   );
 });

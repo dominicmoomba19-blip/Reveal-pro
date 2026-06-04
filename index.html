@@ -63,43 +63,10 @@
   iLink.href = iconURL;
   document.head.appendChild(iLink);
 
-  // ── Service Worker (written as a Blob, registered as same-origin via SW trick) ──
+  // ── Service Worker ────────────────────────────────────────────────────────
   if (!('serviceWorker' in navigator)) return;
-
-  const swCode = `
-const CACHE = 'reveal-v2';
-self.addEventListener('install', e => {
-  self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(c => c.add('/')));
-});
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))
-  ).then(()=>self.clients.claim()));
-});
-self.addEventListener('fetch', e => {
-  e.respondWith(caches.match(e.request).then(hit => {
-    if (hit) return hit;
-    return fetch(e.request).then(r => {
-      if (r && r.status===200 && r.type!=='opaque') {
-        caches.open(CACHE).then(c=>c.put(e.request,r.clone()));
-      }
-      return r;
-    }).catch(()=>hit);
-  }));
-});`;
-
-  // Use a <script type="text/js-sw"> tag trick so the SW is same-origin
-  const script = document.createElement('script');
-  script.type = 'text/js-sw';
-  script.id = '__sw_src__';
-  script.textContent = swCode;
-  document.head.appendChild(script);
-
-  const swBlob = new Blob([swCode], { type: 'text/javascript' });
-  const swURL = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swURL, { scope: '/' })
-    .then(()=> console.log('[REVEAL] SW ✓'))
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log('[REVEAL] SW ✓'))
     .catch(err => console.warn('[REVEAL] SW skipped:', err));
 })();
 </script>

@@ -114,15 +114,62 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .field::placeholder{color:rgba(255,255,255,.35)}
 .field:focus{border-color:var(--crimsonL)}
 
-/* BACK */
-.back{align-self:flex-start;margin-bottom:14px;background:var(--w10);border:1.5px solid var(--w20);border-radius:12px;padding:8px 16px;color:#fff;font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .18s}
-.back:active{transform:scale(.95)}
+/* BACK BUTTON */
+.back{align-self:flex-start;margin-bottom:14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);border-radius:12px;padding:9px 18px;color:rgba(255,255,255,.8);font-family:var(--fb);font-weight:700;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .18s;letter-spacing:.2px}
+.back:active{transform:scale(.95);background:rgba(255,255,255,.1)}
+
+/* SECTION TITLES */
+.section-title{font-family:var(--fd);font-size:30px;text-align:center;margin-bottom:6px}
+.section-sub{color:rgba(255,255,255,.5);text-align:center;font-size:14px;margin-bottom:20px;font-weight:600}
 
 /* PLAYER CHIPS */
 .chips{display:flex;flex-wrap:wrap;gap:8px;width:100%;min-height:16px}
-.chip{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(158,16,48,.35),rgba(232,41,77,.25));border:1.5px solid rgba(192,21,46,.5);border-radius:50px;padding:7px 13px;font-size:13px;font-weight:800;animation:popIn .2s ease}
-.chip-x{cursor:pointer;font-size:15px;opacity:.7;line-height:1}
-.count-badge{background:rgba(192,21,46,.25);border-radius:10px;padding:4px 12px;font-size:12px;font-weight:800;color:var(--crimsonL);border:1px solid rgba(192,21,46,.35);align-self:flex-start}
+.chip{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(192,21,46,.3),rgba(232,41,77,.18));border:1.5px solid rgba(232,41,77,.4);border-radius:50px;padding:8px 14px;font-size:13px;font-weight:800;animation:popIn .2s ease;letter-spacing:.2px}
+.chip-x{cursor:pointer;font-size:15px;opacity:.6;line-height:1;transition:opacity .15s}
+.chip-x:hover{opacity:1}
+.count-badge{background:rgba(192,21,46,.2);border-radius:10px;padding:5px 14px;font-size:12px;font-weight:800;color:var(--crimsonL);border:1.5px solid rgba(192,21,46,.3);align-self:flex-start;letter-spacing:.3px}
+
+/* TAP BOX */
+.tap-box{background:rgba(255,255,255,.04);border:2px dashed rgba(255,255,255,.2);border-radius:20px;padding:32px 20px;width:100%;text-align:center;cursor:pointer;transition:all .2s;font-size:14px;font-weight:700;user-select:none}
+.tap-box:active{transform:scale(.97);background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.35)}
+
+/* ROLE CARD */
+.role-card{background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.15);border-radius:var(--rL);padding:36px 22px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px}
+.role-imp{border-color:rgba(239,68,68,.6);background:linear-gradient(160deg,rgba(239,68,68,.1),rgba(26,0,0,.8));box-shadow:0 0 30px rgba(239,68,68,.12)}
+.role-inn{border-color:rgba(34,197,94,.5);background:linear-gradient(160deg,rgba(34,197,94,.08),rgba(0,26,0,.8))}
+
+/* HOT SEAT CARD */
+.hs-seat{background:linear-gradient(135deg,rgba(251,191,36,.14),rgba(245,158,11,.05));border:1.5px solid rgba(251,191,36,.45);border-radius:var(--rL);padding:18px 18px 20px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 0 24px rgba(251,191,36,.1)}
+.hs-seated{font-family:var(--fd);font-size:34px;color:var(--gold);text-shadow:0 0 18px rgba(255,215,0,.35)}
+
+/* HOT SEAT REACT */
+.hs-react-row{display:flex;gap:8px;width:100%}
+.hs-react-btn{flex:1;padding:13px 4px;border-radius:16px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);color:#fff;font-family:var(--fb);font-size:12px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+.hs-react-btn:active{transform:scale(.95)}
+.hs-react-good.sel{background:linear-gradient(135deg,#15803d,#22c55e);border-color:transparent;box-shadow:0 4px 14px rgba(34,197,94,.3)}
+.hs-react-bad.sel{background:linear-gradient(135deg,#7f1d1d,#b91c3c);border-color:transparent;box-shadow:0 4px 14px rgba(185,28,60,.3)}
+
+/* WEREWOLF ROLE CARDS */
+.ww-role-card{border-radius:var(--rL);padding:32px 22px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.ww-wolf{background:linear-gradient(160deg,rgba(220,38,38,.12),rgba(26,5,5,.9));border:2px solid rgba(220,38,38,.55);box-shadow:0 0 28px rgba(220,38,38,.12)}
+.ww-villager{background:linear-gradient(160deg,rgba(34,197,94,.08),rgba(5,26,10,.9));border:2px solid rgba(34,197,94,.45)}
+.ww-seer{background:linear-gradient(160deg,rgba(96,165,250,.1),rgba(5,8,26,.9));border:2px solid rgba(96,165,250,.5)}
+.ww-doctor{background:linear-gradient(160deg,rgba(163,230,53,.08),rgba(10,21,5,.9));border:2px solid rgba(163,230,53,.4)}
+.ww-vote-btn{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:15px;font-weight:800;color:#fff;transition:all .18s}
+.ww-vote-btn:active{transform:scale(.98)}
+.ww-vote-btn.eliminated{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);opacity:.5;pointer-events:none}
+.ww-vote-btn.voted{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.55)}
+.ww-dead-chip{background:rgba(239,68,68,.12);border:1.5px solid rgba(239,68,68,.35);border-radius:50px;padding:5px 14px;font-size:13px;font-weight:800;color:#fca5a5;display:flex;align-items:center;gap:5px}
+
+/* VOTE BUTTONS */
+.vote-btn{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
+.vote-btn.voted{background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.5)}
+.vote-btn:active{transform:scale(.98)}
+
+/* HS VOTE BTN */
+.hs-vote-btn{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
+.hs-vote-btn:active{transform:scale(.98)}
+.hs-vote-btn.leading{background:rgba(251,191,36,.15);border-color:rgba(251,191,36,.5);box-shadow:0 4px 14px rgba(251,191,36,.1)}
 
 /* MODE CARDS */
 .mode-card{width:100%;border-radius:var(--rL);padding:18px 16px 18px 120px;min-height:112px;display:flex;align-items:center;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;border:1.5px solid;position:relative;overflow:hidden}
@@ -214,90 +261,76 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .m-dpwf::before{background:linear-gradient(to right,rgba(255,0,0,.11),transparent)}
 .m-dpwf::after{background:#ff1111;box-shadow:0 0 10px rgba(255,0,0,.9)}
 .m-dpwf .mode-name{color:#ff3333;text-shadow:0 0 14px rgba(255,0,0,.7),0 0 28px rgba(255,0,0,.3);letter-spacing:.3px}
-.nhie-player{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--w10);border:2px solid var(--w20);border-radius:18px;padding:12px 8px;cursor:pointer;transition:all .2s;flex:1;min-width:72px;max-width:130px;user-select:none}
+/* NHIE player tiles */
+.nhie-player{display:flex;flex-direction:column;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:18px;padding:12px 8px;cursor:pointer;transition:all .2s;flex:1;min-width:72px;max-width:130px;user-select:none}
 .nhie-player:active{transform:scale(.94)}
-.nhie-player.drank{background:rgba(6,182,212,.18);border-color:#06b6d4}
-.nhie-player.out{opacity:.35;pointer-events:none}
+.nhie-player.drank{background:rgba(6,182,212,.18);border-color:#06b6d4;box-shadow:0 4px 12px rgba(6,182,212,.2)}
+.nhie-player.out{opacity:.3;pointer-events:none}
 .nhie-lives{font-size:13px;font-weight:900;min-height:18px;letter-spacing:1px}
 .nhie-pname{font-size:12px;font-weight:800;text-align:center;word-break:break-word}
 .nhie-grid{display:flex;flex-wrap:wrap;gap:8px;width:100%;justify-content:center}
-
-/* HOT SEAT */
-.m-hotseat{background:linear-gradient(135deg,#1a1000,#2a1a00);border-color:#f59e0b}
-.m-hotseat .mode-name{color:#fbbf24}
-.hs-seat{background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(245,158,11,.05));border:2px solid rgba(251,191,36,.4);border-radius:var(--rL);padding:20px 18px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px}
-.hs-seated{font-family:var(--fd);font-size:36px;color:var(--gold)}
-.hs-vote-btn{display:flex;align-items:center;justify-content:space-between;background:var(--w10);border:2px solid var(--w20);border-radius:14px;padding:13px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
-.hs-vote-btn:active{transform:scale(.98)}
-.hs-vote-btn.leading{background:rgba(251,191,36,.15);border-color:rgba(251,191,36,.55)}
-.hs-react-row{display:flex;gap:8px;width:100%}
-.hs-react-btn{flex:1;padding:11px 4px;border-radius:14px;background:var(--w10);border:2px solid var(--w20);color:#fff;font-family:var(--fb);font-size:11px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
-.hs-react-btn:active{transform:scale(.95)}
-.hs-react-good.sel{background:linear-gradient(135deg,#15803d,#22c55e);border-color:transparent}
-.hs-react-bad.sel{background:linear-gradient(135deg,#7f1d1d,#b91c3c);border-color:transparent}
-
-/* WEREWOLF */
-.ww-role-card{border-radius:var(--rL);padding:36px 22px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
-.ww-wolf{background:linear-gradient(135deg,#1a0505,#2d0808);border:3px solid #dc2626}
-.ww-villager{background:linear-gradient(135deg,#051a0a,#082d10);border:3px solid #22c55e}
-.ww-seer{background:linear-gradient(135deg,#05081a,#080f2d);border:3px solid #60a5fa}
-.ww-doctor{background:linear-gradient(135deg,#0a1505,#142208);border:3px solid #a3e635}
-.ww-vote-btn{display:flex;align-items:center;justify-content:space-between;background:var(--w10);border:2px solid var(--w20);border-radius:14px;padding:13px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
-.ww-vote-btn:active{transform:scale(.98)}
-.ww-vote-btn.eliminated{background:rgba(239,68,68,.2);border-color:#ef4444;opacity:.6;pointer-events:none}
-.ww-vote-btn.voted{background:rgba(239,68,68,.25);border-color:#ef4444}
-.ww-dead-chip{background:rgba(239,68,68,.15);border:1.5px solid rgba(239,68,68,.4);border-radius:50px;padding:5px 13px;font-size:13px;font-weight:800;color:#fca5a5;display:flex;align-items:center;gap:5px}
-
-/* GAME SCREEN */
-.game-header{display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:10px}
-.mode-badge{font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:50px;background:var(--w10);border:1.5px solid var(--w20)}
-.round-info{font-size:13px;font-weight:700;color:var(--w80)}
-.progress{width:100%;height:5px;background:var(--w10);border-radius:3px;overflow:hidden;margin-bottom:10px}
-.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#b91c3c,#e8294d);transition:width .4s ease}
-
-/* QUESTION CARD */
-.q-card{background:var(--w10);border:2px solid var(--w20);border-radius:var(--rL);padding:28px 22px;text-align:center;width:100%;backdrop-filter:blur(20px);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:180px;position:relative;overflow:hidden;animation:slideUp .4s ease}
-.q-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(192,21,46,.08) 0%,transparent 70%);pointer-events:none}
-.q-num{font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;opacity:.45}
-.q-text{font-family:var(--fd);font-size:24px;line-height:1.35;position:relative;z-index:1}
-.judge-lbl{font-size:12px;font-weight:700;opacity:.65;display:flex;align-items:center;gap:5px}
-.judge-nm{font-size:20px;font-weight:900;color:var(--gold)}
-
-/* SCORE BUTTONS */
-.score-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
-.sbtn{flex:1;min-width:76px;max-width:140px;padding:10px 8px;border-radius:14px;background:var(--w10);border:2px solid var(--w20);color:#fff;font-family:var(--fb);font-size:13px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center}
-.sbtn:active,.sbtn.sel{background:linear-gradient(135deg,#b91c3c,#e8294d);border-color:transparent;transform:scale(1.06)}
-
-/* SECRET CARD */
-.secret-card{background:var(--w10);border:2px solid var(--w20);border-radius:var(--rL);padding:28px 22px;text-align:center;width:100%;backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;gap:18px}
-.tap-box{background:var(--w05);border:2.5px dashed var(--w20);border-radius:16px;padding:36px 20px;width:100%;text-align:center;cursor:pointer;transition:all .18s;font-size:14px;font-weight:700}
-.tap-box:active{transform:scale(.97);background:var(--w10)}
-
-/* SCOREBOARD OVERLAY */
-#sb-overlay{display:none;position:fixed;inset:0;background:rgba(10,0,25,.95);z-index:100;padding:24px 20px;overflow-y:auto;backdrop-filter:blur(12px)}
-.score-item{display:flex;align-items:center;gap:13px;background:var(--w10);border:1.5px solid var(--w20);border-radius:16px;padding:14px 18px;width:100%;transition:all .3s}
-.rank-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0}
-.r1{background:linear-gradient(135deg,#ffd700,#ffa500);color:#1a0533}
-.r2{background:linear-gradient(135deg,#c0c0c0,#a0a0a0);color:#1a0533}
-.r3{background:linear-gradient(135deg,#cd7f32,#a05a20);color:#fff}
-.r-other{background:var(--w10);border:1.5px solid var(--w20)}
-.p-name{flex:1;font-size:17px;font-weight:800}
-.pts{font-family:var(--fd);font-size:26px;color:var(--gold)}
 
 /* COIN */
 .coin{width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:46px;margin:8px auto;background:linear-gradient(135deg,#ffd700,#ffa500);box-shadow:0 8px 28px rgba(255,215,0,.4);cursor:pointer;transition:all .2s;user-select:none}
 .coin.spin{animation:coinSpin .9s ease forwards}
 .coin:active{transform:scale(.93)}
 
-/* ROLE CARD */
-.role-card{background:#0d0d0d;border:3px solid rgba(255,255,255,.18);border-radius:var(--rL);padding:36px 22px;text-align:center;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px}
-.role-imp{border-color:#ef4444;background:#1a0000}
-.role-inn{border-color:#22c55e;background:#001a00}
+/* ROUND COUNTER BANNER */
+.round-banner{width:100%;display:flex;align-items:center;justify-content:space-between;padding:6px 4px;font-size:12px;font-weight:800;margin-bottom:2px}
+.round-banner-label{opacity:.45;letter-spacing:.5px;text-transform:uppercase;font-size:11px}
+.round-banner-num{color:var(--w80);font-family:'Fredoka One',cursive;font-size:16px}
+.round-banner-final{color:#fbbf24;animation:pulse 1s ease-in-out infinite;font-size:11px}
 
-/* VOTE BTN */
-.vote-btn{display:flex;align-items:center;justify-content:space-between;background:var(--w10);border:2px solid var(--w20);border-radius:14px;padding:13px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:16px;font-weight:800;color:#fff;transition:all .18s}
-.vote-btn.voted{background:rgba(239,68,68,.2);border-color:#ef4444}
-.vote-btn:active{transform:scale(.98)}
+/* QUESTION CARD */
+.q-card{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.03));border:1.5px solid rgba(255,255,255,.12);border-radius:var(--rL);padding:28px 22px;text-align:center;width:100%;backdrop-filter:blur(20px);flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:200px;position:relative;overflow:hidden;animation:slideUp .4s ease}
+.q-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(192,21,46,.1) 0%,transparent 65%);pointer-events:none}
+.q-num{font-size:11px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;opacity:.38}
+.q-text{font-family:var(--fd);font-size:25px;line-height:1.35;position:relative;z-index:1}
+
+/* JUDGE CARD */
+.judge-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:20px;padding:14px 18px 16px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.judge-card-label{font-size:10px;font-weight:900;letter-spacing:2px;opacity:.45;text-transform:uppercase}
+.judge-nm{font-size:22px;font-weight:900;color:var(--gold);font-family:var(--fb);text-shadow:0 0 16px rgba(255,215,0,.35)}
+.judge-card-sub{font-size:11px;opacity:.5;font-weight:700;margin-bottom:4px}
+
+/* SCORE BUTTONS */
+.score-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
+.sbtn{flex:1;min-width:80px;max-width:150px;padding:12px 8px;border-radius:16px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-family:var(--fb);font-size:14px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center;letter-spacing:.2px}
+.sbtn:active{transform:scale(.95)}
+.sbtn.sel{background:linear-gradient(135deg,#b91c3c,#e8294d);border-color:transparent;color:#fff;transform:scale(1.05);box-shadow:0 6px 20px rgba(232,41,77,.4)}
+
+/* TROPHY BTN GOLD */
+.btn-icon{width:46px;height:46px;padding:0;border-radius:50%;font-size:18px;display:flex;align-items:center;justify-content:center;background:rgba(255,215,0,.12);border:1.5px solid rgba(255,215,0,.35);cursor:pointer;transition:all .18s;color:#fff;font-family:var(--fb);flex-shrink:0;box-shadow:0 4px 14px rgba(255,215,0,.12)}
+.btn-icon:active{transform:scale(.9)}
+
+/* SECRET CARD */
+.secret-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:var(--rL);padding:28px 22px;text-align:center;width:100%;backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;gap:18px}
+.tap-box{background:rgba(255,255,255,.04);border:2px dashed rgba(255,255,255,.18);border-radius:16px;padding:36px 20px;width:100%;text-align:center;cursor:pointer;transition:all .18s;font-size:14px;font-weight:700}
+.tap-box:active{transform:scale(.97);background:rgba(255,255,255,.07)}
+
+/* SCOREBOARD OVERLAY */
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(5,0,15,.96);z-index:100;padding:24px 20px;overflow-y:auto;backdrop-filter:blur(14px)}
+.score-item{display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:18px;padding:14px 18px;width:100%;transition:all .3s}
+.score-item:first-child{background:rgba(255,215,0,.1);border-color:rgba(255,215,0,.3)}
+.rank-badge{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0}
+.r1{background:linear-gradient(135deg,#ffd700,#ffa500);color:#1a0533;box-shadow:0 4px 12px rgba(255,215,0,.35)}
+.r2{background:linear-gradient(135deg,#c0c0c0,#a0a0a0);color:#1a0533}
+.r3{background:linear-gradient(135deg,#cd7f32,#a05a20);color:#fff}
+.r-other{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.12)}
+.p-name{flex:1;font-size:17px;font-weight:800}
+.pts{font-family:var(--fd);font-size:26px;color:var(--gold)}
+
+/* END SCREEN */
+#end .display{background:linear-gradient(135deg,#ffd700,#ffa500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:52px;letter-spacing:2px}
+#e-winner{font-family:var(--fd);font-size:36px;text-shadow:0 0 24px rgba(255,215,0,.4);line-height:1.2}
+#e-pts{font-size:14px;color:rgba(255,255,255,.55);margin-top:-6px}
+#e-scores .score-item{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.09)}
+
+/* SPLASH SCREEN TITLE */
+#splash .display{background:linear-gradient(135deg,#fff 30%,rgba(255,255,255,.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none;filter:drop-shadow(0 0 30px rgba(255,60,80,.4))}
+.coin{width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:46px;margin:8px auto;background:linear-gradient(135deg,#ffd700,#ffa500);box-shadow:0 8px 28px rgba(255,215,0,.4);cursor:pointer;transition:all .2s;user-select:none}
+.coin.spin{animation:coinSpin .9s ease forwards}
+.coin:active{transform:scale(.93)}
 
 /* CUSTOM Q */
 .cq-item{display:flex;align-items:center;gap:10px;background:var(--w10);border:1.5px solid var(--w20);border-radius:13px;padding:11px 15px;width:100%}
@@ -339,37 +372,42 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 
 <!-- ====== SPLASH ====== -->
 <div id="splash" class="screen active" style="justify-content:space-between;text-align:center;padding-top:52px;padding-bottom:36px">
-  <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
-    <div class="display" style="font-family:'Fredoka One',cursive;font-size:72px;letter-spacing:5px;line-height:1">REVEAL</div>
-    <div style="font-size:13px;color:var(--w80);letter-spacing:3px;text-transform:uppercase;font-weight:700">Don't Play With Friends 😈 Mwahahaha</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+    <div class="display" style="font-family:'Fredoka One',cursive;font-size:76px;letter-spacing:6px;line-height:1">REVEAL</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.5);letter-spacing:3.5px;text-transform:uppercase;font-weight:700">Don't Play With Friends</div>
   </div>
-  <div style="display:flex;justify-content:center;gap:4px;padding:0 10px">
-    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">🎭</span>
-    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .18s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">😈</span>
-    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .36s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">💀</span>
-    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .54s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">👀</span>
-    <span style="font-size:68px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .72s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))">🐺</span>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+    <div style="display:flex;justify-content:center;gap:2px;padding:0 10px">
+      <span style="font-size:62px;display:inline-block;animation:bounce 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 16px rgba(0,0,0,.6))">🎭</span>
+      <span style="font-size:62px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .18s;filter:drop-shadow(0 6px 16px rgba(0,0,0,.6))">😈</span>
+      <span style="font-size:62px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .36s;filter:drop-shadow(0 6px 16px rgba(0,0,0,.6))">💀</span>
+      <span style="font-size:62px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .54s;filter:drop-shadow(0 6px 16px rgba(0,0,0,.6))">👀</span>
+      <span style="font-size:62px;display:inline-block;animation:bounce 1.6s ease-in-out infinite .72s;filter:drop-shadow(0 6px 16px rgba(0,0,0,.6))">🐺</span>
+    </div>
+    <div style="font-size:13px;color:rgba(255,255,255,.38);font-weight:700;letter-spacing:.5px">😈 Mwahahaha</div>
   </div>
   <div style="display:flex;flex-direction:column;gap:12px;width:100%">
-    <button class="btn btn-primary" onclick="go('setup')" style="font-size:18px;padding:17px 36px">START GAME 🎮</button>
+    <button class="btn btn-primary" onclick="go('setup')" style="font-size:18px;padding:18px 36px;letter-spacing:.5px">START GAME 🎮</button>
     <button class="btn btn-secondary btn-sm" onclick="go('custom-setup')">⚙️ Custom Mode</button>
-    <button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="opacity:.35;font-size:12px;padding:8px 20px">🗑 Clear All Data</button>
+    <button class="btn btn-secondary btn-sm" onclick="clearAllData()" style="opacity:.3;font-size:12px;padding:8px 20px">🗑 Clear All Data</button>
   </div>
 </div>
 
 <!-- ====== SETUP ====== -->
 <div id="setup" class="screen flex-col gap-16" style="max-width:480px;margin:0 auto;width:100%;padding-top:50px">
   <button class="back" onclick="go('splash')">← Back</button>
-  <div class="section-title display">Who's Playing? 🎮</div>
-  <div class="section-sub">Add at least 2 players — tap Enter or +</div>
+  <div style="text-align:center">
+    <div class="section-title display" style="font-size:32px">Who's Playing?</div>
+    <div class="section-sub" style="margin-bottom:0">Add players — tap Enter or + to add each one</div>
+  </div>
   <div class="row">
-    <input class="field" id="p-input" type="text" placeholder="Player name..." maxlength="18" onkeydown="if(event.key==='Enter')addP()">
-    <button class="btn-icon" onclick="addP()">+</button>
+    <input class="field" id="p-input" type="text" placeholder="Enter player name..." maxlength="18" onkeydown="if(event.key==='Enter')addP()">
+    <button class="btn-icon" onclick="addP()" style="background:linear-gradient(135deg,#b91c3c,#e8294d);border-color:transparent;color:#fff;font-size:22px;box-shadow:0 4px 14px rgba(232,41,77,.35)">+</button>
   </div>
   <div id="chips" class="chips"></div>
   <div id="p-count" class="count-badge" style="display:none">0 players</div>
   <div class="spacer"></div>
-  <button class="btn btn-primary" id="start-btn" onclick="goModes()" style="display:none">Let's Play! 🎉</button>
+  <button class="btn btn-primary" id="start-btn" onclick="goModes()" style="display:none;font-size:18px;padding:18px">Let's Play! 🎉</button>
 </div>
 
 <!-- ====== MODE SELECT ====== -->
@@ -503,13 +541,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
     <div class="q-num" id="q-num">QUESTION 1</div>
     <div class="q-text" id="q-text">Loading...</div>
   </div>
-  <div class="tc w-full">
-    <div class="judge-lbl" style="justify-content:center;margin-bottom:5px">⚖️ Judge</div>
+  <div class="judge-card">
+    <div class="judge-card-label">⚖️ Judge</div>
     <div class="judge-nm" id="g-judge">Player 1</div>
-    <div style="font-size:12px;opacity:.6;margin-top:3px;font-weight:600">picks the best answer</div>
-  </div>
-  <div class="flex-col gap-8 w-full">
-    <div style="font-size:13px;font-weight:700;opacity:.65;text-align:center">Award point to:</div>
+    <div class="judge-card-sub">picks the winner · award point to:</div>
     <div id="g-score-btns" class="score-row"></div>
   </div>
   <div class="flex-col gap-8 w-full" style="padding-bottom:16px">
@@ -532,36 +567,36 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   </div>
 
   <!-- Step 1: secret question -->
-  <div class="secret-card" id="par-step1">
-    <div style="font-size:13px;font-weight:800;opacity:.65">🔒 SECRET QUESTION FOR</div>
-    <div class="judge-nm" id="par-player" style="font-size:26px">Player 1</div>
-    <div class="tap-box" id="par-tap" onclick="revealParQ()">
-      <div style="font-size:36px">🔒</div>
-      <div style="margin-top:8px">Tap to see your question</div>
-      <div style="font-size:12px;opacity:.55;margin-top:3px">Don't show anyone!</div>
+  <div class="secret-card" id="par-step1" style="border-color:rgba(6,182,212,.25);background:linear-gradient(160deg,rgba(6,182,212,.07),rgba(0,10,20,.6))">
+    <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.55;text-transform:uppercase">🔒 Secret question for</div>
+    <div class="judge-nm" id="par-player" style="font-size:28px;color:#22d3ee;text-shadow:0 0 16px rgba(34,211,238,.35)">Player 1</div>
+    <div class="tap-box" id="par-tap" onclick="revealParQ()" style="border-color:rgba(6,182,212,.35)">
+      <div style="font-size:40px">🔒</div>
+      <div style="margin-top:10px;font-size:15px">Tap to see your question</div>
+      <div style="font-size:12px;opacity:.45;margin-top:4px">Don't show anyone!</div>
     </div>
     <div id="par-q-area" style="display:none;width:100%;text-align:center">
-      <div class="q-text" id="par-q-text" style="font-size:21px;line-height:1.4"></div>
-      <div style="margin-top:14px;font-size:13px;opacity:.65;font-weight:600">Whisper a name to everyone. Hide the screen!</div>
+      <div class="q-text" id="par-q-text" style="font-size:21px;line-height:1.4;color:#e2f8fc"></div>
+      <div style="margin-top:14px;font-size:12px;opacity:.55;font-weight:700;letter-spacing:.3px">Whisper a name to everyone. Hide the screen!</div>
     </div>
-    <button class="btn btn-secondary btn-sm w-full" id="par-done" style="display:none" onclick="showNamePick()">Done Whispering 🤫</button>
+    <button class="btn btn-secondary btn-sm w-full" id="par-done" style="display:none;border-color:rgba(6,182,212,.4);color:#22d3ee" onclick="showNamePick()">Done Whispering 🤫</button>
   </div>
 
   <!-- Step 2: name pick -->
   <div id="par-step2" style="display:none;width:100%" class="flex-col gap-10">
-    <div style="font-size:13px;font-weight:700;opacity:.65;text-align:center">Who did you say? (tap their name)</div>
+    <div style="font-size:12px;font-weight:900;letter-spacing:1.5px;opacity:.5;text-align:center;text-transform:uppercase">Who did you whisper?</div>
     <div id="par-name-btns" class="score-row"></div>
   </div>
 
   <!-- Step 3: coin flip -->
   <div id="par-step3" style="display:none;width:100%">
-    <div class="secret-card">
-      <div style="font-size:13px;font-weight:800;opacity:.65">THE PERSON NAMED IS</div>
-      <div class="judge-nm" id="par-named" style="font-size:24px;color:#22d3ee">???</div>
-      <div style="font-size:13px;opacity:.65;font-weight:600">Flip the coin to reveal the question!</div>
+    <div class="secret-card" style="border-color:rgba(6,182,212,.3);background:linear-gradient(160deg,rgba(6,182,212,.08),rgba(0,10,20,.7))">
+      <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.5;text-transform:uppercase">The person named is</div>
+      <div class="judge-nm" id="par-named" style="font-size:26px;color:#22d3ee;text-shadow:0 0 16px rgba(34,211,238,.4)">???</div>
+      <div style="font-size:13px;opacity:.55;font-weight:700">Flip the coin — heads reveals the question!</div>
       <div class="coin" id="coin" onclick="flipCoin()">🪙</div>
-      <div id="coin-res" style="display:none;font-size:17px;font-weight:800;margin-top:6px"></div>
-      <div id="coin-q" style="display:none;margin-top:10px;background:rgba(34,197,94,.12);border:2px solid rgba(34,197,94,.35);border-radius:14px;padding:16px;font-weight:700;font-size:16px;line-height:1.4"></div>
+      <div id="coin-res" style="display:none;font-size:18px;font-weight:900;margin-top:4px"></div>
+      <div id="coin-q" style="display:none;margin-top:10px;background:rgba(34,197,94,.1);border:1.5px solid rgba(34,197,94,.35);border-radius:16px;padding:16px;font-weight:700;font-size:16px;line-height:1.4"></div>
     </div>
   </div>
 
@@ -574,7 +609,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 <!-- ====== BLACKOUT ====== -->
 <div id="blackout" class="screen flex-col gap-14" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
   <div class="game-header">
-    <div class="mode-badge">BLACKOUT 🕵️</div>
+    <div class="mode-badge" style="color:#a78bfa;border-color:rgba(167,139,250,.4)">BLACKOUT 🕵️</div>
     <div class="round-info" id="bo-round">Round 1</div>
     <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
   </div>
@@ -623,12 +658,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 
   <!-- Phase D: Reveal -->
   <div id="bo-reveal" style="display:none;width:100%" class="flex-col gap-14 tc">
-    <div class="role-card role-imp" style="animation:glow 2s ease infinite">
-      <div style="font-size:58px">🎭</div>
-      <div style="font-family:var(--fd);font-size:24px;color:#ef4444">THE IMPOSTER WAS</div>
-      <div id="bo-imp-name" style="font-family:var(--fd);font-size:34px"></div>
+    <div class="role-card role-imp" style="animation:glow 2s ease infinite;box-shadow:0 0 40px rgba(239,68,68,.2)">
+      <div style="font-size:64px;filter:drop-shadow(0 0 16px rgba(239,68,68,.6))">🎭</div>
+      <div style="font-family:var(--fd);font-size:22px;color:#ef4444;letter-spacing:1px">THE IMPOSTER WAS</div>
+      <div id="bo-imp-name" style="font-family:var(--fd);font-size:38px;text-shadow:0 0 20px rgba(239,68,68,.5)"></div>
     </div>
-    <div id="bo-score-info" style="font-size:14px;font-weight:700;opacity:.8;line-height:1.5"></div>
+    <div id="bo-score-info" style="font-size:14px;font-weight:700;opacity:.75;line-height:1.6"></div>
     <button class="btn btn-primary" onclick="nextBORound()">Next Round →</button>
     <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
   </div>
@@ -676,19 +711,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   <div class="scroll flex-col gap-12" style="flex:1;width:100%">
 
     <!-- Night / Day phase label -->
-    <div id="worf-phase-label" class="q-card" style="flex:unset;min-height:auto;padding:18px 20px;gap:8px">
-      <div id="worf-phase-emoji" style="font-size:36px">🌙</div>
-      <div id="worf-phase-title" style="font-family:var(--fd);font-size:22px"></div>
-      <div id="worf-phase-desc" style="font-size:13px;opacity:.7;font-weight:600;line-height:1.5"></div>
+    <div id="worf-phase-label" class="q-card" style="flex:unset;min-height:auto;padding:20px;gap:10px;background:linear-gradient(160deg,rgba(220,38,38,.08),rgba(10,0,0,.5));border-color:rgba(248,113,113,.2)">
+      <div id="worf-phase-emoji" style="font-size:40px">🌙</div>
+      <div id="worf-phase-title" style="font-family:var(--fd);font-size:24px"></div>
+      <div id="worf-phase-desc" style="font-size:13px;opacity:.65;font-weight:600;line-height:1.5"></div>
     </div>
 
     <!-- Alive players -->
-    <div style="font-size:12px;font-weight:900;letter-spacing:1.5px;opacity:.55;text-align:center">ALIVE</div>
+    <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.45;text-align:center;text-transform:uppercase">🟢 Alive</div>
     <div id="worf-alive-list" class="flex-col gap-8 w-full"></div>
 
     <!-- Dead players -->
     <div id="worf-dead-section" style="display:none">
-      <div style="font-size:12px;font-weight:900;letter-spacing:1.5px;opacity:.4;text-align:center;margin-bottom:8px">☠️ ELIMINATED</div>
+      <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.35;text-align:center;margin-bottom:8px;text-transform:uppercase">☠️ Eliminated</div>
       <div id="worf-dead-list" style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center"></div>
     </div>
 
@@ -710,14 +745,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 </div>
 
 <!-- ====== END SCREEN ====== -->
-<div id="end" class="screen" style="justify-content:center;text-align:center;gap:18px;max-width:480px;margin:0 auto;width:100%">
-  <div style="font-size:80px;animation:bounce 1.2s ease infinite">👑</div>
-  <div class="display" style="font-family:var(--fd);font-size:46px">WINNER!</div>
-  <div id="e-winner" style="font-family:var(--fd);font-size:34px"></div>
-  <div id="e-pts" style="font-size:15px;opacity:.65;margin-top:-10px"></div>
-  <div id="e-scores" class="flex-col gap-8 w-full" style="margin:10px 0"></div>
-  <button class="btn btn-primary" onclick="playAgain()">Play Again 🔄</button>
-  <button class="btn btn-secondary btn-sm" onclick="go('splash')" style="margin-top:4px">Home 🏠</button>
+<div id="end" class="screen" style="justify-content:center;text-align:center;gap:16px;max-width:480px;margin:0 auto;width:100%;padding:32px 20px">
+  <div style="font-size:72px;animation:bounce 1.2s ease infinite;filter:drop-shadow(0 0 24px rgba(255,215,0,.5))">👑</div>
+  <div class="display" style="font-family:var(--fd);letter-spacing:2px">WINNER!</div>
+  <div id="e-winner"></div>
+  <div id="e-pts"></div>
+  <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.5),transparent);margin:0 auto"></div>
+  <div id="e-scores" class="flex-col gap-8 w-full" style="margin:4px 0"></div>
+  <button class="btn btn-primary" onclick="playAgain()" style="margin-top:4px">Play Again 🔄</button>
+  <button class="btn btn-secondary btn-sm" onclick="go('splash')">Home 🏠</button>
 </div>
 
 <!-- End Game Confirm Modal -->

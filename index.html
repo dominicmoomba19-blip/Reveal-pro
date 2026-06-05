@@ -513,7 +513,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
     <div id="g-score-btns" class="score-row"></div>
   </div>
   <div class="flex-col gap-8 w-full" style="padding-bottom:16px">
-    <button class="btn btn-primary" id="g-skip-btn" onclick="castSkipVote()">Next ⏭</button>
+    <button class="btn btn-primary" id="g-next" onclick="nextQ()">Vote to skip ⏭</button>
     <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
   </div>
 </div>
@@ -1304,8 +1304,6 @@ function startReg(m){
   go('game');loadQ();
 }
 function loadQ(){
-  const skipBtn=document.getElementById('g-skip-btn');
-  if(skipBtn){skipBtn.disabled=false;skipBtn.style.opacity='1';}
   if(round>=maxRounds){endGame();return;}
   if(round>=qPool.length){qPool=shuffle([...(mode==='custom'?cQs:Q[mode])]);round=0;}
   const q=qPool[round],prog=((round+1)/maxRounds)*100;
@@ -1320,24 +1318,17 @@ function loadQ(){
   document.getElementById('g-round').textContent=`Round ${round+1}`;
   document.getElementById('g-score-btns').innerHTML=players.filter(p=>p!==j).map(p=>`<button class="sbtn" onclick="selW(this,'${esc(p)}')">${escHtml(p)}</button>`).join('');
   winner=null;
-  if(skipBtn)skipBtn.textContent=isLast?'Finish Game ⏭':'Next ⏭';
+  document.getElementById('g-next').textContent=isLast?'Finish Game ⏭':'Vote to skip ⏭';
   const c=document.getElementById('q-card');c.style.animation='none';c.offsetHeight;c.style.animation='slideUp .4s ease';
 }
 function selW(btn,p){
   hap('light');
   document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');winner=p;
-  const skipBtn=document.getElementById('g-skip-btn');
-  if(skipBtn)skipBtn.textContent=`Award to ${p} ⏭`;
+  document.getElementById('g-next').textContent=`Award to ${p} ⏭`;
 }
 function nextQ(){
   hap(winner?'success':'light');
-  if(winner){scores[winner]=(scores[winner]||0)+1;toast(`+1 point for ${winner}! 🎉`);}
-  round++;judgeIdx++;
-  if(round>=maxRounds){endGame();}else{loadQ();}
-}
-function castSkipVote(){
-  hap(winner?'success':'medium');
   if(winner){scores[winner]=(scores[winner]||0)+1;toast(`+1 point for ${winner}! 🎉`);}
   round++;judgeIdx++;
   if(round>=maxRounds){endGame();}else{loadQ();}

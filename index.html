@@ -125,39 +125,95 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .count-badge{background:rgba(192,21,46,.25);border-radius:10px;padding:4px 12px;font-size:12px;font-weight:800;color:var(--crimsonL);border:1px solid rgba(192,21,46,.35);align-self:flex-start}
 
 /* MODE CARDS */
-.mode-card{width:100%;border-radius:var(--rL);padding:20px 18px 20px 118px;min-height:118px;display:flex;align-items:center;cursor:pointer;transition:all .2s ease;border:2px solid;position:relative;overflow:hidden}
+.mode-card{width:100%;border-radius:var(--rL);padding:18px 16px 18px 120px;min-height:112px;display:flex;align-items:center;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;border:1.5px solid;position:relative;overflow:hidden}
 .mode-card:active{transform:scale(.97)}
-.mode-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:112px;background:rgba(0,0,0,.22);border-right:1px solid rgba(255,255,255,.07);z-index:0}
-.mode-emoji{position:absolute;left:-4px;bottom:-14px;font-size:108px;line-height:1;filter:drop-shadow(0 8px 22px rgba(0,0,0,.7));z-index:1;pointer-events:none}
+/* left emoji zone bg */
+.mode-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:110px;z-index:0;border-right:1px solid rgba(255,255,255,.06)}
+/* colored left accent stripe */
+.mode-card::after{content:'';position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:0 3px 3px 0;z-index:2}
+.mode-emoji{position:absolute;left:-4px;bottom:-16px;font-size:114px;line-height:1;filter:drop-shadow(0 10px 26px rgba(0,0,0,.8));z-index:1;pointer-events:none}
 .mode-info{flex:1;min-width:0;position:relative;z-index:1}
-.mode-name{font-family:var(--fd);font-size:22px;line-height:1.15;margin-bottom:6px;word-break:break-word}
-.mode-desc{font-size:13px;opacity:.9;line-height:1.5;font-weight:600}
-.mode-arrow{font-size:22px;opacity:.35;flex-shrink:0;margin-left:10px;align-self:center;position:relative;z-index:1}
-.m-classic{background:linear-gradient(135deg,#1a3a5c,#0d2540);border-color:#FFD700}
-.m-classic .mode-name{color:#FFD700}
-.m-spicy{background:linear-gradient(135deg,#5c1a1a,#3d0a0a);border-color:#ef4444}
-.m-spicy .mode-name{color:#ff6b6b}
-.m-hardcore{background:linear-gradient(135deg,#3d1a00,#2a1000);border-color:#f97316}
-.m-hardcore .mode-name{color:#fb923c}
-.m-confessions{background:linear-gradient(135deg,#3b0010,#1f000a);border-color:#e8294d}
-.m-confessions .mode-name{color:#fca5a5}
-.m-deep{background:linear-gradient(135deg,#0a1a3d,#071228);border-color:#3b82f6}
-.m-deep .mode-name{color:#60a5fa}
-.m-paranoia{background:linear-gradient(135deg,#0a3d2a,#07281c);border-color:#06b6d4}
-.m-paranoia .mode-name{color:#22d3ee}
-.m-blackout{background:linear-gradient(135deg,#0d0d0d,#1a1a1a);border-color:rgba(255,255,255,.25)}
-.m-blackout .mode-name{color:#fff}
-.m-custom{background:linear-gradient(135deg,#0a3d0a,#072807);border-color:#22c55e}
-.m-custom .mode-name{color:#4ade80}
-.m-wyr{background:linear-gradient(135deg,#1a1a3d,#0d0d2e);border-color:#f59e0b}
-.m-wyr .mode-name{color:#fbbf24}
-.m-worf{background:linear-gradient(135deg,#1a0a0a,#2e0d0d);border-color:#dc2626}
-.m-worf .mode-name{color:#f87171}
-.m-dpwf{background:linear-gradient(135deg,#0a0000,#1a0000);border-color:#ff0000;box-shadow:0 0 18px rgba(255,0,0,.25),inset 0 0 30px rgba(255,0,0,.05)}
-.m-dpwf .mode-name{color:#ff3333;text-shadow:0 0 12px rgba(255,0,0,.6)}
+.mode-name{font-family:var(--fd);font-size:21px;line-height:1.1;margin-bottom:5px;word-break:break-word}
+.mode-desc{font-size:12.5px;opacity:.72;line-height:1.45;font-weight:600}
+.mode-arrow{font-size:18px;opacity:.28;flex-shrink:0;margin-left:8px;align-self:center;position:relative;z-index:1}
+
+/* CLASSIC — gold prestige */
+.m-classic{background:linear-gradient(118deg,#1a3a5c,#0d2540 60%,#091e35);border-color:rgba(255,215,0,.4);box-shadow:0 4px 22px rgba(255,215,0,.07)}
+.m-classic::before{background:linear-gradient(to right,rgba(255,215,0,.07),transparent)}
+.m-classic::after{background:#FFD700}
+.m-classic .mode-name{color:#FFD700;text-shadow:0 0 18px rgba(255,215,0,.45)}
+
+/* SPICY — hellfire */
+.m-spicy{background:linear-gradient(148deg,#5c1a1a,#3d0a0a 55%,#290505);border-color:rgba(239,68,68,.48);box-shadow:0 4px 22px rgba(239,68,68,.1)}
+.m-spicy::before{background:linear-gradient(to right,rgba(239,68,68,.09),transparent)}
+.m-spicy::after{background:#ef4444}
+.m-spicy .mode-name{color:#ff6b6b;text-shadow:0 0 16px rgba(255,107,107,.55)}
+
+/* HARDCORE — scorched */
+.m-hardcore{background:linear-gradient(158deg,#3d1a00,#2a1000 55%,#180900);border-color:rgba(249,115,22,.44);box-shadow:0 4px 22px rgba(249,115,22,.09)}
+.m-hardcore::before{background:linear-gradient(to right,rgba(249,115,22,.09),transparent)}
+.m-hardcore::after{background:#f97316}
+.m-hardcore .mode-name{color:#fb923c;text-shadow:0 0 14px rgba(249,115,22,.5)}
+
+/* CONFESSIONS — crimson secrets */
+.m-confessions{background:linear-gradient(124deg,#3b0010,#1f000a 55%,#130006);border-color:rgba(232,41,77,.48);box-shadow:0 4px 22px rgba(232,41,77,.1)}
+.m-confessions::before{background:linear-gradient(to right,rgba(232,41,77,.09),transparent)}
+.m-confessions::after{background:#e8294d}
+.m-confessions .mode-name{color:#fca5a5;text-shadow:0 0 16px rgba(232,41,77,.45)}
+
+/* DEEP — cold ocean */
+.m-deep{background:linear-gradient(154deg,#0a1a3d,#071228 55%,#040d1f);border-color:rgba(59,130,246,.42);box-shadow:0 4px 22px rgba(59,130,246,.09)}
+.m-deep::before{background:linear-gradient(to right,rgba(59,130,246,.09),transparent)}
+.m-deep::after{background:#3b82f6}
+.m-deep .mode-name{color:#60a5fa;text-shadow:0 0 16px rgba(96,165,250,.45)}
+
+/* PARANOIA — surveillance */
+.m-paranoia{background:linear-gradient(143deg,#0a3d2a,#07281c 55%,#041b12);border-color:rgba(6,182,212,.42);box-shadow:0 4px 22px rgba(6,182,212,.09)}
+.m-paranoia::before{background:linear-gradient(to right,rgba(6,182,212,.09),transparent)}
+.m-paranoia::after{background:#06b6d4}
+.m-paranoia .mode-name{color:#22d3ee;text-shadow:0 0 16px rgba(34,211,238,.45)}
+
+/* BLACKOUT — stark */
+.m-blackout{background:linear-gradient(135deg,#111,#0a0a0a);border-color:rgba(255,255,255,.18);box-shadow:0 4px 22px rgba(0,0,0,.35)}
+.m-blackout::before{background:linear-gradient(to right,rgba(255,255,255,.04),transparent)}
+.m-blackout::after{background:rgba(255,255,255,.55)}
+.m-blackout .mode-name{color:#fff;letter-spacing:.5px}
+
+/* CUSTOM */
+.m-custom{background:linear-gradient(135deg,#0a3d0a,#072807);border-color:rgba(34,197,94,.42);box-shadow:0 4px 22px rgba(34,197,94,.07)}
+.m-custom::before{background:linear-gradient(to right,rgba(34,197,94,.07),transparent)}
+.m-custom::after{background:#22c55e}
+.m-custom .mode-name{color:#4ade80;text-shadow:0 0 14px rgba(74,222,128,.4)}
+
+/* WOULD U RATHER */
+.m-wyr{background:linear-gradient(138deg,#1a1a3d,#0d0d2e 55%,#080827);border-color:rgba(245,158,11,.42);box-shadow:0 4px 22px rgba(245,158,11,.09)}
+.m-wyr::before{background:linear-gradient(to right,rgba(245,158,11,.09),transparent)}
+.m-wyr::after{background:#f59e0b}
+.m-wyr .mode-name{color:#fbbf24;text-shadow:0 0 14px rgba(251,191,36,.45)}
+
+/* WEREWOLF — blood moon */
+.m-worf{background:linear-gradient(163deg,#1a0a0a,#2e0d0d 40%,#1a0505);border-color:rgba(220,38,38,.48);box-shadow:0 4px 22px rgba(220,38,38,.1)}
+.m-worf::before{background:linear-gradient(to right,rgba(220,38,38,.09),transparent)}
+.m-worf::after{background:#dc2626}
+.m-worf .mode-name{color:#f87171;text-shadow:0 0 16px rgba(248,113,113,.45)}
+
 /* NEVER HAVE I EVER */
-.m-nhie{background:linear-gradient(135deg,#001a1a,#002a20);border-color:#06b6d4}
-.m-nhie .mode-name{color:#22d3ee}
+.m-nhie{background:linear-gradient(128deg,#001a1a,#002a20 55%,#001a14);border-color:rgba(6,182,212,.42);box-shadow:0 4px 22px rgba(6,182,212,.08)}
+.m-nhie::before{background:linear-gradient(to right,rgba(6,182,212,.08),transparent)}
+.m-nhie::after{background:#06b6d4}
+.m-nhie .mode-name{color:#22d3ee;text-shadow:0 0 14px rgba(34,211,238,.4)}
+
+/* HOT SEAT */
+.m-hotseat{background:linear-gradient(143deg,#1a1000,#2a1a00 45%,#1a0e00);border-color:rgba(245,158,11,.42);box-shadow:0 4px 22px rgba(245,158,11,.09)}
+.m-hotseat::before{background:linear-gradient(to right,rgba(245,158,11,.09),transparent)}
+.m-hotseat::after{background:#f59e0b}
+.m-hotseat .mode-name{color:#fbbf24;text-shadow:0 0 14px rgba(251,191,36,.45)}
+
+/* DON'T PLAY WITH FRIENDS — maximum danger */
+.m-dpwf{background:linear-gradient(135deg,#0a0000,#1a0000 40%,#0d0000);border-color:rgba(255,0,0,.52);box-shadow:0 0 28px rgba(255,0,0,.18),0 8px 32px rgba(255,0,0,.08),inset 0 0 40px rgba(255,0,0,.04)}
+.m-dpwf::before{background:linear-gradient(to right,rgba(255,0,0,.11),transparent)}
+.m-dpwf::after{background:#ff1111;box-shadow:0 0 10px rgba(255,0,0,.9)}
+.m-dpwf .mode-name{color:#ff3333;text-shadow:0 0 14px rgba(255,0,0,.7),0 0 28px rgba(255,0,0,.3);letter-spacing:.3px}
 .nhie-player{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--w10);border:2px solid var(--w20);border-radius:18px;padding:12px 8px;cursor:pointer;transition:all .2s;flex:1;min-width:72px;max-width:130px;user-select:none}
 .nhie-player:active{transform:scale(.94)}
 .nhie-player.drank{background:rgba(6,182,212,.18);border-color:#06b6d4}

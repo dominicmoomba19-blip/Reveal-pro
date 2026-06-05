@@ -513,12 +513,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
     <div id="g-score-btns" class="score-row"></div>
   </div>
   <div class="flex-col gap-8 w-full" style="padding-bottom:16px">
-    <button class="btn btn-primary" id="g-next" onclick="nextQ()">Next Question →</button>
-    <!-- Skip vote strip -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:4px 0">
-      <button id="g-skip-btn" onclick="castSkipVote()" style="background:none;border:none;color:rgba(255,255,255,.4);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;padding:6px 12px;border-radius:8px;transition:all .18s;letter-spacing:.3px">⏭ Vote to skip</button>
-      <div id="g-skip-status" style="font-size:12px;font-weight:800;color:rgba(232,41,77,.7);display:none"></div>
-    </div>
+    <button class="btn btn-primary" id="g-skip-btn" onclick="castSkipVote()">Next ⏭</button>
     <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
   </div>
 </div>
@@ -750,9 +745,6 @@ function hap(type='light'){
 // ===== STATE =====
 let players=[],scores={},mode='',round=0,judgeIdx=0,winner=null,qPool=[],cQs=[],cName='CUSTOM',cDesc='Your own questions.',maxRounds=10;
 let allTimeScores={};
-
-// ===== SKIP VOTE STATE =====
-let skipVotes=new Set(),skipThreshold=2;
 
 // ===== STORAGE =====
 function saveStorage(){
@@ -1312,37 +1304,31 @@ function startReg(m){
   go('game');loadQ();
 }
 function loadQ(){
-  skipVotes=new Set();
-  skipThreshold=Math.max(2,Math.ceil(players.length/2));
   const skipBtn=document.getElementById('g-skip-btn');
-  const skipStatus=document.getElementById('g-skip-status');
-  if(skipBtn){skipBtn.style.opacity='1';skipBtn.disabled=false;skipBtn.style.color='rgba(255,255,255,.4)';}
-  if(skipStatus){skipStatus.style.display='none';skipStatus.textContent='';}
-  // Check if we've hit the round limit
+  if(skipBtn){skipBtn.disabled=false;skipBtn.style.opacity='1';}
   if(round>=maxRounds){endGame();return;}
   if(round>=qPool.length){qPool=shuffle([...(mode==='custom'?cQs:Q[mode])]);round=0;}
   const q=qPool[round],prog=((round+1)/maxRounds)*100;
   document.getElementById('q-num').textContent=`QUESTION ${round+1}`;
   document.getElementById('q-text').textContent=q;
   document.getElementById('g-prog').style.width=prog+'%';
-  // Round counter banner
   document.getElementById('g-round-display').textContent=`${round+1} / ${maxRounds}`;
   const isLast=round===maxRounds-1;
   document.getElementById('g-last-round').style.display=isLast?'block':'none';
   const j=players[judgeIdx%players.length];
   document.getElementById('g-judge').textContent=j;
   document.getElementById('g-round').textContent=`Round ${round+1}`;
-  // score buttons
   document.getElementById('g-score-btns').innerHTML=players.filter(p=>p!==j).map(p=>`<button class="sbtn" onclick="selW(this,'${esc(p)}')">${escHtml(p)}</button>`).join('');
-  winner=null;document.getElementById('g-next').textContent=isLast?'Final Round! Finish →':'Next Question →';
-  // re-animate
+  winner=null;
+  if(skipBtn)skipBtn.textContent=isLast?'Finish Game ⏭':'Next ⏭';
   const c=document.getElementById('q-card');c.style.animation='none';c.offsetHeight;c.style.animation='slideUp .4s ease';
 }
 function selW(btn,p){
   hap('light');
   document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');winner=p;
-  document.getElementById('g-next').textContent=`Award to ${p} →`;
+  const skipBtn=document.getElementById('g-skip-btn');
+  if(skipBtn)skipBtn.textContent=`Award to ${p} ⏭`;
 }
 function nextQ(){
   hap(winner?'success':'light');
@@ -1351,25 +1337,10 @@ function nextQ(){
   if(round>=maxRounds){endGame();}else{loadQ();}
 }
 function castSkipVote(){
-  hap('medium');
-  const cur=skipVotes.size+1;
-  skipVotes.add(cur);
-  const needed=skipThreshold-skipVotes.size;
-  const skipBtn=document.getElementById('g-skip-btn');
-  const skipStatus=document.getElementById('g-skip-status');
-  if(skipVotes.size>=skipThreshold){
-    hap('success');
-    if(skipBtn){skipBtn.disabled=true;skipBtn.style.opacity='.2';}
-    if(skipStatus){skipStatus.style.display='none';}
-    toast('Question skipped by group! ⏭');
-    winner=null;
-    round++;judgeIdx++;
-    if(round>=maxRounds){endGame();}else{loadQ();}
-  } else {
-    if(skipStatus){skipStatus.textContent=`${skipVotes.size}/${skipThreshold} want to skip`;skipStatus.style.display='block';}
-    if(skipBtn){skipBtn.style.color='rgba(232,41,77,.8)';}
-    toast(`${skipVotes.size}/${skipThreshold} want to skip ⏭`);
-  }
+  hap(winner?'success':'medium');
+  if(winner){scores[winner]=(scores[winner]||0)+1;toast(`+1 point for ${winner}! 🎉`);}
+  round++;judgeIdx++;
+  if(round>=maxRounds){endGame();}else{loadQ();}
 }
 
 // ===== PARANOIA =====

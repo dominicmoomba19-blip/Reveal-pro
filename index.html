@@ -425,7 +425,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   <button class="back" onclick="go('setup')">← Back</button>
   <div style="text-align:center;margin-bottom:6px">
     <div class="section-title display" style="font-size:32px">Pick a Mode</div>
-    <div class="section-sub" style="margin-bottom:12px">Choose how wild tonight gets</div>
+    <div class="section-sub" style="margin-bottom:8px">Choose how wild tonight gets</div>
+    <button onclick="showRules()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;font-weight:800;letter-spacing:1px;cursor:pointer;padding:4px 10px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.2)">ℹ️ How to Play</button>
   </div>
   <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;margin-bottom:14px">
     <div style="font-size:10px;font-weight:900;letter-spacing:2.5px;opacity:.4;text-transform:uppercase">How many rounds?</div>
@@ -454,7 +455,24 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 </div>
 
 
-<!-- ====== NEVER HAVE I EVER ====== -->
+<!-- ====== RULES OVERLAY ====== -->
+<div id="rules-overlay" style="display:none;position:fixed;inset:0;background:rgba(5,0,15,.97);z-index:200;padding:24px 20px;overflow-y:auto;backdrop-filter:blur(16px)">
+  <div style="max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="display" style="font-size:26px;font-family:'Fredoka One',cursive">How to Play</div>
+      <button onclick="hideRules()" style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);border-radius:50%;width:38px;height:38px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+
+    <!-- SHARED BASE RULE -->
+    <div style="background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:18px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.45;text-transform:uppercase;margin-bottom:6px">The Basics</div>
+      <div style="font-size:13px;font-weight:600;line-height:1.65;opacity:.85">A question is shown on screen. Pass the phone around. Everyone answers out loud. The <span style="color:#FFD700;font-weight:800">Judge</span> picks the best answer and awards a point. Judge rotates every round. Most points at the end wins.</div>
+    </div>
+
+    <!-- PER MODE RULES -->
+    <div id="rules-list" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
 <div id="nhie" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
   <div class="game-header">
     <div class="mode-badge" style="color:#22d3ee;border-color:rgba(6,182,212,.4)">NEVER HAVE I EVER</div>
@@ -895,7 +913,45 @@ const Q={
     "If you had to survive a week with no phone, what breaks first?",
     "What's your most embarrassing fashion era?",
     "If your life had a theme song right now, what would it be?",
-    "What would you do if you woke up tomorrow as the opposite gender?"
+    "What's something you did as a child that you'd still do now if it was socially acceptable?",
+    "What song do you know every single word to but would be embarrassed to admit?",
+    "What's the most useless talent you genuinely have?",
+    "If your personality had a weather forecast, what would today say?",
+    "What's something you've argued about passionately that doesn't actually matter?",
+    "What's the most embarrassing thing currently in your camera roll?",
+    "If you were a warning label, what would you say?",
+    "What's the most ridiculous thing you've bought online and never actually used?",
+    "What's something everyone else seems to love that you simply don't get?",
+    "What's the last thing you searched on YouTube that you'd be embarrassed to show?",
+    "What's your go-to comfort food and what usually triggers the craving?",
+    "What's the most extreme thing you've ever done purely out of boredom?",
+    "What's the longest you've worn an outfit without changing — and what was the situation?",
+    "If your bedroom could talk, what's the most embarrassing thing it would say?",
+    "What hobby would you pick up if everyone magically got 3 extra hours a day?",
+    "What's a movie or show you've rewatched more times than you'll ever admit?",
+    "What's one thing you absolutely cannot do first thing in the morning?",
+    "What's the most creative excuse you've ever used to leave somewhere early?",
+    "What's something you've explained confidently and turned out to be completely wrong about?",
+    "What's one thing you pretend not to enjoy but secretly love?",
+    "What's your most embarrassing fashion era — describe it in detail?",
+    "What's something small that genuinely makes your day better every single time?",
+    "If you could only eat food from one country for the rest of your life, which?",
+    "What's the most embarrassing reason you've ever cried?",
+    "If someone filmed your morning routine, what would shock them most?",
+    "What's something you've done that your parents would ground you for even now?",
+    "What's the worst gift you've ever given someone — and how did they react?",
+    "What's a word or phrase you use way too much without realising it?",
+    "If your group chat got exposed right now, who'd be most embarrassed?",
+    "What would you do with your life if money was completely irrelevant?",
+    "What's the most expensive thing you've broken and how did you handle it?",
+    "What's a food combination you eat that would horrify a chef?",
+    "What's the strangest thing you've done to procrastinate?",
+    "If you had to change your name tomorrow, what would you pick?",
+    "What's the most childish argument you've had as an adult?",
+    "What's something you were absolutely convinced you were good at until you weren't?",
+    "What's the most embarrassing thing you've ever autocorrected to?",
+    "If your life had a laugh track, what moment would get the biggest laugh?",
+    "What's the most unnecessary thing you've ever bought just because it was on sale?"
   ],
   spicy:[
     "What's the most scandalous text you've ever sent?",
@@ -937,7 +993,40 @@ const Q={
     "What's one relationship mistake you keep repeating?",
     "What's the most embarrassing thing you've been caught doing?",
     "What's the wildest reason you've ever cancelled plans?",
-    "What's the longest you've ever waited for a reply before doing something regrettable?"
+    "What's the most chaotic thing your group chat has ever discussed?",
+    "What's the most toxic trait you brought into your last relationship?",
+    "What's a type you keep going back to even though it never works out?",
+    "What's the most embarrassing voice note you've ever sent — and to who?",
+    "What's something you've done purely to make someone jealous — and did it work?",
+    "What's the pettiest hill you've ever died on in a relationship?",
+    "What's something romantic you rehearsed in your head that never actually happened?",
+    "Who's the last person you checked up on who has no idea you did it?",
+    "What's a text conversation that would go completely viral if it ever got leaked?",
+    "What's the worst advice you ever took about love — and whose was it?",
+    "What's the most extreme thing you've done after seeing someone's story?",
+    "What's something about your dating history you'd never put on your CV?",
+    "What's the most embarrassing thing you've done to look good for someone?",
+    "What's a situationship you let drag on way too long — and why did you let it?",
+    "What's the worst thing you've ever said during an argument you can't take back?",
+    "What's the most unhinged thing you've done over someone you liked?",
+    "What's a relationship red flag you saw early and chose to ignore completely?",
+    "What's the most embarrassing thing that's happened to you on a first date?",
+    "What's one thing about your romantic life your parents can never know?",
+    "What's the most embarrassing thing you've done when you were falling for someone?",
+    "What's something you've said in an argument that ended it immediately — and not in a good way?",
+    "What's the most embarrassing thing you've posted on a story and then deleted?",
+    "What's a personality trait you have that makes you difficult to date?",
+    "What's the most embarrassing way you've found out someone liked you?",
+    "What's the most desperate thing you've done to save a situationship?",
+    "What's a type you're attracted to that everyone around you thinks is a terrible idea?",
+    "What's the longest you've gone without texting back on purpose — and why?",
+    "What's something you've done to a crush that, looking back, was a lot?",
+    "What's the most embarrassing thing you've found yourself doing at 2AM?",
+    "What's the most you've ever changed yourself for someone who didn't deserve it?",
+    "What's a lie you told early in a relationship that you had to keep maintaining?",
+    "What's the most immature thing you've done after being rejected?",
+    "What's a habit you have that would be a dealbreaker for most people you date?",
+    "What's the most you've ever stalked someone's profile in one sitting?"
   ],
   hardcore:[
     "Who in this room would you trust LEAST with a secret? Be honest.",
@@ -979,7 +1068,33 @@ const Q={
     "What's the most entitled thing you've ever done?",
     "If one person in this room read your messages about them, who would be most upset?",
     "What's the biggest promise you've made and quietly broken?",
-    "What's one thing you've done that you'd be ashamed to tell your parents?"
+    "What's the most passive-aggressive thing you've done to someone you called a friend?",
+    "Who here have you defended in public but complained about in private?",
+    "What's something someone here did that permanently changed your opinion of them?",
+    "What's a decision someone here made that you thought was a mistake but said nothing?",
+    "What's the most selfish reason you've stayed in a friendship?",
+    "Who here have you given the least grace to — and was it deserved?",
+    "What's the most dishonest version of yourself you've shown someone in this room?",
+    "What's something about your own character you're still not willing to change?",
+    "What's the most disrespectful thing you've done and quietly justified to yourself?",
+    "What's the biggest lie you've told someone in this room — and they believed it?",
+    "What's an uncomfortable truth you know about yourself that you never say out loud?",
+    "Who here do you think is closest to a breaking point — and have you done anything about it?",
+    "Who here have you given more than you've received — and are you still doing it?",
+    "What opinion do you have about someone in this group you've been sitting on for months?",
+    "What's a promise you've made to someone here that you quietly haven't kept?",
+    "What's the most you've ever pretended to be okay with something you weren't?",
+    "Who here do you think gets away with things purely because people are afraid to call them out?",
+    "What's something about yourself you keep blaming on other people?",
+    "What's the most unfair thing you've done to someone and never apologised for?",
+    "Who in this room do you think you've taken for granted the most?",
+    "What's a version of yourself you're glad these people never met?",
+    "What would you change about the way you've treated someone in this room?",
+    "What's the most uncomfortable truth someone has told you that you needed to hear?",
+    "Who here do you think tolerates more from you than they let on?",
+    "What's something you've started believing about yourself that isn't actually true?",
+    "What's the most recent time you let ego get in the way of doing the right thing?",
+    "What's a boundary someone has with you that you've tested more than once?"
   ],
   confessions:[
     "Confess something you've never told anyone in this room",
@@ -1021,7 +1136,38 @@ const Q={
     "Confess a time you took credit for something you didn't actually do",
     "What's the most dramatic reaction you've had to something minor?",
     "Confess a lie that's gone on so long you don't know how to stop",
-    "What's the most embarrassing autocorrect fail that actually sent?"
+    "Confess the last time you completely ignored someone you saw in public",
+    "What's the most impulsive decision you've made and never told anyone about?",
+    "Confess something you do on your phone that would embarrass you if anyone saw",
+    "What's the most ridiculous lie you've told just to sound more interesting?",
+    "Confess the silliest reason you've cried in the last six months",
+    "What's a habit you have at home that would horrify a houseguest?",
+    "Confess the last time you felt jealous and said absolutely nothing",
+    "What's a comfort show you've watched more than five times — and don't regret it?",
+    "Confess the most dramatic way you've avoided a conversation you didn't want to have",
+    "What's the most embarrassing notification that's ever popped up on your screen in public?",
+    "Confess the most recent time you talked to yourself and had a full conversation",
+    "What's the most childish thing that still genuinely upsets you?",
+    "Confess a compliment you gave that you completely didn't mean",
+    "What's the biggest overreaction you've had this year — what caused it?",
+    "Confess the last time you pretended to understand something you definitely didn't",
+    "What's the most embarrassing thing you've ever rehearsed saying to someone?",
+    "Confess something you ate recently that you'd be embarrassed to admit",
+    "What's something you do when you're completely alone that would confuse the people who know you?",
+    "Confess the most ridiculous thing you've ever Googled at an unreasonable hour",
+    "What's a purchase you regret but told everyone was exactly what you wanted?",
+    "Confess the most extreme thing you've done just because you were bored",
+    "What's something you've secretly Googled about someone in this room?",
+    "Confess the last time you pretended to have plans when you didn't",
+    "What's something you've watched more than ten times and still not admitted to?",
+    "Confess the most embarrassing thing you've done for a like, comment or reaction",
+    "What's something you've convinced yourself you've outgrown but still do?",
+    "Confess the pettiest thing you've done that genuinely made you feel better",
+    "What's the most embarrassing thing you've said in your sleep — if you know?",
+    "Confess the last time you talked someone out of something purely for selfish reasons",
+    "What's a song you sing at full volume when you think no one can hear?",
+    "Confess something you've blamed on someone else that was actually your fault",
+    "What's the most embarrassing thing that's happened to you in public this year?"
   ],
   deep:[
     "What's the biggest lesson from your biggest failure?",
@@ -1063,7 +1209,33 @@ const Q={
     "What would change if you genuinely believed you were enough?",
     "What habit or thought pattern are you most embarrassed that you still have?",
     "When was the last time you did something purely for yourself with no guilt?",
-    "What's one truth about yourself that took you the longest to accept?"
+    "What's something you're still trying to forgive yourself for?",
+    "What's a version of happiness you chased that wasn't actually yours?",
+    "What would you do differently about the last person you hurt?",
+    "What's something that used to define you that no longer does — and how does that feel?",
+    "What's the most honest answer to 'how are you?' that you've never actually given?",
+    "What's something you've outgrown that you're still holding on to?",
+    "What do you think you're owed in life that you haven't received yet?",
+    "What would your life look like if you stopped waiting to be ready?",
+    "What's a fear you've carried so long you've forgotten it's optional?",
+    "What's the most important relationship in your life that you invest in the least?",
+    "When was the last time you were truly present — no phone, no noise, just fully there?",
+    "What's something you keep doing for validation instead of actual fulfilment?",
+    "If the people who raised you could see who you've become, what would they feel?",
+    "What's the version of success you pretend to want versus the one you actually want?",
+    "What are you currently building — and does it actually reflect who you want to be?",
+    "What's something you've never been given credit for that mattered deeply to you?",
+    "What's the story you keep telling yourself about why something didn't work out?",
+    "What would the people who loved you most at your worst say about who you are now?",
+    "What's something you've sacrificed that you've never told anyone about?",
+    "What's one thing you wish you'd started earlier — and what's stopping you now?",
+    "What relationship in your life changed you the most — and how?",
+    "What do you think is the most misunderstood thing about you?",
+    "What's a truth about yourself that you've only recently stopped running from?",
+    "What would you do differently in the last 12 months if you could?",
+    "What does belonging feel like to you — and do you have it right now?",
+    "What part of your identity have you given up to fit in somewhere?",
+    "What's the most honest thing you've ever said to yourself in a quiet moment?"
   ],
   paranoia:[
     "Who here is most likely to become famous?",
@@ -1105,7 +1277,38 @@ const Q={
     "Who here would you call at 3AM in a real emergency?",
     "Who here is the most likely to be a morning person one day?",
     "Who here is most likely to win a staring contest?",
-    "Who here do you think prays the hardest?"
+    "Who here has the most potential they're not currently using?",
+    "Who here would be hardest to replace in this friend group?",
+    "Who here would be the best parent?",
+    "Who here would last longest in a silent retreat?",
+    "Who here would be most dangerous with a megaphone and an audience?",
+    "Who here is most likely to drop everything and move cities with no plan?",
+    "Who here would get famous for the most unexpected reason?",
+    "Who here gets most emotional over things they don't talk about?",
+    "Who here gives the most thought to things before they speak?",
+    "Who here has the best instincts about people?",
+    "Who here do you think would genuinely miss you if you disappeared for a month?",
+    "Who here is secretly the most romantic?",
+    "Who here would you trust most to keep a surprise without ruining it?",
+    "Who here do you think has the most stories they've never told this group?",
+    "Who here is most likely to become the best version of themselves this year?",
+    "Who here would be the best person to have on your side in a legal dispute?",
+    "Who here is most likely to be known for something completely different in 10 years?",
+    "Who here would be the first to volunteer for something no one else wanted to do?",
+    "Who here do you think overthinks the most — and do they know it?",
+    "Who here would handle losing everything the best?",
+    "Who here do you think is carrying something heavy right now but not showing it?",
+    "Who here would be the most fun at a party they didn't want to attend?",
+    "Who here do you think will still be in your life in 10 years?",
+    "Who here would you call at 3AM and why?",
+    "Who here do you think has grown the most since you first met them?",
+    "Who here do you think needs a break the most right now?",
+    "Who here would be the best at keeping a secret forever?",
+    "Who here do you think is underestimated by the people around them?",
+    "Who here would you trust to make a life-changing decision on your behalf?",
+    "Who here do you think is most likely to surprise everyone in the next year?",
+    "Who here do you think loves the deepest but shows it the least?",
+    "Who here would be the most loyal if things got genuinely difficult?"
   ],
   wyr:[
     "Would you rather be incredibly smart but forgettable, or average but unforgettable?",
@@ -1147,7 +1350,32 @@ const Q={
     "Would you rather have to apologise to every person you've ever wronged or forgive everyone who's wronged you?",
     "Would you rather your dreams become reality or your reality become a dream?",
     "Would you rather always know the right thing to say or always know the right thing to do?",
-    "Would you rather spend a year in total silence or a year in constant noise?"
+    "Would you rather always know when people are lying or never be able to lie yourself?",
+    "Would you rather lose 5 years off your life or lose your 5 closest friendships?",
+    "Would you rather be the smartest person no one listens to or average but always heard?",
+    "Would you rather replay your most embarrassing moment once a day or never remember it at all?",
+    "Would you rather be brutally honest with everyone forever or have everyone be brutally honest with you?",
+    "Would you rather have the career you want in a place you hate, or a mediocre career in your perfect place?",
+    "Would you rather be the person everyone respects but nobody truly knows, or fully known but constantly underestimated?",
+    "Would you rather have your biggest regret reversed or your biggest fear permanently removed?",
+    "Would you rather always feel like you belong, or always stand out in every room?",
+    "Would you rather relive your teenage years knowing what you know now, or skip 10 years forward?",
+    "Would you rather be incapable of making a wrong decision or incapable of feeling regret?",
+    "Would you rather know what every animal is thinking or understand every language on earth?",
+    "Would you rather never have to sleep again or never have to eat again?",
+    "Would you rather have one person who knows everything about you or a thousand people who know a little?",
+    "Would you rather your life be a closed book no one reads or an open one everyone judges?",
+    "Would you rather always have to finish what you start or never be able to commit to anything?",
+    "Would you rather have the ability to fix your biggest mistake or completely forget it ever happened?",
+    "Would you rather be a legend people talk about after you're gone or beloved by everyone while you're alive?",
+    "Would you rather be able to hear every conversation people have about you or never hear any of them?",
+    "Would you rather have your best year again or skip straight to 5 years of growth?",
+    "Would you rather be wrong about everything you believe or right about everything but unable to convince anyone?",
+    "Would you rather feel everything deeply or nothing at all?",
+    "Would you rather be forgiven for everything you've done or forget everything you've done wrong?",
+    "Would you rather have one real friend who knows everything or ten close ones who each know a fraction?",
+    "Would you rather build something meaningful alone or be part of something great with others?",
+    "Would you rather know exactly when a friendship will end or be surprised every time?"
   ],
   nhie:[
     "...lied to get out of plans",
@@ -1189,7 +1417,40 @@ const Q={
     "...showed up somewhere and immediately wanted to leave",
     "...deleted a message after someone had already seen it",
     "...laughed at something I probably shouldn't have",
-    "...cancelled plans at the last minute for no real reason"
+    "...slid into someone's DMs and immediately regretted it",
+    "...looked through someone's phone without asking",
+    "...pretended to be asleep to avoid a conversation",
+    "...eaten food that fell on the floor and told absolutely no one",
+    "...added someone on social media just to keep tabs on them",
+    "...pretended to like a gift I absolutely did not like",
+    "...stayed in a friendship just to see how it would end",
+    "...skipped someone's message and left it on read for weeks",
+    "...used being tired as an excuse when I was just completely unbothered",
+    "...said yes to something I already knew I was going to cancel",
+    "...borrowed something and never returned it and never brought it up",
+    "...sat in a parked car for 10 extra minutes just to finish a song",
+    "...eavesdropped on a conversation and pretended I hadn't heard a thing",
+    "...typed a whole paragraph, read it back, and deleted every word",
+    "...celebrated quietly on the inside when plans got cancelled",
+    "...refreshed someone's profile immediately after they posted something",
+    "...been jealous of someone in this room and said absolutely nothing",
+    "...laughed at something serious because I didn't know how else to react",
+    "...made a decision based purely on not wanting to look stupid",
+    "...texted someone hoping they'd see it and not reply",
+    "...pretended to be on the phone to avoid talking to someone",
+    "...given someone wrong directions instead of admitting I didn't know",
+    "...googled something embarrassing immediately after someone mentioned it",
+    "...changed my opinion mid-conversation to avoid conflict",
+    "...taken a screenshot of something I had no business saving",
+    "...convinced someone I was fine when I was absolutely falling apart",
+    "...used someone else's wifi without asking",
+    "...rehearsed a conversation in my head for days that never happened",
+    "...ordered something different from a menu because I couldn't pronounce what I actually wanted",
+    "...muted someone's notifications so I didn't have to respond",
+    "...said I was on my way when I hadn't even started getting ready",
+    "...lied about reading a book or watching something just to seem more interesting",
+    "...done something embarrassing and immediately looked around to see if anyone noticed",
+    "...laughed way too long at a joke I didn't understand just to fit in"
   ],
   hotseat:[
     "What's something about yourself that would genuinely shock everyone here?",
@@ -1221,7 +1482,30 @@ const Q={
     "Who here knows too much about you — and does that make you nervous?",
     "What's a decision you've made recently that you know was selfish?",
     "What would change if everyone in this room knew exactly what you think of them?",
-    "What's the most two-faced thing you've ever done to someone you called a friend?"
+    "What's something you've let someone in this room believe about you that isn't true?",
+    "What's the most honest thing you could say about where your life is right now?",
+    "Who in this room have you been the worst version of yourself around?",
+    "What's one thing you'd change about this friend group if you actually could?",
+    "What's something you've been pretending to be over that you're clearly not?",
+    "What's something you want more than you've admitted to anyone here?",
+    "What would change in your life if you stopped seeking approval from people in this room?",
+    "What's a decision you made that affected someone here without you realising it at the time?",
+    "What's something you'd want this group to actually hold you accountable for?",
+    "What's the most out-of-character thing you've done in the last 6 months?",
+    "What's one honest thing you'd want to say to this whole group right now?",
+    "What's something you've done recently that you haven't told anyone here about?",
+    "What do you actually think happens when we die — no deflecting, no jokes?",
+    "What's the biggest gap between who you are right now and who you want to be?",
+    "What's the most honest answer to 'what are you working on in yourself right now'?",
+    "What's something you've avoided telling this group because you're not sure how they'd react?",
+    "What's a version of yourself this group has never seen — and why haven't they?",
+    "What's something you've done this year that surprised even yourself?",
+    "If you had to rate your own loyalty to people in this room out of 10, what would you give?",
+    "What's the most vulnerable thing you could say right now in front of everyone?",
+    "What's a thought you've had about your future lately that you haven't told anyone?",
+    "What's something you keep doing that you know isn't serving you — and why haven't you stopped?",
+    "If one person in this room could see your unfiltered thoughts right now, who would you least want it to be?",
+    "What's the most real thing anyone in this room has ever said to you?"
   ],
   dpwf:[
     "Who here do you think secretly can't stand someone else in this room?",
@@ -1252,14 +1536,68 @@ const Q={
     "What's the most selfish thing you've witnessed someone in this room do?",
     "Who here do you think is most likely holding a grudge against someone in this group right now?",
     "What's one thing you wish you could say to someone in this room that you've been too afraid to?",
-    "Who here do you think is least self-aware about how they come across to others?",
-    "If you had to expose one secret about someone in this room right now, whose would shake the table most?"
+    "Who here do you think is most likely holding a grudge right now and smiling through it?",
+    "What's the most uncomfortable truth this group refuses to address?",
+    "Who here do you think is most difficult to genuinely get close to — and do they know it?",
+    "What's one thing this group does that you've always found annoying but never said?",
+    "Who here have you given more loyalty than they've ever returned?",
+    "What's a dynamic in this group that everyone sees but nobody talks about?",
+    "What's something you've excused in someone here that you'd never excuse in a stranger?",
+    "Who here would handle your worst day the worst?",
+    "Who here is best at making everything quietly about themselves?",
+    "What would this group actually look like if everyone was honest for just one day?",
+    "Who here do you think is the most emotionally unavailable — and have they ever admitted it?",
+    "What's a conversation this group has been avoiding that needs to happen?",
+    "Who here do you think is secretly the most insecure?",
+    "Who here would be the hardest to forgive if they truly wronged you — and why?",
+    "What's the most performative thing someone in this room regularly does?",
+    "What's something this group celebrates in someone that they'd never celebrate in you?",
+    "Who here do you think has the least self-awareness in how they affect other people?",
+    "What's the most one-sided relationship dynamic you've noticed in this group?",
+    "Who here do you think has the most excuses ready for their own behaviour?",
+    "What's something a person in this room does that everyone talks about behind closed doors?",
+    "If someone in this room had to apologise to the whole group, who should it be — and for what?",
+    "What's something you've wanted to say to someone here for months that you keep swallowing?",
+    "Who here do you think has changed the most in how they treat people — and is it for better or worse?",
+    "What's the most glaring double standard you've noticed in this group?"
   ]
 };
 
-const TOPICS=["First Love","Monday Morning","Social Media Addiction","That Friend Who Always Cancels","A Bad Haircut","Running Very Late","Group Chat Drama","Your Hometown","A Sunday Afternoon","Being Ghosted","Expensive Sneakers","Catching Feelings","That Awkward Silence","A Bad Date","Nostalgia","Being Broke","A Long Road Trip","School Days","Eating Alone","The Walk of Shame","Procrastination","Overtime at Work","A Surprise Party","Midnight Cravings","The Friend Zone","Going Viral","A Cold Shower","Déjà Vu","The Morning After","Road Rage","Power Outage","A Blind Date","Sibling Rivalry","Jet Lag","A Secret Crush","Payday","Online Shopping at 3AM","That One Teacher","The Last Slice of Pizza","A Wedding Speech","Interview Nerves","Losing Your Keys","An Unexpected Compliment","The Gym in January","A Passive-Aggressive Text"];
+const TOPICS=["First Love","Monday Morning","Social Media Addiction","That Friend Who Always Cancels","A Bad Haircut","Running Very Late","Group Chat Drama","Your Hometown","A Sunday Afternoon","Being Ghosted","Expensive Sneakers","Catching Feelings","That Awkward Silence","A Bad Date","Nostalgia","Being Broke","A Long Road Trip","School Days","Eating Alone","The Walk of Shame","Procrastination","Overtime at Work","A Surprise Party","Midnight Cravings","The Friend Zone","Going Viral","A Cold Shower","Déjà Vu","The Morning After","Road Rage","Power Outage","A Blind Date","Sibling Rivalry","Jet Lag","A Secret Crush","Payday","Online Shopping at 3AM","That One Teacher","The Last Slice of Pizza","A Wedding Speech","Interview Nerves","Losing Your Keys","An Unexpected Compliment","The Gym in January","A Passive-Aggressive Text","Cancelled Plans","Borrowing Money","That Awkward Family Dinner","Falling Asleep in Public","The Last Day of School","A Terrible Haircut","Getting Lost","Exam Season","Moving Out","Unrequited Love","A Long Queue","The Morning Commute","Running Out of Data","A Missed Call","Overthinking at 2AM","A Backhanded Compliment","Being the New Person","The Sunday Scaries","Growing Apart","Catching Feelings Too Fast","Waiting for a Reply","Trying to Impress Someone","A Very Public Embarrassment","Outgrowing a Friend","That One Coworker","Deleting an App and Redownloading It","Saying Goodbye","A First Impression Gone Wrong","Nostalgia for Last Year","Being the Bigger Person","Wasting a Whole Day","A Phone That Died at the Worst Time"];
 
-// ===== NAV =====
+// ===== RULES =====
+const RULES=[
+  {emoji:'🐷',name:'Classic',color:'#FFD700',desc:'Fun, light questions. Everyone answers out loud. The judge picks the funniest or most honest reply and awards a point. Great starting mode.'},
+  {emoji:'😈',name:'Spicy',color:'#ff6b6b',desc:'Same as Classic but the questions get personal. Expect awkward silences, nervous laughter, and oversharing. Answer honestly or face the consequences.'},
+  {emoji:'💀',name:'Hardcore',color:'#fb923c',desc:'Same as Classic. No filters, no softening. Questions are designed to expose things nobody would normally say out loud. Not for the faint-hearted.'},
+  {emoji:'🙈',name:'Confessions',color:'#fca5a5',desc:'Same as Classic. Every question is a prompt to confess something real. You can lie — but the judge will know. Honour system enforced by the group.'},
+  {emoji:'🦭',name:'Deep Talk',color:'#60a5fa',desc:'Same as Classic. Questions go beneath the surface — about identity, purpose, growth. Best played when everyone\'s settled in and willing to be real.'},
+  {emoji:'👀',name:'Paranoia',color:'#22d3ee',desc:'Each player privately reads a "who here..." question and whispers a name to the group. Everyone hears the name — but not the question. Flip a coin: heads reveals the question, tails keeps it secret forever.'},
+  {emoji:'🕵️',name:'Blackout',color:'#a78bfa',desc:'One player is secretly the imposter. Everyone gets the same topic except them — theirs is different. Players take turns giving clues. After the round, vote for who you think the imposter is. Imposter wins by staying hidden.'},
+  {emoji:'⚖️',name:'Would U Rather',color:'#fbbf24',desc:'Two options are given. Every player picks one and defends their choice. No fence-sitting — you must commit to a side. Judge picks the most convincing reasoning.'},
+  {emoji:'🐺',name:'Werewolf',color:'#f87171',desc:'Hidden roles: wolves and villagers. Each night the wolves eliminate one player. Each day the village debates and votes someone out. Villagers win by eliminating all wolves. Wolves win when they outnumber the village.'},
+  {emoji:'🍺',name:'Never Have I Ever',color:'#22d3ee',desc:'A statement is read aloud. Tap your name if you\'ve done it — you lose a life. Each player starts with 3 lives. Last player with lives remaining wins.'},
+  {emoji:'🔥',name:'Hot Seat',color:'#fbbf24',desc:'The group votes to put one player in the hot seat. That player must answer every question honestly for the whole round. The group reacts to each answer. Most popular answers earn points.'},
+  {emoji:'☠️',name:'Don\'t Play With Friends',color:'#ff3333',desc:'Confrontational questions aimed directly at the group. Things nobody\'s saying out loud — until now. This mode has ended friendships. You were warned. Play at your own risk.'},
+];
+
+function showRules(){
+  hap('light');
+  const list=document.getElementById('rules-list');
+  list.innerHTML=RULES.map(r=>`
+    <div style="background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);border-left:3px solid ${r.color};border-radius:16px;padding:14px 16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:22px">${r.emoji}</span>
+        <span style="font-family:'Fredoka One',cursive;font-size:17px;color:${r.color}">${r.name}</span>
+      </div>
+      <div style="font-size:13px;font-weight:600;line-height:1.6;opacity:.8">${r.desc}</div>
+    </div>`).join('');
+  document.getElementById('rules-overlay').style.display='block';
+  document.getElementById('rules-overlay').scrollTop=0;
+}
+function hideRules(){
+  document.getElementById('rules-overlay').style.display='none';
+}
 function goInternal(id,animate){
   document.querySelectorAll('.screen').forEach(s=>{
     s.style.animation='none'; // stop any running animation before hiding

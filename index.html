@@ -10,6 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="REVEAL">
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<!-- AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675823185972979" crossorigin="anonymous"></script>
 <style>
 :root {
   --fd: 'Fredoka One', ui-rounded, system-ui, sans-serif;
@@ -473,6 +475,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
     <div id="rules-list" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
 </div>
+
 <div id="nhie" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
   <div class="game-header">
     <div class="mode-badge" style="color:#22d3ee;border-color:rgba(6,182,212,.4)">NEVER HAVE I EVER</div>
@@ -784,6 +787,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   <div id="e-pts"></div>
   <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.5),transparent);margin:0 auto"></div>
   <div id="e-scores" class="flex-col gap-8 w-full" style="margin:4px 0"></div>
+  <div style="width:100%;border-radius:16px;overflow:hidden;min-height:100px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.08)">
+    <ins class="adsbygoogle"
+      style="display:block;width:100%;min-height:100px"
+      data-ad-client="ca-pub-8675823185972979"
+      data-ad-slot="XXXXXXXXXX"
+      data-ad-format="rectangle"
+      data-full-width-responsive="true"></ins>
+  </div>
   <button class="btn btn-primary" onclick="playAgain()" style="margin-top:4px">Play Again 🔄</button>
   <button class="btn btn-secondary btn-sm" onclick="go('splash')">Home 🏠</button>
 </div>
@@ -1715,6 +1726,7 @@ function selW(btn,p){
   btn.classList.add('sel');winner=p;
   document.getElementById('g-next').textContent=`Award to ${p} ⏭`;
 }
+
 function nextQ(){
   hap(winner?'success':'light');
   if(winner){scores[winner]=(scores[winner]||0)+1;toast(`+1 point for ${winner}! 🎉`);}
@@ -2052,6 +2064,8 @@ function endGame(){
       <div class="pts">${scores[p]||0}<span style="font-size:11px;opacity:.5;font-weight:600;margin-left:6px">ALL-TIME ${allTimeScores[p]||0}W</span></div>
     </div>`).join('');
   go('end');triggerConfetti();
+  // Push AdSense ad on end screen
+  try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}
 }
 function playAgain(){players.forEach(p=>scores[p]=0);go('mode-select');}
 

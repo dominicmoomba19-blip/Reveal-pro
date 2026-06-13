@@ -10,9 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="REVEAL">
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<!-- AdSense -->
-<meta name="google-adsense-account" content="ca-pub-8675823185972979">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8675823185972979" crossorigin="anonymous"></script>
+<!-- Video Ad System -->
 <style>
 :root {
   --fd: 'Fredoka One', ui-rounded, system-ui, sans-serif;
@@ -118,6 +116,87 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 /* DIVIDER */
 .divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);margin:4px 0}
 
+/* ===== VIDEO AD OVERLAY ===== */
+#vid-ad-overlay{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.97);
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:0;
+}
+#vid-ad-overlay.active{display:flex}
+.vid-ad-inner{
+  width:100%;max-width:480px;
+  display:flex;flex-direction:column;gap:0;
+  position:relative;
+}
+.vid-ad-player{
+  width:100%;aspect-ratio:16/9;
+  background:#000;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.vid-ad-player video{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+/* Fallback sponsor card shown when no video src */
+.vid-ad-card{
+  width:100%;aspect-ratio:16/9;
+  background:linear-gradient(135deg,#0d0d1a 0%,#1a0030 50%,#0d001a 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:28px;text-align:center;position:relative;overflow:hidden;
+}
+.vid-ad-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 20%,rgba(192,21,46,.25) 0%,transparent 55%),
+             radial-gradient(ellipse at 70% 80%,rgba(139,92,246,.2) 0%,transparent 55%);
+  pointer-events:none;
+}
+.vid-ad-card-logo{
+  font-size:52px;filter:drop-shadow(0 0 20px rgba(192,21,46,.7));
+  animation:pulse 1.5s ease-in-out infinite;
+}
+.vid-ad-card-title{
+  font-family:var(--fd);font-size:28px;letter-spacing:2px;
+  background:linear-gradient(135deg,#fff,#fca5a5);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.vid-ad-card-sub{
+  font-size:14px;font-weight:700;color:rgba(255,255,255,.65);line-height:1.5;max-width:260px;
+}
+.vid-ad-card-cta{
+  background:linear-gradient(135deg,#b91c3c,#e8294d);
+  color:#fff;font-family:var(--fb);font-size:15px;font-weight:800;
+  border:none;border-radius:50px;padding:11px 28px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(192,21,46,.4);
+  position:relative;z-index:1;
+}
+.vid-ad-bar{
+  width:100%;background:#111;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;gap:12px;
+}
+.vid-ad-skip-btn{
+  background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);
+  border-radius:8px;padding:8px 18px;color:#fff;
+  font-family:var(--fb);font-size:13px;font-weight:800;cursor:not-allowed;
+  opacity:.45;transition:all .2s;letter-spacing:.3px;
+  white-space:nowrap;flex-shrink:0;
+}
+.vid-ad-skip-btn.ready{
+  cursor:pointer;opacity:1;
+  background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);
+}
+.vid-ad-skip-btn.ready:active{transform:scale(.95)}
+.vid-ad-countdown{
+  font-size:12px;font-weight:800;color:rgba(255,255,255,.5);letter-spacing:.3px;
+  flex:1;text-align:center;
+}
+.vid-ad-prog{height:3px;width:100%;background:rgba(255,255,255,.1);position:absolute;bottom:0;left:0}
+.vid-ad-prog-fill{height:100%;background:linear-gradient(90deg,#e8294d,#fbbf24);width:0%;transition:width .5s linear}
+.vid-ad-label{
+  font-size:10px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.3);
+  text-transform:uppercase;text-align:right;flex-shrink:0;
+}
 /* SCROLLBAR */
 .scroll::-webkit-scrollbar{width:3px}
 .scroll::-webkit-scrollbar-track{background:transparent}
@@ -408,8 +487,56 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 .del-btn{background:rgba(239,68,68,.15);border:1.5px solid rgba(239,68,68,.3);border-radius:10px;padding:6px 10px;color:#ef4444;font-size:15px;cursor:pointer;flex-shrink:0;transition:all .18s}
 .del-btn:active{transform:scale(.9);background:rgba(239,68,68,.3)}
 
-/* TOAST */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(26,10,55,.97);border:1.5px solid rgba(192,21,46,.5);backdrop-filter:blur(20px);border-radius:50px;padding:11px 22px;font-weight:800;font-size:14px;z-index:200;transition:transform .3s ease;white-space:nowrap;max-width:90vw;text-align:center}
+/* SECRET LOVER MODE */
+.m-slv{background:linear-gradient(148deg,#2d0a1a,#1a0510 55%,#0d0208);border-color:rgba(236,72,153,.44);box-shadow:0 4px 22px rgba(236,72,153,.09)}
+.m-slv::before{background:linear-gradient(to right,rgba(236,72,153,.09),transparent)}
+.m-slv::after{background:#ec4899}
+.m-slv .mode-name{color:#f9a8d4;text-shadow:0 0 14px rgba(249,168,212,.5)}
+.slv-pass-card{background:linear-gradient(160deg,rgba(236,72,153,.1),rgba(190,24,93,.05));border:1.5px solid rgba(236,72,153,.35);border-radius:var(--rL);padding:22px 20px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.slv-pick-btn{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 18px;width:100%;cursor:pointer;font-family:var(--fb);font-size:15px;font-weight:800;color:#fff;transition:all .18s}
+.slv-pick-btn:active{transform:scale(.97)}
+.slv-pick-btn.chosen{background:linear-gradient(135deg,rgba(236,72,153,.28),rgba(190,24,93,.15));border-color:#ec4899;box-shadow:0 4px 16px rgba(236,72,153,.25)}
+.slv-match-card{background:linear-gradient(135deg,rgba(236,72,153,.1),rgba(190,24,93,.05));border:1.5px solid rgba(236,72,153,.3);border-radius:var(--rL);padding:20px 22px;width:100%;text-align:center;animation:slideUp .5s ease}
+.slv-match-card.gold{border-color:#fbbf24;background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(251,191,36,.05));box-shadow:0 0 30px rgba(251,191,36,.18)}
+.slv-heart-pulse{display:inline-block;font-size:48px;animation:pulse 1.2s ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(236,72,153,.7))}
+
+/* FAMILY MODES */
+.m-fts{background:linear-gradient(148deg,#1a3a1a,#0d2510 55%,#071a08);border-color:rgba(34,197,94,.44);box-shadow:0 4px 22px rgba(34,197,94,.09)}
+.m-fts::before{background:linear-gradient(to right,rgba(34,197,94,.09),transparent)}
+.m-fts::after{background:#22c55e}
+.m-fts .mode-name{color:#4ade80;text-shadow:0 0 14px rgba(74,222,128,.5)}
+
+.m-dfm{background:linear-gradient(148deg,#1a2a3a,#0d1a2a 55%,#071220);border-color:rgba(96,165,250,.44);box-shadow:0 4px 22px rgba(96,165,250,.09)}
+.m-dfm::before{background:linear-gradient(to right,rgba(96,165,250,.09),transparent)}
+.m-dfm::after{background:#60a5fa}
+.m-dfm .mode-name{color:#93c5fd;text-shadow:0 0 14px rgba(147,197,253,.5)}
+
+.m-simon{background:linear-gradient(148deg,#1a1a0a,#101005 55%,#0a0a03);border-color:rgba(250,204,21,.44);box-shadow:0 4px 22px rgba(250,204,21,.09)}
+.m-simon::before{background:linear-gradient(to right,rgba(250,204,21,.09),transparent)}
+.m-simon::after{background:#facc15}
+.m-simon .mode-name{color:#fef08a;text-shadow:0 0 14px rgba(254,240,138,.5)}
+
+/* SIMON SAYS game styles */
+.simon-cmd{
+  background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(234,179,8,.06));
+  border:2px solid rgba(250,204,21,.4);border-radius:var(--rL);
+  padding:28px 22px;text-align:center;width:100%;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.simon-action{font-family:var(--fd);font-size:32px;color:#fef08a;line-height:1.2;text-shadow:0 0 20px rgba(254,240,138,.4)}
+.simon-timer-ring{position:relative;display:inline-flex;align-items:center;justify-content:center}
+
+/* FTS (Finish the Story) styles */
+.fts-story-box{
+  background:rgba(34,197,94,.06);border:1.5px solid rgba(34,197,94,.25);
+  border-radius:16px;padding:16px;width:100%;
+  font-size:14px;font-weight:700;line-height:1.7;color:rgba(255,255,255,.85);
+  min-height:100px;max-height:220px;overflow-y:auto;
+}
+.fts-sentence{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.fts-sentence:last-child{border-bottom:none;color:#4ade80}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(26,10,55,.97);border:1.5px solid rgba(192,21,46,.5);backdrop-filter:blur(20px);border-radius:50px;padding:11px 22px;font-weight:800;font-size:14px;z-index:200;transition:transform .3s ease;white-space:nowrap;max-width:90vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
 /* CONFETTI */
@@ -511,14 +638,230 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
     <div class="mode-card m-nhie" onclick="startMode('nhie')"><div class="mode-emoji">🍺</div><div class="mode-info"><div class="mode-name">NEVER HAVE I EVER</div><div class="mode-desc">Tap if you've done it and lose a life. Most innocent at the end wins.</div></div><div class="mode-arrow">›</div></div>
     <div class="mode-card m-hotseat" onclick="startMode('hotseat')"><div class="mode-emoji">🔥</div><div class="mode-info"><div class="mode-name">HOT SEAT</div><div class="mode-desc">Group votes. One person answers everything. No escape, no mercy.</div></div><div class="mode-arrow">›</div></div>
     <div class="mode-card m-dpwf" onclick="startMode('dpwf')"><div class="mode-emoji">🎭</div><div class="mode-info"><div class="mode-name">DON'T PLAY WITH FRIENDS</div><div class="mode-desc">Warning: friendships will not survive this. Designed to cause division. You were told.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-slv" onclick="startMode('slv')"><div class="mode-emoji">💘</div><div class="mode-info"><div class="mode-name">FIND YOUR SECRET LOVER</div><div class="mode-desc">Each round, secretly pick a name. At the end — the algorithm reveals who has a thing for who.</div></div><div class="mode-arrow">›</div></div>
     <div class="mode-card m-pictionary" onclick="startMode('pictionary')"><div class="mode-emoji">🎨</div><div class="mode-info"><div class="mode-name">PICTIONARY</div><div class="mode-desc">Draw it. Guess it. No words allowed. Your art will be judged — harshly.</div></div><div class="mode-arrow">›</div></div>
     <div class="mode-card m-headsup" onclick="startMode('headsup')"><div class="mode-emoji">📱</div><div class="mode-info"><div class="mode-name">HEADS UP!</div><div class="mode-desc">Phone on forehead. Guess the word from your friends' clues before the timer runs out!</div></div><div class="mode-arrow">›</div></div>
     <div class="mode-card m-mafia" onclick="startMode('mafia')"><div class="mode-emoji">🕵️</div><div class="mode-info"><div class="mode-name">MAFIA</div><div class="mode-desc">Citizens vs the Mob. Find the killers before they silence the town. Trust no one.</div></div><div class="mode-arrow">›</div></div>
     <div class="mode-card m-ttol" onclick="startMode('ttol')"><div class="mode-emoji">🤥</div><div class="mode-info"><div class="mode-name">TWO TRUTHS ONE LIE</div><div class="mode-desc">Write 3 statements about yourself — two true, one a lie. Can the group sniff out the fake?</div></div><div class="mode-arrow">›</div></div>
     <div class="mode-card m-custom" id="custom-card" onclick="startMode('custom')" style="display:none"><div class="mode-emoji">✨</div><div class="mode-info"><div class="mode-name" id="c-name">CUSTOM</div><div class="mode-desc" id="c-desc">Your own questions. Your own rules. Your chaos.</div></div><div class="mode-arrow">›</div></div>
+
+    <!-- FAMILY MODES SECTION -->
+    <div style="width:100%;padding:8px 4px 4px;display:flex;align-items:center;gap:10px">
+      <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15))"></div>
+      <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.45;text-transform:uppercase;white-space:nowrap">👨‍👩‍👧 Family Modes</div>
+      <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,.15),transparent)"></div>
+    </div>
+    <div class="mode-card m-fts" onclick="startMode('fts')"><div class="mode-emoji">📖</div><div class="mode-info"><div class="mode-name">FINISH THE STORY</div><div class="mode-desc">One sentence at a time. Every player adds to the story. Where it ends — nobody knows.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-dfm" onclick="startMode('dfm')"><div class="mode-emoji">👨‍👩‍👧</div><div class="mode-info"><div class="mode-name">DESCRIBE YOUR FAMILY</div><div class="mode-desc">Pick a family member and describe them in exactly 3 words. No sugar-coating allowed.</div></div><div class="mode-arrow">›</div></div>
+    <div class="mode-card m-simon" onclick="startMode('simon')"><div class="mode-emoji">👆</div><div class="mode-info"><div class="mode-name">SIMON SAYS</div><div class="mode-desc">Do it only if Simon says. One wrong move and you're out. Last one standing wins.</div></div><div class="mode-arrow">›</div></div>
   </div>
 </div>
 
+
+
+<!-- ====== FIND YOUR SECRET LOVER ====== -->
+<div id="slv" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#f9a8d4;border-color:rgba(236,72,153,.4)">SECRET LOVER 💘</div>
+    <div class="round-info" id="slv-round">Round 1</div>
+  </div>
+  <div class="progress"><div class="progress-fill" id="slv-prog" style="width:0%;background:linear-gradient(90deg,#be185d,#ec4899)"></div></div>
+  <div class="round-banner">
+    <span class="round-banner-label">Round</span>
+    <span class="round-banner-num" id="slv-round-display" style="color:#f9a8d4">1 / 10</span>
+    <span id="slv-last-round" style="display:none;font-size:12px" class="round-banner-final">💘 LAST ROUND!</span>
+  </div>
+
+  <!-- Phase A: Question shown to all -->
+  <div id="slv-phase-q" class="flex-col gap-12 w-full" style="flex:1;justify-content:center">
+    <div class="q-card" style="background:linear-gradient(135deg,rgba(236,72,153,.08),rgba(190,24,93,.04));border-color:rgba(236,72,153,.3)">
+      <div class="q-num" style="color:#f9a8d4">THIS ROUND'S QUESTION</div>
+      <div class="q-text" id="slv-q-text" style="color:#fff">Loading...</div>
+    </div>
+    <div style="background:rgba(236,72,153,.07);border:1.5px solid rgba(236,72,153,.2);border-radius:16px;padding:14px 16px;text-align:center">
+      <div style="font-size:12px;font-weight:800;opacity:.65;line-height:1.6">Read the question out loud.<br>Then <b style="color:#f9a8d4">pass the phone around</b> — each player picks secretly.</div>
+    </div>
+    <button class="btn btn-primary" onclick="slvStartPicking()" style="background:linear-gradient(135deg,#be185d,#ec4899);box-shadow:0 8px 28px rgba(236,72,153,.35)">Start Picking 💘</button>
+  </div>
+
+  <!-- Phase B: Pass-and-pick -->
+  <div id="slv-phase-pick" style="display:none;flex:1" class="flex-col gap-12 w-full">
+    <div class="slv-pass-card">
+      <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.55;text-transform:uppercase;color:#f9a8d4">👤 Picking now</div>
+      <div id="slv-cur-player" style="font-family:var(--fd);font-size:32px;color:#f9a8d4;text-shadow:0 0 16px rgba(249,168,212,.4)">—</div>
+      <div style="font-size:12px;opacity:.5;font-weight:700">Everyone else look away! 🙈</div>
+    </div>
+    <div class="tap-box" id="slv-reveal-tap" onclick="slvRevealPicks()" style="border-color:rgba(236,72,153,.35)">
+      <div style="font-size:36px">🔒</div>
+      <div style="margin-top:8px;font-weight:800">Tap to reveal your picks</div>
+      <div style="font-size:12px;opacity:.45;margin-top:4px">Don't let anyone see!</div>
+    </div>
+    <div id="slv-pick-area" style="display:none" class="flex-col gap-8 w-full">
+      <div style="font-size:12px;font-weight:800;opacity:.65;text-align:center;letter-spacing:.5px">Who comes to mind? Pick one 👇</div>
+      <div id="slv-pick-btns" class="flex-col gap-8 w-full"></div>
+      <button class="btn btn-secondary btn-sm" onclick="slvConfirmPick()" id="slv-confirm-btn" style="opacity:.4" disabled>Confirm ✓</button>
+    </div>
+  </div>
+
+  <!-- Phase C: Waiting / next player -->
+  <div id="slv-phase-wait" style="display:none;flex:1" class="flex-col gap-12 w-full" style="align-items:center;justify-content:center">
+    <div style="text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
+      <div style="font-size:64px">✅</div>
+      <div style="font-family:var(--fd);font-size:22px;color:#f9a8d4">Pick locked in!</div>
+      <div style="font-size:13px;opacity:.6;font-weight:700">Cover the screen and pass to the next player</div>
+    </div>
+    <button class="btn btn-primary" id="slv-next-player-btn" onclick="slvNextPlayer()" style="background:linear-gradient(135deg,#be185d,#ec4899);box-shadow:0 8px 28px rgba(236,72,153,.35)">Next Player →</button>
+  </div>
+
+  <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
+</div>
+
+<!-- ====== SECRET LOVER — REVEAL SCREEN ====== -->
+<div id="slv-reveal" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;padding-top:40px">
+  <div style="text-align:center">
+    <div class="slv-heart-pulse">💘</div>
+    <div class="display" style="font-family:'Fredoka One',cursive;font-size:30px;margin-top:8px">The Algorithm Knows</div>
+    <div style="font-size:13px;opacity:.6;font-weight:700;margin-top:4px">Based on who everyone secretly picked...</div>
+  </div>
+  <div id="slv-matches" class="flex-col gap-10 w-full"></div>
+  <div id="slv-loners" style="display:none" class="flex-col gap-6 w-full">
+    <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.4;text-transform:uppercase;text-align:center;margin-top:6px">🥲 No strong signal for</div>
+    <div id="slv-loner-chips" style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center"></div>
+  </div>
+  <button class="btn btn-primary" onclick="playAgain()" style="background:linear-gradient(135deg,#be185d,#ec4899);box-shadow:0 8px 28px rgba(236,72,153,.35);margin-top:8px">Play Again 🎮</button>
+  <button class="btn btn-secondary btn-sm" onclick="go('splash')">Home</button>
+</div>
+
+<!-- ====== FINISH THE STORY ====== -->
+<div id="fts" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#4ade80;border-color:rgba(74,222,128,.4)">FINISH THE STORY 📖</div>
+    <div class="round-info" id="fts-round">Round 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="progress"><div class="progress-fill" id="fts-prog" style="width:0%;background:linear-gradient(90deg,#15803d,#22c55e)"></div></div>
+  <div class="round-banner">
+    <span class="round-banner-label">Round</span>
+    <span class="round-banner-num" id="fts-round-display" style="color:#4ade80">1 / 10</span>
+    <span id="fts-last-round" style="display:none;font-size:12px" class="round-banner-final">🔥 LAST ROUND!</span>
+  </div>
+  <!-- Story so far -->
+  <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.45;text-transform:uppercase">📖 Story so far</div>
+  <div class="fts-story-box scroll" id="fts-story-box">
+    <div style="opacity:.4;font-style:italic;font-size:13px">The story will appear here as players add sentences...</div>
+  </div>
+  <!-- Current player turn -->
+  <div style="background:rgba(34,197,94,.08);border:1.5px solid rgba(34,197,94,.25);border-radius:16px;padding:14px 16px;text-align:center">
+    <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.55;text-transform:uppercase;color:#4ade80;margin-bottom:4px">✍️ It's your turn</div>
+    <div class="judge-nm" id="fts-player" style="font-size:26px;color:#4ade80;text-shadow:0 0 16px rgba(74,222,128,.4)"></div>
+    <div style="font-size:12px;opacity:.5;font-weight:700;margin-top:4px">Add one sentence to continue the story</div>
+  </div>
+  <input class="field" id="fts-input" type="text" placeholder="Add your sentence..." maxlength="120"
+    onkeydown="if(event.key==='Enter')ftsAddSentence()">
+  <div style="display:flex;gap:8px;width:100%">
+    <button class="btn btn-primary" onclick="ftsAddSentence()" style="flex:2;background:linear-gradient(135deg,#15803d,#22c55e);box-shadow:0 8px 28px rgba(34,197,94,.35)">Add Sentence ✍️</button>
+    <button class="btn btn-secondary btn-sm" style="flex:1" onclick="ftsNextStory()">New Story →</button>
+  </div>
+  <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
+</div>
+
+<!-- ====== DESCRIBE YOUR FAMILY MEMBER ====== -->
+<div id="dfm" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#93c5fd;border-color:rgba(147,197,253,.4)">DESCRIBE YOUR FAMILY 👨‍👩‍👧</div>
+    <div class="round-info" id="dfm-round">Round 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="progress"><div class="progress-fill" id="dfm-prog" style="width:0%;background:linear-gradient(90deg,#1d4ed8,#60a5fa)"></div></div>
+  <div class="round-banner">
+    <span class="round-banner-label">Round</span>
+    <span class="round-banner-num" id="dfm-round-display" style="color:#93c5fd">1 / 10</span>
+    <span id="dfm-last-round" style="display:none;font-size:12px" class="round-banner-final">🔥 LAST ROUND!</span>
+  </div>
+  <div class="q-card" style="background:linear-gradient(135deg,rgba(96,165,250,.08),rgba(59,130,246,.04));border-color:rgba(96,165,250,.3)">
+    <div class="q-num" style="color:#93c5fd">DESCRIBE THEM IN 3 WORDS</div>
+    <div class="q-text" id="dfm-prompt">Loading...</div>
+  </div>
+  <div style="background:rgba(96,165,250,.06);border:1.5px solid rgba(96,165,250,.2);border-radius:16px;padding:14px 16px;text-align:center">
+    <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.55;text-transform:uppercase;color:#93c5fd;margin-bottom:4px">🎤 It's your turn</div>
+    <div class="judge-nm" id="dfm-player" style="font-size:26px;color:#93c5fd"></div>
+    <div style="font-size:12px;opacity:.5;font-weight:700;margin-top:4px">Say 3 words out loud — group reacts!</div>
+  </div>
+  <div style="font-size:13px;font-weight:700;opacity:.6;text-align:center">Judge picks the funniest or most accurate answer 👇</div>
+  <div id="dfm-score-btns" class="score-row"></div>
+  <button class="btn btn-primary" id="dfm-next" onclick="dfmNext()" style="background:linear-gradient(135deg,#1d4ed8,#60a5fa);box-shadow:0 8px 28px rgba(96,165,250,.35)">Next →</button>
+  <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
+</div>
+
+<!-- ====== SIMON SAYS ====== -->
+<div id="simon" class="screen flex-col gap-12" style="max-width:480px;margin:0 auto;width:100%;justify-content:space-between">
+  <div class="game-header">
+    <div class="mode-badge" style="color:#fef08a;border-color:rgba(254,240,138,.4)">SIMON SAYS 👆</div>
+    <div class="round-info" id="simon-round">Round 1</div>
+    <button class="btn-icon" style="font-size:16px" onclick="showSB()">🏆</button>
+  </div>
+  <div class="progress"><div class="progress-fill" id="simon-prog" style="width:0%;background:linear-gradient(90deg,#713f12,#facc15)"></div></div>
+  <!-- Players still in -->
+  <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.45;text-transform:uppercase;text-align:center">🟢 Still In</div>
+  <div id="simon-alive" style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center"></div>
+  <div id="simon-out-section" style="display:none">
+    <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.35;text-align:center;margin-bottom:6px;text-transform:uppercase">❌ Out</div>
+    <div id="simon-out" style="display:flex;flex-wrap:wrap;gap:7px;justify-content:center"></div>
+  </div>
+  <!-- Command card -->
+  <div class="simon-cmd" id="simon-cmd-card">
+    <div id="simon-is-simon" style="font-size:13px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;opacity:.6"></div>
+    <div class="simon-action" id="simon-action"></div>
+    <div id="simon-fake-warning" style="display:none;font-size:12px;color:#ef4444;font-weight:800;margin-top:4px">⚠️ Simon didn't say! Don't do it!</div>
+  </div>
+  <!-- Timer ring -->
+  <div style="display:flex;align-items:center;justify-content:center">
+    <div class="simon-timer-ring">
+      <svg width="80" height="80" style="transform:rotate(-90deg)">
+        <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
+        <circle id="simon-ring" cx="40" cy="40" r="30" fill="none" stroke="#facc15" stroke-width="5"
+          stroke-dasharray="188" stroke-dashoffset="0" stroke-linecap="round"
+          style="transition:stroke-dashoffset .3s linear,stroke .3s"/>
+      </svg>
+      <div id="simon-time-disp" style="position:absolute;font-family:var(--fd);font-size:22px;color:#fef08a"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;width:100%">
+    <button class="btn btn-primary" id="simon-next-btn" onclick="simonNext()" style="flex:2;background:linear-gradient(135deg,#713f12,#facc15);box-shadow:0 8px 28px rgba(250,204,21,.35)">Next Command →</button>
+    <button class="btn btn-secondary btn-sm" style="flex:1" onclick="simonEliminate()">❌ Out</button>
+  </div>
+  <button class="btn btn-secondary btn-sm" onclick="confirmEnd()">End Game Early</button>
+</div>
+
+<!-- ====== VIDEO AD OVERLAY ====== -->
+<div id="vid-ad-overlay">
+  <div class="vid-ad-inner">
+    <!-- VIDEO PLAYER — swap src with your actual video URL -->
+    <!-- If no video, the sponsor card below shows instead -->
+    <div class="vid-ad-player" id="vid-ad-player">
+      <video id="vid-ad-video" playsinline muted
+        src=""
+        style="display:none"
+        onended="vidAdVideoEnded()">
+      </video>
+      <!-- Sponsor card (fallback / shown when no video) -->
+      <div class="vid-ad-card" id="vid-ad-card">
+        <div class="vid-ad-card-logo" id="vid-ad-icon">😈</div>
+        <div class="vid-ad-card-title" id="vid-ad-title">REVEAL</div>
+        <div class="vid-ad-card-sub" id="vid-ad-sub">The party game that exposes everything. Don't play with friends you want to keep.</div>
+        <button class="vid-ad-card-cta" id="vid-ad-cta" onclick="vidAdCTAClick()">Get REVEAL on Gumroad →</button>
+      </div>
+    </div>
+    <!-- Bottom bar -->
+    <div class="vid-ad-bar" style="position:relative">
+      <div class="vid-ad-label" id="vid-ad-label">AD</div>
+      <div class="vid-ad-countdown" id="vid-ad-countdown">Skip in 10s</div>
+      <button class="vid-ad-skip-btn" id="vid-ad-skip" onclick="vidAdSkip()">Skip Ad ›</button>
+      <!-- progress bar -->
+      <div class="vid-ad-prog"><div class="vid-ad-prog-fill" id="vid-ad-prog-fill"></div></div>
+    </div>
+  </div>
+</div>
 
 <!-- ====== RULES OVERLAY ====== -->
 <div id="rules-overlay" style="display:none;position:fixed;inset:0;background:rgba(5,0,15,.97);z-index:200;padding:24px 20px;overflow-y:auto;backdrop-filter:blur(16px)">
@@ -1091,7 +1434,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
 </div>
 
 <!-- ====== SCOREBOARD OVERLAY ====== -->
-<div id="sb-overlay">
+<div id="sb-overlay" style="z-index:100">
   <div style="max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:12px">
     <div class="game-header">
       <div class="section-title display" style="margin:0;font-size:26px">🏆 Scores</div>
@@ -1110,13 +1453,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle
   <div id="e-pts"></div>
   <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.5),transparent);margin:0 auto"></div>
   <div id="e-scores" class="flex-col gap-8 w-full" style="margin:4px 0"></div>
-  <div style="width:100%;border-radius:16px;overflow:hidden;min-height:100px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.08)">
-    <ins class="adsbygoogle"
-      style="display:block;width:100%;min-height:100px"
-      data-ad-client="ca-pub-8675823185972979"
-      data-ad-slot="XXXXXXXXXX"
-      data-ad-format="rectangle"
-      data-full-width-responsive="true"></ins>
+  <div id="end-sponsor-slot" style="width:100%;border-radius:16px;overflow:hidden;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.08);cursor:pointer" onclick="endSponsorClick()">
+    <div style="display:flex;align-items:center;gap:14px;padding:16px 18px">
+      <div style="font-size:36px" id="end-sp-icon">😈</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:10px;font-weight:900;letter-spacing:2px;opacity:.35;text-transform:uppercase;margin-bottom:3px">Sponsored</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:18px;line-height:1.1" id="end-sp-title">Get REVEAL on Gumroad</div>
+        <div style="font-size:12px;font-weight:700;opacity:.6;margin-top:3px;line-height:1.4" id="end-sp-sub">Download the full game · play offline anywhere</div>
+      </div>
+      <div style="font-size:13px;font-weight:900;color:#e8294d;flex-shrink:0">→</div>
+    </div>
   </div>
   <button class="btn btn-primary" onclick="playAgain()" style="margin-top:4px">Play Again 🔄</button>
   <button class="btn btn-secondary btn-sm" onclick="go('splash')">Home 🏠</button>
@@ -1142,6 +1488,15 @@ function hap(type='light'){
   if(!navigator.vibrate)return;
   const patterns={light:18,medium:35,heavy:60,success:[30,60,30],error:[60,40,80]};
   navigator.vibrate(patterns[type]||18);
+}
+
+// ===== UTILITIES =====
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
 }
 
 // ===== STATE =====
@@ -1786,8 +2141,39 @@ const Q={
     "...done something embarrassing and immediately looked around to see if anyone noticed",
     "...laughed way too long at a joke I didn't understand just to fit in"
   ],
+  slv:[
+    "Who here would you most want to be stuck with on a desert island?",
+    "Who here looks like they give the best hugs?",
+    "Who here would you trust with a secret you've never told anyone?",
+    "Who here would you want to slow dance with at a party?",
+    "Who here would you call at 2AM when you're having a rough night?",
+    "Who here do you think would be the most romantic partner?",
+    "Who here could you talk to for hours without getting bored?",
+    "Who here has the most attractive energy in the room right now?",
+    "Who here do you think is secretly the most emotionally intelligent?",
+    "Who here would you choose to watch a sunset with?",
+    "Who here would you want cooking you dinner after a long day?",
+    "Who here has a smile that genuinely makes the room better?",
+    "Who here do you think has the best taste — in everything?",
+    "Who here would you take on a spontaneous road trip with?",
+    "Who here do you think has the most depth that people often miss?",
+    "Who here would you want to share your playlist with?",
+    "Who here do you think genuinely listens when you talk?",
+    "Who here do you think you'd fall for if you met them as a stranger?",
+    "Who here would you want next to you in a hard moment?",
+    "Who here looks like they write in a journal at night?",
+    "Who here would you most want to receive a handwritten letter from?",
+    "Who here has the best laugh — and you'd do anything to hear it?",
+    "Who here feels like home in a way that's hard to explain?",
+    "Who here would you want to share a late-night meal with?",
+    "Who here do you think has chemistry with almost everyone they meet?",
+    "Who here would you trust to plan a perfect date without telling you where you're going?",
+    "Who here do you think is going to fall deeply in love in the next year?",
+    "Who here makes you feel comfortable without even trying?",
+    "Who here would you most want to walk through a city with at midnight?",
+    "Who here do you think is the most magnetic when they're just being themselves?"
+  ],
   hotseat:[
-    "What's something about yourself that would genuinely shock everyone here?",
     "Who in this group do you trust least with your secrets?",
     "What's the most embarrassing thing that's happened to you this year?",
     "What's a lie you've told to someone in this room?",
@@ -1917,6 +2303,7 @@ const RULES=[
   {emoji:'🍺',name:'Never Have I Ever',color:'#22d3ee',desc:'A statement is read aloud. Tap your name if you\'ve done it — you lose a life. Each player starts with 3 lives. Last player with lives remaining wins.'},
   {emoji:'🔥',name:'Hot Seat',color:'#fbbf24',desc:'The group votes to put one player in the hot seat. That player must answer every question honestly for the whole round. The group reacts to each answer. Most popular answers earn points.'},
   {emoji:'☠️',name:'Don\'t Play With Friends',color:'#ff3333',desc:'Confrontational questions aimed directly at the group. Things nobody\'s saying out loud — until now. This mode has ended friendships. You were warned. Play at your own risk.'},
+  {emoji:'💘',name:'Find Your Secret Lover',color:'#ec4899',desc:'Each round a romantic question is read out. Then the phone is passed — each player secretly picks a name. No one sees who picked who. At the end, the algorithm matches players based on who kept choosing each other. The results are final and deeply embarrassing.'},
 ];
 
 function showRules(){
@@ -2009,8 +2396,11 @@ function confirmEnd(){
   document.getElementById('end-confirm').style.display='flex';
 }
 
-// ===== START MODE =====
+// ===== START MODE (with pre-game reward ads) =====
 function startMode(m){
+  _launchMode(m);
+}
+function _launchMode(m){
   mode=m;round=0;judgeIdx=0;players.forEach(p=>scores[p]=0);
   if(m==='blackout')startBO();
   else if(m==='paranoia')startPar();
@@ -2021,6 +2411,10 @@ function startMode(m){
   else if(m==='mafia')startMafia();
   else if(m==='headsup'){mode=m;players.forEach(p=>scores[p]=0);startMode_headsup();}
   else if(m==='pictionary'){mode=m;startPictionary();}
+  else if(m==='fts')startFTS();
+  else if(m==='dfm')startDFM();
+  else if(m==='simon')startSimon();
+  else if(m==='slv')startSLV();
   else startReg(m);
 }
 
@@ -2062,7 +2456,8 @@ function nextQ(){
   hap(winner?'success':'light');
   if(winner){scores[winner]=(scores[winner]||0)+1;toast(`+1 point for ${winner}! 🎉`);}
   round++;judgeIdx++;
-  if(round>=maxRounds){endGame();}else{loadQ();}
+  if(round>=maxRounds){endGame();}
+  else{loadQ();}
 }
 
 // ===== PARANOIA =====
@@ -2145,7 +2540,11 @@ function flipCoin(){
     document.getElementById('par-next').style.display='block';
   },950);
 }
-function nextPar(){parRound++;parP++;if(parRound>=maxRounds){endGame();}else{loadPar();}}
+function nextPar(){
+  parRound++;parP++;
+  if(parRound>=maxRounds){endGame();}
+  else{loadPar();}
+}
 
 // ===== BLACKOUT =====
 let boRound=0,boImposter=null,boTopic=null,boRoleIdx=0,boVotes={},boVoters=new Set();
@@ -2231,7 +2630,11 @@ function revealImposter(){
   }
   triggerConfetti();
 }
-function nextBORound(){boRound++;if(boRound>=maxRounds){endGame();}else{newBORound();}}
+function nextBORound(){
+  boRound++;
+  if(boRound>=maxRounds){endGame();}
+  else{newBORound();}
+}
 
 // ===== WEREWOLF =====
 const WORF_ROLES=[
@@ -2394,11 +2797,14 @@ function endGame(){
       <div class="p-name">${escHtml(p)}</div>
       <div class="pts">${scores[p]||0}<span style="font-size:11px;opacity:.5;font-weight:600;margin-left:6px">ALL-TIME ${allTimeScores[p]||0}W</span></div>
     </div>`).join('');
+  // Show end-of-session video ad BEFORE the end screen
+  // End screen ad: 30s long, skip after 10s
   go('end');triggerConfetti();
-  // Push AdSense ad on end screen
-  try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}
 }
-function playAgain(){players.forEach(p=>scores[p]=0);go('mode-select');}
+function playAgain(){
+  players.forEach(p=>scores[p]=0);
+  go('mode-select');
+}
 
 
 // ===== NEVER HAVE I EVER =====
@@ -2441,7 +2847,10 @@ function nhieTap(p){
   else{nhieDrank[p]=true;nhieLives[p]=Math.max(0,(nhieLives[p]||0)-1);nhieDrinkTotal[p]=(nhieDrinkTotal[p]||0)+1;}
   renderNHIEGrid();
 }
-function nextNHIE(){nhieRound++;loadNHIE();}
+function nextNHIE(){
+  nhieRound++;
+  loadNHIE();
+}
 function nhieEnd(){
   players.forEach(p=>{scores[p]=nhieLives[p]||0;});
   const mostDrunk=[...players].sort((a,b)=>(nhieDrinkTotal[b]||0)-(nhieDrinkTotal[a]||0))[0];
@@ -2450,11 +2859,11 @@ function nhieEnd(){
 }
 
 // ===== HOT SEAT =====
-let hsRound=0,hsTotalQ=0,hsSeated=null,hsVotes={},hsQPool=[];
+let hsRound=0,hsTotalQ=0,hsSeated=null,hsVotes={},hsQPool=[],hsQIdx=0;
 const HS_Q_PER_SEAT=3;
 
 function startHS(){
-  hsRound=0;hsTotalQ=0;hsSeated=null;hsVotes={};
+  hsRound=0;hsTotalQ=0;hsSeated=null;hsVotes={};hsQIdx=0;
   players.forEach(p=>scores[p]=0);
   hsQPool=shuffle([...Q.hotseat]);
   loadHSVote();go('hs-vote');
@@ -2500,8 +2909,8 @@ function confirmHSVote(){
   loadHSQ();go('hs-game');
 }
 function loadHSQ(){
-  if(!hsQPool.length)hsQPool=shuffle([...Q.hotseat]);
-  const q=hsQPool.shift();
+  if(hsQIdx>=hsQPool.length){hsQPool=shuffle([...Q.hotseat]);hsQIdx=0;}
+  const q=hsQPool[hsQIdx++];
   const qNum=hsTotalQ+1;
   document.getElementById('hs-q-text').textContent=q;
   document.getElementById('hs-q-info').textContent=`Q ${qNum} / ${maxRounds}`;
@@ -2520,18 +2929,25 @@ function nextHS(){
   hsTotalQ++;
   if(hsTotalQ>=maxRounds){endGame();return;}
   const qInSeat=hsTotalQ%HS_Q_PER_SEAT;
-  if(qInSeat===0){hsRound++;loadHSVote();go('hs-vote');}
-  else{loadHSQ();}
+  if(qInSeat===0){
+    // Seat rotation = perfect natural break
+    hsRound++;loadHSVote();go('hs-vote');
+  } else {
+    loadHSQ();
+  }
 }
 
 // ===== PICTIONARY =====
 const PIC_WORDS = [
   // Easy
   'Cat','Dog','House','Tree','Sun','Car','Fish','Bird','Book','Pizza','Cake','Phone','Ball','Hat','Shoe','Chair','Cloud','Star','Moon','Heart','Flower','Plane','Train','Boat','Apple','Banana','Key','Door','Eye','Hand',
+  'Egg','Spoon','Fork','Cup','Clock','Candle','Bed','Sock','Glasses','Ladder','Mirror','Drum','Sandwich','Snake','Spider','Rabbit','Frog','Mountain','River','Beach','Snowflake','Balloon','Kite','Map','Hammer','Scissors','Crab','Bee','Butterfly','Lamp',
   // Medium
   'Rainbow','Umbrella','Guitar','Camera','Bicycle','Rocket','Castle','Dragon','Robot','Crown','Volcano','Tornado','Bridge','Lighthouse','Telescope','Snowman','Campfire','Surfboard','Trophy','Compass','Lantern','Anchor','Cactus','Penguin','Elephant','Jellyfish','Waterfall','Treasure','Spaceship','Windmill',
+  'Skateboard','Helicopter','Submarine','Igloo','Pyramid','Maze','Parachute','Vampire','Mermaid','Wizard','Ninja','Pirate ship','Tractor','Wheelchair','Saxophone','Accordion','Backpack','Bonfire','Chandelier','Greenhouse','Hourglass','Microscope','Periscope','Scarecrow','Tightrope','Wind turbine','Beehive','Drawbridge','Catapult','Origami',
   // Hard
-  'Democracy','Gravity','Jealousy','Karma','Nostalgia','Procrastination','Heartbreak','Midnight snack','Plot twist','Social media','Traffic jam','Power cut','Bad Wi-Fi','Group chat','Morning person','Jump scare','Déjà vu','First date','Ghosting','Cliffhanger','Daydream','Overthinking','Comfort zone','Side hustle','Flex','Slay','Situationship','Main character','Lowkey','Hypocrite'
+  'Democracy','Gravity','Jealousy','Karma','Nostalgia','Procrastination','Heartbreak','Midnight snack','Plot twist','Social media','Traffic jam','Power cut','Bad Wi-Fi','Group chat','Morning person','Jump scare','Déjà vu','First date','Ghosting','Cliffhanger','Daydream','Overthinking','Comfort zone','Side hustle','Flex','Slay','Situationship','Main character','Lowkey','Hypocrite',
+  'Embarrassment','Time travel','Writer\'s block','Stage fright','Awkward silence','Imposter syndrome','Brain freeze','FOMO','Burnout','Sixth sense','Conspiracy theory','Identity crisis','Culture shock','Hangry','Bad hair day','Inner peace','Existential crisis','Long distance','Self care','Energy drink','Battery low','Buffering','Network error','Group project','Awkward hug','Inside joke','Last minute','Red flag','Green flag','Mood swing'
 ];
 const PIC_COLORS = ['#1a1a1a','#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#a855f7','#ec4899','#ffffff'];
 let picRound=0, picDrawerIdx=0, picWord='', picWordPool=[], picTool='pen', picColor='#1a1a1a', picDrawing=false, picStrokes=[], picTimer=null, picTimeLeft=90, picGuesses={}, picCanvasData=null;
@@ -2676,11 +3092,16 @@ function picRevealAnswer(){
   let info='';
   if(guessed===picWord){
     scores[drawer]=(scores[drawer]||0)+1;
-    // guesser also gets a point
-    const guesser=players.find(p=>p!==drawer);
-    if(guesser)scores[guesser]=(scores[guesser]||0)+1;
-    info=`✅ Correct guess! +1 for <b>${escHtml(drawer)}</b> (drawer) and the guesser!`;
+    info=`✅ Correct guess! +1 for <b>${escHtml(drawer)}</b> (drawer). Judge: tap who guessed it to award their point 👇`;
+    // Render quick score buttons for the guesser
+    const others=players.filter(p=>p!==drawer);
+    document.getElementById('pic-reveal-score-info').innerHTML=info;
+    const btnRow=document.createElement('div');
+    btnRow.className='score-row';btnRow.style.marginTop='10px';
+    btnRow.innerHTML=others.map(p=>`<button class="sbtn" onclick="picAwardGuesser('${esc(p)}',this)">${escHtml(p)}</button>`).join('');
+    document.getElementById('pic-reveal-score-info').after(btnRow);
     triggerConfetti();hap('success');
+    return; // info already set above, skip the innerHTML line below
   } else if(guessed){
     info=`❌ Wrong! The word was <b>${escHtml(picWord)}</b>. No points this round.`;
     hap('error');
@@ -2689,6 +3110,15 @@ function picRevealAnswer(){
   }
   document.getElementById('pic-reveal-score-info').innerHTML=info;
 }
+function picAwardGuesser(p,btn){
+  hap('success');
+  scores[p]=(scores[p]||0)+1;
+  toast(`+1 for ${p} (guesser)! 🎉`);
+  // remove buttons
+  const row=btn.parentElement;if(row)row.remove();
+  document.getElementById('pic-reveal-score-info').innerHTML=
+    document.getElementById('pic-reveal-score-info').innerHTML.replace(/Judge:.*?👇/,'✅ Point awarded!');
+}
 function picNext(){
   picRound++;picDrawerIdx++;
   loadPicRound();
@@ -2696,14 +3126,16 @@ function picNext(){
 
 // ===== HEADS UP =====
 const HU_CATS = {
-  '🎬 Movies & TV': ['The Lion King','Titanic','Avatar','Inception','Frozen','Spider-Man','The Matrix','Jurassic Park','Black Panther','Toy Story','Avengers','Finding Nemo','Harry Potter','Fast & Furious','The Godfather','Shrek','Interstellar','Moana','Squid Game','Stranger Things','Game of Thrones','Breaking Bad','Money Heist','The Office','Friends','Naruto','Attack on Titan','One Piece','Dragon Ball Z','The Witcher','Peaky Blinders','Ozark','Wednesday','Euphoria','Prison Break'],
-  '🎤 Celebs': ['Beyoncé','Rihanna','Drake','Cristiano Ronaldo','Lionel Messi','Elon Musk','Taylor Swift','LeBron James','Oprah Winfrey','Jay-Z','Nicki Minaj','Will Smith','Kim Kardashian','Kanye West','Serena Williams','Cardi B','Bad Bunny','Shakira','Adele','Ed Sheeran','Bruno Mars','Dwayne Johnson','Zendaya','Billie Eilish','Michael Jordan','Ariana Grande','Justin Bieber','Wizkid','Burna Boy','Davido','Tiwa Savage','Angelina Jolie','Chris Hemsworth','Tom Cruise','Morgan Freeman'],
-  '🐾 Animals': ['Elephant','Giraffe','Crocodile','Penguin','Flamingo','Cheetah','Gorilla','Hippo','Kangaroo','Meerkat','Platypus','Chameleon','Mantis Shrimp','Axolotl','Capybara','Narwhal','Pangolin','Sloth','Wolverine','Armadillo','Otter','Toucan','Snow Leopard','Komodo Dragon','Proboscis Monkey'],
-  '🍕 Food & Drink': ['Pizza','Sushi','Jollof Rice','Tacos','Ramen','Burger','Pap and Chakalaka','Nshima','Chicken Wings','Chocolate Cake','Ice Cream','Biltong','Samosa','Chips','Croissant','Lobster','Pineapple','Avocado','Boba Tea','Espresso','Sangria','Baklava','Dumplings','Churros','Mango','Injera'],
-  '⚽ Sports': ['Football','Basketball','Tennis','Swimming','Cricket','Rugby','Boxing','Volleyball','Athletics','Cycling','Gymnastics','Surfing','Skiing','Wrestling','Golf','Table Tennis','Baseball','Badminton','Archery','Fencing'],
-  '🌍 Places': ['Eiffel Tower','Great Wall of China','Machu Picchu','Victoria Falls','Sahara Desert','Amazon Rainforest','Mount Everest','Niagara Falls','Grand Canyon','Colosseum','Taj Mahal','Big Ben','Pyramids of Giza','Statue of Liberty','Sydney Opera House','Serengeti','Dead Sea','Zanzibar','Cape Town','Lusaka'],
-  '🎭 Actions': ['Swimming','Sneezing','Crying','Laughing','Dancing','Cooking','Driving','Climbing a tree','Taking a selfie','Texting','Sleeping','Arguing','Proposing','Playing guitar','Doing push-ups','Brushing teeth','Eating messy food','Running from something','Tiptoeing','Shadow boxing'],
-  '🔥 Random': ['Rainbow','Thunder','Quicksand','Hiccup','Déjà vu','Gravity','Karma','Chaos','Nostalgia','Midnight','Gossip','Catfish','Cliffhanger','Blackout','Brainwash','Shortcut','Conspiracy','Plot twist','Underdog','Overtime']
+  '🎬 Movies & TV': ['The Lion King','Titanic','Avatar','Inception','Frozen','Spider-Man','The Matrix','Jurassic Park','Black Panther','Toy Story','Avengers','Finding Nemo','Harry Potter','Fast & Furious','The Godfather','Shrek','Interstellar','Moana','Squid Game','Stranger Things','Game of Thrones','Breaking Bad','Money Heist','The Office','Friends','Naruto','Attack on Titan','One Piece','Dragon Ball Z','The Witcher','Peaky Blinders','Ozark','Wednesday','Euphoria','Prison Break','Encanto','Joker','Barbie','Oppenheimer','The Boys','Loki','WandaVision','Sherlock','Vikings','La Casa de Papel','Cobra Kai','The Mandalorian','Bridgerton','You','The Crown','Emily in Paris'],
+  '🎤 Celebs': ['Beyoncé','Rihanna','Drake','Cristiano Ronaldo','Lionel Messi','Elon Musk','Taylor Swift','LeBron James','Oprah Winfrey','Jay-Z','Nicki Minaj','Will Smith','Kim Kardashian','Kanye West','Serena Williams','Cardi B','Bad Bunny','Shakira','Adele','Ed Sheeran','Bruno Mars','Dwayne Johnson','Zendaya','Billie Eilish','Michael Jordan','Ariana Grande','Justin Bieber','Wizkid','Burna Boy','Davido','Tiwa Savage','Angelina Jolie','Chris Hemsworth','Tom Cruise','Morgan Freeman','SZA','Doja Cat','Travis Scott','Selena Gomez','Dua Lipa','The Weeknd','Sabrina Carpenter','Lewis Hamilton','Erling Haaland','Kylian Mbappé','Usain Bolt','Idris Elba','Trevor Noah','Tyla','Diamond Platnumz','Sarkodie'],
+  '🐾 Animals': ['Elephant','Giraffe','Crocodile','Penguin','Flamingo','Cheetah','Gorilla','Hippo','Kangaroo','Meerkat','Platypus','Chameleon','Mantis Shrimp','Axolotl','Capybara','Narwhal','Pangolin','Sloth','Wolverine','Armadillo','Otter','Toucan','Snow Leopard','Komodo Dragon','Proboscis Monkey','Zebra','Hyena','Warthog','Ostrich','Hedgehog','Octopus','Peacock','Camel','Bat','Owl','Koala','Lemur','Tarantula','Scorpion','Hippopotamus','Buffalo','Mongoose','Vulture','Stingray','Seahorse'],
+  '🍕 Food & Drink': ['Pizza','Sushi','Jollof Rice','Tacos','Ramen','Burger','Pap and Chakalaka','Nshima','Chicken Wings','Chocolate Cake','Ice Cream','Biltong','Samosa','Chips','Croissant','Lobster','Pineapple','Avocado','Boba Tea','Espresso','Sangria','Baklava','Dumplings','Churros','Mango','Injera','Kapenta','Village Chicken','Vitumbuwa','Fritters','Mealie Meal','Fanta','Mosi Lager','Maheu','Doughnut','Popcorn','Hotdog','Waffles','Pancakes','Smoothie','Milkshake','Cheese','Bacon','Curry','Fried Rice','Pasta'],
+  '⚽ Sports': ['Football','Basketball','Tennis','Swimming','Cricket','Rugby','Boxing','Volleyball','Athletics','Cycling','Gymnastics','Surfing','Skiing','Wrestling','Golf','Table Tennis','Baseball','Badminton','Archery','Fencing','Netball','Darts','Snooker','Karate','Judo','Formula 1','Skateboarding','Rowing','Triathlon','Marathon'],
+  '🌍 Places': ['Eiffel Tower','Great Wall of China','Machu Picchu','Victoria Falls','Sahara Desert','Amazon Rainforest','Mount Everest','Niagara Falls','Grand Canyon','Colosseum','Taj Mahal','Big Ben','Pyramids of Giza','Statue of Liberty','Sydney Opera House','Serengeti','Dead Sea','Zanzibar','Cape Town','Lusaka','Times Square','Burj Khalifa','Mount Kilimanjaro','Lake Kariba','South Luangwa','Table Mountain','Disney World','Hollywood','Niagara','Petra'],
+  '🎭 Actions': ['Swimming','Sneezing','Crying','Laughing','Dancing','Cooking','Driving','Climbing a tree','Taking a selfie','Texting','Sleeping','Arguing','Proposing','Playing guitar','Doing push-ups','Brushing teeth','Eating messy food','Running from something','Tiptoeing','Shadow boxing','Praying','Yawning','Hiccuping','Stretching','Whistling','Juggling','Skipping rope','Painting a wall','Riding a bike','Vacuuming'],
+  '🔥 Random': ['Rainbow','Thunder','Quicksand','Hiccup','Déjà vu','Gravity','Karma','Chaos','Nostalgia','Midnight','Gossip','Catfish','Cliffhanger','Blackout','Brainwash','Shortcut','Conspiracy','Plot twist','Underdog','Overtime','Avalanche','Stampede','Mirage','Echo','Static','Vortex','Eclipse','Adrenaline','Loophole','Glitch'],
+  '🎮 Video Games': ['Minecraft','Fortnite','Call of Duty','FIFA','GTA','Roblox','Pac-Man','Mario','Pokémon','Among Us','Candy Crush','Tetris','PUBG','Free Fire','Subway Surfers','Chess','Sudoku','Snake','Angry Birds','Temple Run'],
+  '🎵 Music & Dance': ['Amapiano','Afrobeats','Hip Hop','Reggae','Gospel','Karaoke','Air Guitar','Moonwalk','Headbanging','Tap Dance','Beatboxing','Whistle','Drum Solo','Saxophone Solo','Dancehall']
 };
 const HU_CAT_NAMES = Object.keys(HU_CATS);
 let huTimer=60, huPlayerIdx=0, huCurrentCat='', huWords=[], huWordIdx=0, huRoundScore=0, huRoundResults=[], huInterval=null, huTimeLeft=0, huTotalRounds=0;
@@ -2816,6 +3248,7 @@ function huNextPlayer(){
   huPlayerIdx++;
   if(huPlayerIdx>=players.length){endGame();return;}
   huRoundScore=0;huRoundResults=[];huWordIdx=0;
+  // Player rotation = perfect natural break
   huStartCountdown();
 }
 
@@ -2825,6 +3258,7 @@ const MAFIA_ROLES=[
   {id:'mafia',name:'Mafia',emoji:'🔫',cls:'mafia-mafia',team:'mafia',desc:'You are Mafia! Work with the Don at night to pick a victim. During the day, stay cool, cast suspicion elsewhere, and protect your crew.'},
   {id:'detective',name:'Detective',emoji:'🔍',cls:'mafia-detective',team:'citizen',desc:'You are the Detective! Each night you secretly investigate one player. The moderator silently shows thumbs up (Mafia) or down (innocent). Use your intel wisely!'},
   {id:'doctor',name:'Doctor',emoji:'💉',cls:'mafia-doctor',team:'citizen',desc:'You are the Doctor! Each night you protect one player (even yourself) from being killed. If Mafia targets your pick, they survive!'},
+  {id:'vigilante',name:'Vigilante',emoji:'🎯',cls:'mafia-citizen',team:'citizen',desc:'You are the Vigilante! Once per game, during the night, you may choose one player to eliminate. Choose carefully — killing an innocent hurts your own team!'},
   {id:'citizen',name:'Citizen',emoji:'🧑',cls:'mafia-citizen',team:'citizen',desc:'You are a Citizen. No special powers — but your vote and instincts are everything. Watch, listen, and root out the Mafia!'}
 ];
 function mafiaRoleSet(n){
@@ -2835,7 +3269,8 @@ function mafiaRoleSet(n){
   if(n===7)return['don','mafia','detective','doctor','citizen','citizen','citizen'];
   if(n===8)return['don','mafia','detective','doctor','citizen','citizen','citizen','citizen'];
   if(n===9)return['don','mafia','mafia','detective','doctor','citizen','citizen','citizen','citizen'];
-  return['don','mafia','mafia','detective','doctor',...Array(n-5).fill('citizen')];
+  if(n===10)return['don','mafia','mafia','detective','doctor','vigilante','citizen','citizen','citizen','citizen'];
+  return['don','mafia','mafia','detective','doctor','vigilante',...Array(n-6).fill('citizen')];
 }
 let mafiaAssignIdx=0,mafiaAssigned=[],mafiaAlive=[],mafiaDead=[],mafiaNight=1,mafiaVotes={};
 function startMafia(){
@@ -2872,9 +3307,9 @@ function mafiaNextRole(){
 function mafiaRenderAlive(){
   document.getElementById('mafia-alive-list').innerHTML=mafiaAlive.map(p=>`
     <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 16px">
-      <span style="font-size:18px">${p.role.emoji}</span>
+      <span style="font-size:18px">❓</span>
       <span style="font-size:15px;font-weight:800;flex:1">${escHtml(p.name)}</span>
-      <span style="font-size:11px;opacity:.4;font-weight:700">${p.role.team==='mafia'?'???':'???'}</span>
+      <span style="font-size:11px;opacity:.4;font-weight:700">???</span>
     </div>`).join('');
   const deadSec=document.getElementById('mafia-dead-section');
   deadSec.style.display=mafiaDead.length?'block':'none';
@@ -3104,7 +3539,690 @@ function ttolNext(){
 }
 
 
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// ===== FINISH THE STORY =====
+let ftsRound=0, ftsPlayerIdx=0, ftsSentences=[], ftsStoryStarters=[
+  "It was a quiet Sunday morning in Lusaka when suddenly...",
+  "The old woman at the market smiled and handed me something strange...",
+  "Nobody believed him until the day he opened the box and found...",
+  "The family had lived in that house for 30 years, but nobody ever talked about the room upstairs until...",
+  "She found a letter under her pillow. It read: Dear friend, by the time you read this...",
+  "The pastor paused mid-sermon and pointed at the back of the church...",
+  "Three friends made a bet they would regret for the rest of their lives...",
+  "The chicken crossed the road and nobody expected what happened next...",
+  "It was the longest power cut in living memory. By day three...",
+  "The wedding was perfect until the best man stood up to give his speech and said...",
+  "Everyone in the village knew the mango tree at the centre was special, but nobody knew why until...",
+  "The phone rang at 3AM. A voice said: I know what you did...",
+  "She opened her exam paper and laughed — not because it was funny, but because...",
+  "The driver slammed the brakes. In the middle of the Great East Road stood...",
+  "My grandmother always said never open the green tin. Last Saturday I finally did...",
+];
+let ftsCurrentStarter='';
+
+function startFTS(){
+  ftsRound=0;ftsPlayerIdx=0;ftsSentences=[];
+  players.forEach(p=>scores[p]=0);
+  go('fts');loadFTS();
+}
+function loadFTS(){
+  if(ftsRound>=maxRounds){endGame();return;}
+  ftsSentences=[];
+  ftsCurrentStarter=ftsStoryStarters[ftsRound%ftsStoryStarters.length];
+  const prog=((ftsRound+1)/maxRounds)*100;
+  document.getElementById('fts-round').textContent='Round '+(ftsRound+1);
+  document.getElementById('fts-round-display').textContent=`${ftsRound+1} / ${maxRounds}`;
+  document.getElementById('fts-prog').style.width=prog+'%';
+  document.getElementById('fts-last-round').style.display=ftsRound===maxRounds-1?'block':'none';
+  ftsPlayerIdx=0;
+  renderFTSStory();
+  renderFTSPlayer();
+}
+function renderFTSStory(){
+  const box=document.getElementById('fts-story-box');
+  if(ftsSentences.length===0){
+    box.innerHTML=`<div class="fts-sentence" style="color:#4ade80;font-style:italic">${escHtml(ftsCurrentStarter)}</div>`;
+  } else {
+    box.innerHTML=`<div class="fts-sentence" style="opacity:.65;font-style:italic">${escHtml(ftsCurrentStarter)}</div>`
+      +ftsSentences.map((s,i)=>`<div class="fts-sentence${i===ftsSentences.length-1?' ':''}">
+        <span style="font-size:11px;opacity:.4;font-weight:900">${escHtml(s.player)}: </span>${escHtml(s.text)}
+      </div>`).join('');
+    box.scrollTop=box.scrollHeight;
+  }
+}
+function renderFTSPlayer(){
+  const p=players[ftsPlayerIdx%players.length];
+  document.getElementById('fts-player').textContent=p;
+  document.getElementById('fts-input').value='';
+  document.getElementById('fts-input').focus();
+}
+function ftsAddSentence(){
+  const val=document.getElementById('fts-input').value.trim();
+  if(!val){toast('Type a sentence first!');return;}
+  hap('light');
+  ftsSentences.push({player:players[ftsPlayerIdx%players.length],text:val});
+  ftsPlayerIdx++;
+  renderFTSStory();
+  renderFTSPlayer();
+  // After all players have gone once, judge awards a point
+  if(ftsPlayerIdx%players.length===0&&ftsPlayerIdx>0){
+    toast('Everyone added a sentence! Judge awards the point 🏆');
+    renderFTSJudge();
+  }
+}
+function renderFTSJudge(){
+  const judge=players[(ftsPlayerIdx)%players.length];
+  document.getElementById('fts-player').textContent='Judge: '+judge;
+  document.getElementById('fts-input').style.display='none';
+  // Add score buttons temporarily
+  const box=document.getElementById('fts-story-box');
+  const btnRow=document.createElement('div');
+  btnRow.id='fts-judge-row';
+  btnRow.className='score-row';
+  btnRow.style.marginTop='8px';
+  btnRow.innerHTML=players.map(p=>`<button class="sbtn" onclick="ftsAward('${esc(p)}')">${escHtml(p)}</button>`).join('');
+  box.after(btnRow);
+}
+function ftsAward(p){
+  hap('success');
+  scores[p]=(scores[p]||0)+1;
+  toast(`+1 for ${p}! 🎉`);
+  const row=document.getElementById('fts-judge-row');
+  if(row)row.remove();
+  document.getElementById('fts-input').style.display='';
+  ftsNextStory();
+}
+function ftsNextStory(){
+  if(ftsSentences.length>0&&!confirm('Skip this story? No point will be awarded.'))return;
+  const row=document.getElementById('fts-judge-row');
+  if(row)row.remove();
+  document.getElementById('fts-input').style.display='';
+  ftsRound++;
+  loadFTS();
+}
+
+// ===== DESCRIBE YOUR FAMILY MEMBER =====
+let dfmRound=0, dfmJudgeIdx=0, dfmWinner=null;
+const DFM_PROMPTS=[
+  "Describe your mum in 3 words",
+  "Describe your dad in 3 words",
+  "Describe your oldest sibling in 3 words",
+  "Describe your youngest sibling in 3 words",
+  "Describe your grandma in 3 words",
+  "Describe your grandpa in 3 words",
+  "Describe your favourite uncle in 3 words",
+  "Describe your most dramatic aunt in 3 words",
+  "Describe the cousin everyone talks about in 3 words",
+  "Describe the family member nobody invites but always shows up in 3 words",
+  "Describe the family member who thinks they're the funniest in 3 words",
+  "Describe the strictest person in your family in 3 words",
+  "Describe the family member who gives the best advice in 3 words",
+  "Describe the family member who gives the worst advice in 3 words",
+  "Describe the family member who eats the most at every gathering in 3 words",
+  "Describe the family member who's always on their phone in 3 words",
+  "Describe the family member who starts the most arguments in 3 words",
+  "Describe the family member everyone calls when something goes wrong in 3 words",
+  "Describe the family member who always arrives late in 3 words",
+  "Describe the family member who thinks they know everything in 3 words",
+];
+let dfmQPool=[];
+
+function startDFM(){
+  dfmRound=0;dfmJudgeIdx=0;dfmWinner=null;
+  dfmQPool=shuffle([...DFM_PROMPTS]);
+  players.forEach(p=>scores[p]=0);
+  go('dfm');loadDFM();
+}
+function loadDFM(){
+  if(dfmRound>=maxRounds){endGame();return;}
+  if(dfmRound>=dfmQPool.length){dfmQPool=shuffle([...DFM_PROMPTS]);dfmRound=0;}
+  const prog=((dfmRound+1)/maxRounds)*100;
+  document.getElementById('dfm-round').textContent='Round '+(dfmRound+1);
+  document.getElementById('dfm-round-display').textContent=`${dfmRound+1} / ${maxRounds}`;
+  document.getElementById('dfm-prog').style.width=prog+'%';
+  document.getElementById('dfm-last-round').style.display=dfmRound===maxRounds-1?'block':'none';
+  document.getElementById('dfm-prompt').textContent=dfmQPool[dfmRound];
+  const judge=players[dfmJudgeIdx%players.length];
+  document.getElementById('dfm-player').textContent=judge+' judges';
+  dfmWinner=null;
+  document.getElementById('dfm-score-btns').innerHTML=players.filter(p=>p!==judge).map(p=>`<button class="sbtn" onclick="dfmSel(this,'${esc(p)}')">${escHtml(p)}</button>`).join('');
+  document.getElementById('dfm-next').textContent=dfmRound===maxRounds-1?'Finish Game ⏭':'Next →';
+}
+function dfmSel(btn,p){
+  hap('light');
+  document.querySelectorAll('#dfm-score-btns .sbtn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');dfmWinner=p;
+  document.getElementById('dfm-next').textContent=`Award to ${p} →`;
+}
+function dfmNext(){
+  hap(dfmWinner?'success':'light');
+  if(dfmWinner){scores[dfmWinner]=(scores[dfmWinner]||0)+1;toast(`+1 for ${dfmWinner}! 🎉`);}
+  dfmRound++;dfmJudgeIdx++;
+  if(dfmRound>=maxRounds){endGame();}
+  else{loadDFM();}
+}
+
+// ===== SIMON SAYS =====
+let simonRound=0, simonAlive=[], simonInterval=null, simonTimeLeft=0;
+const SIMON_COMMANDS=[
+  // ── True "Simon says" commands (harder physical actions) ──
+  {cmd:"Pat your head and rub your stomach at the same time",isSimon:true},
+  {cmd:"Touch your right elbow with your left hand",isSimon:true},
+  {cmd:"Stand on one leg and count to three out loud",isSimon:true},
+  {cmd:"Tap your left knee with your right hand twice",isSimon:true},
+  {cmd:"Cross your arms and then uncross them fast",isSimon:true},
+  {cmd:"Touch your nose with your left pinky finger",isSimon:true},
+  {cmd:"Clap behind your back",isSimon:true},
+  {cmd:"Spin around TWICE and then freeze",isSimon:true},
+  {cmd:"Put your right hand on your left shoulder and your left hand on your right knee",isSimon:true},
+  {cmd:"Wink your right eye three times",isSimon:true},
+  {cmd:"Tap both feet alternately five times as fast as you can",isSimon:true},
+  {cmd:"Touch your right ear with your left hand behind your head",isSimon:true},
+  {cmd:"Clap once above your head and once below your knee",isSimon:true},
+  {cmd:"Stomp left foot, clap once, then stomp right foot",isSimon:true},
+  {cmd:"Touch your elbow to your knee",isSimon:true},
+  {cmd:"Make a fist with your right hand and open your left hand flat at the same time",isSimon:true},
+  {cmd:"Look up, stick out your tongue, and clap once",isSimon:true},
+  {cmd:"Touch your left heel with your right hand",isSimon:true},
+  {cmd:"Clap three times getting faster each time",isSimon:true},
+  {cmd:"Put your hands on your hips and do two squats",isSimon:true},
+  {cmd:"Snap your fingers, then clap, then stomp — in that order",isSimon:true},
+  {cmd:"Touch your chin with your right hand and wave with your left",isSimon:true},
+  {cmd:"Tap the top of your head twice then tap your chin once",isSimon:true},
+  {cmd:"Point to the ceiling with your left hand and to the floor with your right",isSimon:true},
+  {cmd:"Shrug your shoulders three times as fast as possible",isSimon:true},
+
+  // ── Fake commands (no "Simon says" — should NOT be done) ──
+  {cmd:"Touch your nose",isSimon:false},
+  {cmd:"Clap once",isSimon:false},
+  {cmd:"Stand up",isSimon:false},
+  {cmd:"Jump",isSimon:false},
+  {cmd:"Spin around",isSimon:false},
+  {cmd:"Wave your hand",isSimon:false},
+  {cmd:"Touch your ears",isSimon:false},
+  {cmd:"Stomp your foot",isSimon:false},
+  {cmd:"Put your hands up",isSimon:false},
+  {cmd:"Touch your knee",isSimon:false},
+  {cmd:"Clap three times",isSimon:false},
+  {cmd:"Touch your left shoulder",isSimon:false},
+  {cmd:"Tap your chest",isSimon:false},
+  {cmd:"Point at someone",isSimon:false},
+  {cmd:"Sit down",isSimon:false},
+  {cmd:"Cross your arms",isSimon:false},
+  {cmd:"Pat your head",isSimon:false},
+  {cmd:"Touch the floor",isSimon:false},
+  {cmd:"Wink",isSimon:false},
+  {cmd:"Snap your fingers",isSimon:false},
+];
+let simonPool=[];
+
+function startSimon(){
+  simonRound=0;
+  simonAlive=[...players];
+  simonPool=shuffle([...SIMON_COMMANDS]);
+  players.forEach(p=>scores[p]=0);
+  go('simon');loadSimon();
+}
+function loadSimon(){
+  if(simonAlive.length<=1){simonEnd();return;}
+  if(simonRound>=simonPool.length){simonPool=shuffle([...SIMON_COMMANDS]);simonRound=0;}
+  const cmd=simonPool[simonRound];
+  const prog=Math.min(100,(simonRound/30)*100);
+  document.getElementById('simon-round').textContent='Round '+(simonRound+1);
+  document.getElementById('simon-prog').style.width=prog+'%';
+  document.getElementById('simon-is-simon').textContent=cmd.isSimon?'✅ SIMON SAYS...':'';
+  document.getElementById('simon-action').textContent=cmd.cmd;
+  document.getElementById('simon-fake-warning').style.display='none';
+  renderSimonAlive();
+  simonStartTimer(cmd);
+}
+function renderSimonAlive(){
+  document.getElementById('simon-alive').innerHTML=simonAlive.map(p=>`
+    <div class="chip" style="background:linear-gradient(135deg,rgba(250,204,21,.2),rgba(234,179,8,.1));border-color:rgba(250,204,21,.4)">${escHtml(p)}</div>`).join('');
+  const outList=players.filter(p=>!simonAlive.includes(p));
+  document.getElementById('simon-out-section').style.display=outList.length?'block':'none';
+  document.getElementById('simon-out').innerHTML=outList.map(p=>`
+    <div style="background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.3);border-radius:50px;padding:6px 14px;font-size:13px;font-weight:800;color:#fca5a5">❌ ${escHtml(p)}</div>`).join('');
+}
+function simonStartTimer(cmd){
+  simonTimeLeft=8;
+  const ring=document.getElementById('simon-ring');
+  document.getElementById('simon-time-disp').textContent=simonTimeLeft;
+  ring.style.strokeDashoffset=0;
+  if(simonInterval)clearInterval(simonInterval);
+  simonInterval=setInterval(()=>{
+    simonTimeLeft--;
+    document.getElementById('simon-time-disp').textContent=simonTimeLeft;
+    const pct=simonTimeLeft/8;
+    ring.style.strokeDashoffset=188*(1-pct);
+    ring.style.stroke=pct>0.5?'#facc15':pct>0.25?'#f97316':'#ef4444';
+    if(simonTimeLeft<=0){
+      clearInterval(simonInterval);
+      // Reveal if it was a trap
+      if(!cmd.isSimon){
+        document.getElementById('simon-fake-warning').style.display='block';
+        hap('error');
+        toast('It was a trap! Anyone who did it is OUT! ⚠️');
+      }
+    }
+  },1000);
+}
+function simonEliminate(){
+  if(simonAlive.length<=2){simonEnd();return;}
+  // Show a tap-to-eliminate picker so the host can pick who actually broke the rule
+  const existing=document.getElementById('simon-elim-picker');
+  if(existing){existing.remove();return;}
+  const picker=document.createElement('div');
+  picker.id='simon-elim-picker';
+  picker.style.cssText='display:flex;flex-direction:column;gap:8px;width:100%;margin-top:8px';
+  picker.innerHTML='<div style="font-size:11px;font-weight:900;letter-spacing:1.5px;opacity:.55;text-transform:uppercase;text-align:center">Tap who broke the rule ❌</div>'
+    +simonAlive.map(p=>`<button class="vote-btn" onclick="simonConfirmElim('${esc(p)}')">${escHtml(p)}</button>`).join('');
+  document.getElementById('simon-next-btn').parentElement.before(picker);
+}
+function simonConfirmElim(p){
+  const picker=document.getElementById('simon-elim-picker');
+  if(picker)picker.remove();
+  toast(`${p} is out! ❌`);
+  simonAlive=simonAlive.filter(pl=>pl!==p);
+  hap('heavy');
+  renderSimonAlive();
+  if(simonAlive.length<=1){setTimeout(simonEnd,800);}
+}
+function simonNext(){
+  clearInterval(simonInterval);
+  simonRound++;
+  loadSimon();
+}
+function simonEnd(){
+  clearInterval(simonInterval);
+  if(simonAlive.length>=1){
+    simonAlive.forEach(p=>{scores[p]=(scores[p]||0)+3;});
+    toast(`${simonAlive.join(' & ')} wins Simon Says! 👑`);
+  }
+  setTimeout(endGame,800);
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HOW TO SET UP YOUR OWN ADS:
+//
+// Option A — Use a video file (MP4):
+//   Set VID_AD_CONFIG.videoUrl to a direct .mp4 URL.
+//   The video will play with a 10s skip countdown.
+//   After skip, the callback fires and the game starts / end screen shows.
+//
+// Option B — Sponsor card (no video, current default):
+//   Leave videoUrl as ''. The styled sponsor card appears instead.
+//   Edit the sponsor entries in VID_AD_CONFIG.sponsors to promote your
+//   Gumroad product, social, or any link you want.
+//
+// PLACEMENT:
+//   - 2 pre-game reward videos play before each game session starts.
+//   - Interstitials fire every 3 rounds at natural break points.
+//   - 1 end-of-session video plays at the end of each game.
+//
+// SKIP TIMER:
+//   Set VID_AD_CONFIG.skipAfterSeconds (minimum 10 recommended).
+//   Interstitials use a shorter skip time (5s) to keep flow smooth.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Interstitial ad (shorter, fires at round breaks) ─────────────────────────
+// When you integrate AdMob via Capacitor, replace this function body with:
+//   const { AdMob } = window.Capacitor.Plugins;
+//   await AdMob.prepareInterstitial({ adId: 'YOUR_INTERSTITIAL_ID', isTesting: true });
+//   await AdMob.showInterstitial();
+//   if(callback) callback();
+//
+// Until then, it uses the same video overlay with a shorter 5s skip.
+function showInterstitial(callback){
+  if(callback) callback();
+}
+
+// ===== FIND YOUR SECRET LOVER =====
+let slvRound=0,slvQPool=[],slvPickerIdx=0,slvCurrentPick=null;
+// slvVotes[voter][picked] = count
+let slvVotes={};
+
+function startSLV(){
+  slvRound=0;
+  slvQPool=shuffle([...Q.slv]);
+  slvVotes={};
+  players.forEach(p=>{slvVotes[p]={};});
+  go('slv');
+  slvLoadRound();
+}
+
+function slvLoadRound(){
+  if(slvRound>=maxRounds){slvRevealResults();return;}
+  if(slvRound>=slvQPool.length){slvQPool=shuffle([...Q.slv]);slvRound=0;}
+  const q=slvQPool[slvRound];
+  const prog=((slvRound+1)/maxRounds)*100;
+  document.getElementById('slv-q-text').textContent=q;
+  document.getElementById('slv-prog').style.width=prog+'%';
+  document.getElementById('slv-round').textContent='Round '+(slvRound+1);
+  document.getElementById('slv-round-display').textContent=`${slvRound+1} / ${maxRounds}`;
+  document.getElementById('slv-last-round').style.display=slvRound===maxRounds-1?'block':'none';
+  // show phase Q
+  document.getElementById('slv-phase-q').style.display='flex';
+  document.getElementById('slv-phase-pick').style.display='none';
+  document.getElementById('slv-phase-wait').style.display='none';
+}
+
+function slvStartPicking(){
+  hap('light');
+  slvPickerIdx=0;
+  document.getElementById('slv-phase-q').style.display='none';
+  document.getElementById('slv-phase-pick').style.display='flex';
+  slvShowPicker();
+}
+
+function slvShowPicker(){
+  const voter=players[slvPickerIdx];
+  document.getElementById('slv-cur-player').textContent=voter;
+  document.getElementById('slv-reveal-tap').style.display='flex';
+  document.getElementById('slv-pick-area').style.display='none';
+  slvCurrentPick=null;
+}
+
+function slvRevealPicks(){
+  const voter=players[slvPickerIdx];
+  document.getElementById('slv-reveal-tap').style.display='none';
+  document.getElementById('slv-pick-area').style.display='flex';
+  // Build buttons: all players EXCEPT the current voter
+  const others=players.filter(p=>p!==voter);
+  document.getElementById('slv-pick-btns').innerHTML=others.map(p=>`
+    <button class="slv-pick-btn" id="slvpb-${escId(p)}" onclick="slvSelectPick('${esc(p)}')">
+      <span>${escHtml(p)}</span><span id="slvck-${escId(p)}" style="font-size:18px"></span>
+    </button>`).join('');
+  const confirmBtn=document.getElementById('slv-confirm-btn');
+  confirmBtn.disabled=true;confirmBtn.style.opacity='.4';
+}
+
+function slvSelectPick(p){
+  hap('light');
+  slvCurrentPick=p;
+  document.querySelectorAll('.slv-pick-btn').forEach(b=>b.classList.remove('chosen'));
+  document.querySelectorAll('[id^="slvck-"]').forEach(el=>el.textContent='');
+  const btn=document.getElementById('slvpb-'+escId(p));
+  if(btn)btn.classList.add('chosen');
+  const ck=document.getElementById('slvck-'+escId(p));
+  if(ck)ck.textContent='💘';
+  const confirmBtn=document.getElementById('slv-confirm-btn');
+  confirmBtn.disabled=false;confirmBtn.style.opacity='1';
+}
+
+function slvConfirmPick(){
+  if(!slvCurrentPick){toast('Pick someone first! 💘');return;}
+  hap('success');
+  const voter=players[slvPickerIdx];
+  if(!slvVotes[voter])slvVotes[voter]={};
+  slvVotes[voter][slvCurrentPick]=(slvVotes[voter][slvCurrentPick]||0)+1;
+  // show wait/pass screen
+  document.getElementById('slv-pick-area').style.display='none';
+  document.getElementById('slv-reveal-tap').style.display='none';
+  document.getElementById('slv-phase-pick').style.display='none';
+  document.getElementById('slv-phase-wait').style.display='flex';
+  // update next button label
+  const nextBtn=document.getElementById('slv-next-player-btn');
+  const isLastPicker=slvPickerIdx>=players.length-1;
+  nextBtn.textContent=isLastPicker?'See Results for This Round →':'Next Player →';
+}
+
+function slvNextPlayer(){
+  hap('light');
+  slvPickerIdx++;
+  if(slvPickerIdx>=players.length){
+    // all players done this round
+    slvRound++;
+    document.getElementById('slv-phase-wait').style.display='none';
+    slvLoadRound();
+  } else {
+    document.getElementById('slv-phase-wait').style.display='none';
+    document.getElementById('slv-phase-pick').style.display='flex';
+    slvShowPicker();
+  }
+}
+
+function slvRevealResults(){
+  // Build attraction scores: score[A][B] = how many times A picked B
+  // Mutual score = slvVotes[A][B] + slvVotes[B][A]
+  const pairs=[];
+  const seen=new Set();
+  for(let i=0;i<players.length;i++){
+    for(let j=i+1;j<players.length;j++){
+      const a=players[i],b=players[j];
+      const key=a+'|'+b;
+      if(seen.has(key))continue;seen.add(key);
+      const aPickedB=(slvVotes[a]&&slvVotes[a][b])||0;
+      const bPickedA=(slvVotes[b]&&slvVotes[b][a])||0;
+      const mutual=aPickedB+bPickedA;
+      if(mutual>0)pairs.push({a,b,mutual,aPickedB,bPickedA});
+    }
+  }
+  pairs.sort((x,y)=>y.mutual-x.mutual);
+
+  // Track who appears in top pairs for "loners"
+  const paired=new Set();
+
+  const html=pairs.slice(0,6).map((p,i)=>{
+    paired.add(p.a);paired.add(p.b);
+    const isMutual=p.aPickedB>0&&p.bPickedA>0;
+    const isTop=i===0;
+    const chemLabel=
+      p.mutual>=maxRounds*0.6?'🔥 Undeniable Chemistry':
+      p.mutual>=maxRounds*0.3?'💞 Strong Pull':
+      isMutual?'✨ Mutual Spark':
+      '💫 One-Sided Feelings';
+    const subtext=isMutual
+      ?`Both kept choosing each other — ${p.mutual} time${p.mutual>1?'s':''} combined`
+      :(p.aPickedB>p.bPickedA
+        ?`${escHtml(p.a)} kept picking ${escHtml(p.b)}`
+        :`${escHtml(p.b)} kept picking ${escHtml(p.a)}`);
+    return `
+      <div class="slv-match-card ${isTop?'gold':''}">
+        ${isTop?'<div class="slv-heart-pulse">💘</div>':'<div style="font-size:32px">'+(i===1?'💗':i===2?'💖':'💝')+'</div>'}
+        <div style="font-size:11px;font-weight:900;letter-spacing:2px;opacity:.6;text-transform:uppercase;margin:6px 0 2px;color:${isTop?'#fbbf24':'#f9a8d4'}">${chemLabel}</div>
+        <div style="font-family:var(--fd);font-size:${isTop?28:22}px;color:${isTop?'#fbbf24':'#f9a8d4'};line-height:1.3">${escHtml(p.a)} &amp; ${escHtml(p.b)}</div>
+        <div style="font-size:12px;opacity:.6;font-weight:700;margin-top:6px">${subtext}</div>
+      </div>`;
+  }).join('');
+
+  // Loners: players with no mutual attraction detected
+  const loners=players.filter(p=>!paired.has(p));
+
+  document.getElementById('slv-matches').innerHTML=pairs.length===0
+    ?'<div style="text-align:center;opacity:.6;font-size:15px;font-weight:700;padding:20px">😶 Nobody picked the same person twice.<br>The algorithm is confused.</div>'
+    :html;
+
+  const lonersEl=document.getElementById('slv-loners');
+  if(loners.length&&pairs.length>0){
+    lonersEl.style.display='flex';
+    document.getElementById('slv-loner-chips').innerHTML=loners.map(p=>`
+      <div style="background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:50px;padding:6px 14px;font-size:13px;font-weight:800;opacity:.7">${escHtml(p)}</div>`).join('');
+  } else lonersEl.style.display='none';
+
+  triggerConfetti();
+  go('slv-reveal');
+}
+
+const VID_AD_CONFIG = {
+  skipAfterSeconds: 15,  // pre-game rewarded: 30s ad, skip after 15s
+  videoUrl: '',          // set to your .mp4 URL, or leave '' for sponsor card
+
+  // Sponsor cards shown when no video (rotate between pre-game 1, pre-game 2, end)
+  sponsors: {
+    pregame1: {
+      icon: '😈',
+      title: 'REVEAL — Party Game',
+      sub: 'Download the full version on Gumroad. Play anywhere — no internet needed.',
+      ctaText: 'Get it on Gumroad →',
+      ctaUrl: 'https://gumroad.com',  // ← replace with your Gumroad link
+    },
+    pregame2: {
+      icon: '🔥',
+      title: 'Share REVEAL',
+      sub: 'Enjoying the game? Send the link to your friends. More players = more chaos.',
+      ctaText: 'Share with Friends →',
+      ctaUrl: '',  // ← replace with your share URL or leave blank
+    },
+    end: {
+      icon: '👑',
+      title: 'Want more game modes?',
+      sub: 'Get REVEAL Pro on Gumroad — more modes, no ads, play offline forever.',
+      ctaUrl: 'https://gumroad.com',  // ← replace with your Gumroad link
+      ctaText: 'Upgrade on Gumroad →',
+    }
+  }
+};
+
+// ── Also update the end-screen inline sponsor slot ───────────────────────────
+function updateEndSponsor(){
+  const s = VID_AD_CONFIG.sponsors.end;
+  const icon = document.getElementById('end-sp-icon');
+  const title = document.getElementById('end-sp-title');
+  const sub = document.getElementById('end-sp-sub');
+  if(icon) icon.textContent = s.icon;
+  if(title) title.textContent = s.title;
+  if(sub) sub.textContent = s.sub;
+}
+function endSponsorClick(){
+  const url = VID_AD_CONFIG.sponsors.end.ctaUrl;
+  if(url) window.open(url, '_blank');
+}
+window.addEventListener('DOMContentLoaded', updateEndSponsor);
+
+// ── Core ad state ─────────────────────────────────────────────────────────────
+let _vidAdCallback = null;
+let _vidAdTimer = null;
+let _vidAdSecondsLeft = 0;
+let _vidAdType = 'pregame1';
+
+function showVidAd(type, callback){
+  _vidAdCallback = callback;
+  _vidAdType = type;
+
+  const overlay = document.getElementById('vid-ad-overlay');
+  const skipBtn = document.getElementById('vid-ad-skip');
+  const countdown = document.getElementById('vid-ad-countdown');
+  const progFill = document.getElementById('vid-ad-prog-fill');
+  const label = document.getElementById('vid-ad-label');
+  const videoEl = document.getElementById('vid-ad-video');
+  const cardEl = document.getElementById('vid-ad-card');
+  const ctaEl = document.getElementById('vid-ad-cta');
+  const iconEl = document.getElementById('vid-ad-icon');
+  const titleEl = document.getElementById('vid-ad-title');
+  const subEl = document.getElementById('vid-ad-sub');
+
+  const sponsor = VID_AD_CONFIG.sponsors[type] || VID_AD_CONFIG.sponsors.pregame1;
+  const secs = VID_AD_CONFIG.skipAfterSeconds;
+
+  // Populate sponsor card
+  if(iconEl) iconEl.textContent = sponsor.icon;
+  if(titleEl) titleEl.textContent = sponsor.title;
+  if(subEl) subEl.textContent = sponsor.sub;
+  if(ctaEl){
+    ctaEl.textContent = sponsor.ctaText;
+    ctaEl.dataset.url = sponsor.ctaUrl || '';
+  }
+
+  // Label
+  const isPreGame = type.startsWith('pregame');
+  const isEnd = type === 'end';
+  if(label){
+    if(isPreGame) label.textContent = 'AD  ·  GAME UNLOCKS AFTER';
+    else if(isEnd) label.textContent = 'AD  ·  RESULTS AFTER';
+    else label.textContent = 'AD  ·  NEXT ROUND AFTER';
+  }
+
+  // Reset skip btn
+  skipBtn.classList.remove('ready');
+  skipBtn.textContent = `Skip Ad ›`;
+  skipBtn.style.cursor = 'not-allowed';
+
+  // Reset progress
+  progFill.style.transition = 'none';
+  progFill.style.width = '0%';
+
+  // Handle video vs sponsor card
+  if(VID_AD_CONFIG.videoUrl){
+    videoEl.src = VID_AD_CONFIG.videoUrl;
+    videoEl.style.display = 'block';
+    cardEl.style.display = 'none';
+    videoEl.currentTime = 0;
+    videoEl.play().catch(()=>{});
+  } else {
+    videoEl.style.display = 'none';
+    cardEl.style.display = 'flex';
+  }
+
+  // Show overlay
+  overlay.classList.add('active');
+  hap('light');
+
+  // Countdown
+  _vidAdSecondsLeft = secs;
+  countdown.textContent = `Skip in ${secs}s`;
+
+  // Animate progress bar
+  requestAnimationFrame(()=>{
+    progFill.style.transition = `width ${secs}s linear`;
+    progFill.style.width = '100%';
+  });
+
+  if(_vidAdTimer) clearInterval(_vidAdTimer);
+  _vidAdTimer = setInterval(()=>{
+    _vidAdSecondsLeft--;
+    if(_vidAdSecondsLeft > 0){
+      countdown.textContent = `Skip in ${_vidAdSecondsLeft}s`;
+    } else {
+      clearInterval(_vidAdTimer);
+      // Unlock skip
+      skipBtn.classList.add('ready');
+      skipBtn.textContent = 'Skip Ad ›';
+      countdown.textContent = 'You can skip now';
+      hap('medium');
+      // Auto-advance so the game starts even if the user doesn't tap "Skip"
+      _closeVidAd();
+    }
+  }, 1000);
+}
+
+function vidAdSkip(){
+  const skipBtn = document.getElementById('vid-ad-skip');
+  if(!skipBtn.classList.contains('ready')) return; // not yet
+  hap('light');
+  _closeVidAd();
+}
+
+function vidAdVideoEnded(){
+  // Video finished naturally — close immediately and proceed
+  const skipBtn = document.getElementById('vid-ad-skip');
+  if(_vidAdTimer) clearInterval(_vidAdTimer);
+  skipBtn.classList.add('ready');
+  document.getElementById('vid-ad-countdown').textContent = 'Done! Skip to continue';
+  hap('medium');
+  _closeVidAd();
+}
+
+function vidAdCTAClick(){
+  const ctaEl = document.getElementById('vid-ad-cta');
+  const url = ctaEl ? ctaEl.dataset.url : '';
+  if(url) window.open(url, '_blank');
+}
+
+function _closeVidAd(){
+  const overlay = document.getElementById('vid-ad-overlay');
+  const videoEl = document.getElementById('vid-ad-video');
+  if(_vidAdTimer) clearInterval(_vidAdTimer);
+  overlay.classList.remove('active');
+  videoEl.pause();
+  videoEl.src = '';
+  const cb = _vidAdCallback;
+  _vidAdCallback = null;
+  if(cb) cb();
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 // BUG FIX: esc() previously only escaped single quotes, not backslashes, allowing
 // a name like "O\'s" to break out of the onclick JS string.
 function esc(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
